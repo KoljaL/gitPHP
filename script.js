@@ -5,11 +5,11 @@ function sendCommands(values) {
 
     var params = new Object();
     params.CustomCommand = document.getElementById('CustomCommand').value;
-    params.CommitMessage = document.getElementById('CommitMessage').innerText;
+    params.CommitMessage = document.getElementById('CommitMessage').value;
     params.RepoURL = document.getElementById('RepoURL').value;
     params.GitCommand = values;
 
-    // console.log(document.getElementById('RepoURL'));
+    console.log(document.getElementById('CommitMessage'));
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
@@ -22,8 +22,14 @@ function sendCommands(values) {
         // console.log(data);
         var content = document.getElementById('console_output').innerHTML;
         document.getElementById('console_output').innerHTML = content + data;
+
+        // jump to bottom
+        // var objDiv = document.getElementById("console_output");
+        // objDiv.scrollTop = objDiv.scrollHeight;
+
+        // scroll to bottom
         document.getElementById('console_output').scroll({
-            top: 1000,
+            top: 10000000,
             behavior: 'smooth'
         });
 

@@ -1,7 +1,27 @@
+@import url('https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono');
+:root {
+    --dark: #282c34;
+    --lightgrey: #abb2bf;
+    --grey: #818896;
+    --darkgrey: #5c6370;
+    --bluegreen: #56b6c2;
+    --blue: #61aeee;
+    --pink: #c678dd;
+    --salomon: #e06c75;
+    --green: #98c379;
+    --red: #be5046;
+    --orange: #d19a66;
+    --yellow: #e6c07b;
+}
+
 *,
 *:before,
 *:after {
     box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: none;
+    text-decoration: none;
 }
 
 html,
@@ -15,6 +35,10 @@ body {
     height: 100vh;
     background: #111;
     color: #aaa;
+    font-family: 'LibreBaskerville_Regular', 'Garamond', serif;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.5;
 }
 
 #content {
@@ -29,8 +53,10 @@ fieldset {
     /* width: 430px; */
     /* width: max-content; */
     height: max-content;
+    border: 2px solid #5e5e5e;
     border-radius: 5px;
     border-color: #aaa;
+    padding: 1em;
 }
 
 fieldset legend {
@@ -59,6 +85,7 @@ fieldset legend {
 #items {
     /* height: 450px; */
     /* height: 100%; */
+    position: relative;
     overflow-y: auto;
     overflow-x: hidden;
     height: 90vh;
@@ -70,13 +97,38 @@ fieldset legend {
     display: none;
 }
 
+#ChooseRepoURL {
+    position: fixed;
+    z-index: 5;
+    width: 100%;
+    height: 50px;
+    top: 50px;
+    background: #111;
+    /* position: relative; */
+}
+
+#ChooseRepoURL h3 {
+    display: inline;
+    /* position: relative; */
+}
+
+.item #RepoURL {
+    font-size: 1.1em;
+    text-align: right;
+    background: #111;
+    border: none;
+    color: cornflowerblue;
+    float: right;
+}
+
 .item {
     max-width: 600px;
     /* display: inline-block; */
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
     border-bottom: 1px solid #5e5e5e;
     /* vertical-align: bottom; */
     position: relative;
+    top: 70px;
 }
 
 .item .text {
@@ -86,6 +138,10 @@ fieldset legend {
     margin: 0;
     max-width: 480px;
     text-align: justify;
+}
+
+.item #CustomCommand {
+    width: 100%;
 }
 
 
@@ -103,17 +159,12 @@ outline: 3px solid gold;
 */
 
 .item button {
-    font-family: monospace;
     position: absolute;
     bottom: 0px;
     right: 0px;
     margin-bottom: 0.5em;
     text-align: center;
-    background: grey;
-    border: 1px solid black;
-    border-radius: 5px;
     cursor: pointer;
-    height: 23px;
     width: 100px;
 }
 
@@ -144,41 +195,45 @@ button:hover:after {
 }
 
 input.ff_input {
-    float: left;
-    background-color: grey;
-    border: 1px solid black;
-    border-radius: 5px;
+    display: block;
     color: black;
-    margin-top: 5px;
-    padding: 2px 3px;
+    margin-top: .5em;
     width: 200px;
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    margin-bottom: 0.5em;
 }
 
-::-ms-input-placeholder,
-:-ms-input-placeholder,
-::placeholder {
+ ::-ms-input-placeholder,
+ :-ms-input-placeholder,
+ ::placeholder {
     color: rgb(243, 105, 105);
     opacity: 1;
 }
 
-::placeholder {
+ ::placeholder {
     color: rgb(153, 20, 20);
     opacity: 1;
 }
 
-.ff_input {
-    background-color: grey;
-    border: 1px solid darkgray;
-    color: black;
-    border-radius: 3px;
-    margin-top: 5px;
+button,
+input {
+    font-family: 'JetBrainsMono_SemiLight', 'Courier New', monospace;
+    height: 23px;
+    background: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 2px 3px;
+}
+
+
+/*     
+    .ff_input {
+        background-color: grey;
+        border: 1px solid darkgray;
+        color: black;
+        border-radius: 3px;
     padding: 2px 3px;
     width: 200px;
 }
+*/
 
 textarea:focus,
 input:focus {
@@ -187,7 +242,7 @@ input:focus {
 
 .response {
     position: relative;
-    top: 350px;
+    top: 90vh;
     padding-top: 1em;
 }
 
@@ -200,7 +255,9 @@ input:focus {
 }
 
 .response pre {
+    font-family: 'JetBrainsMono_Regular', 'Courier New', monospace;
     color: #aaa;
+    padding-bottom: 1em;
 }
 
 .responsedebug {
