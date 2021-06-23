@@ -141,7 +141,7 @@ fieldset legend {
 .item .text {
     padding: 0.5em 0.5em 0.5em 0;
     margin: 0;
-    max-width: 480px;
+    max-width: 495px;
     text-align: justify;
 }
 
@@ -240,6 +240,10 @@ input:focus {
     padding-bottom: 1em;
 }
 
+.response pre.error {
+    color: var(--red);
+}
+
 .responsedebug {
     position: relative;
     top: 370px;
@@ -248,6 +252,7 @@ input:focus {
     background-color: var(--dark);
     border: 1px solid var(--darkgrey);
     border-radius: 5px;
+    z-index: 15;
 }
 
 #debug {
@@ -260,6 +265,6 @@ input:focus {
 
 /* 
 #form input:focus {
-    outline: 3px solid var(--bluegreen); 
+outline: 3px solid var(--bluegreen); 
 }
 */

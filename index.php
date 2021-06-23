@@ -32,9 +32,32 @@ if ( !$ssh->login( $user, $password ) ) {
 function execPHP( $gitCommand ) {
     global $ssh,$resp;
     // echo '<div class=response>/'.$resp['RepoURL'].'~$ '.$resp[$gitCommand] .'<br><pre>';
-    echo '<div class=response><span>'.$resp['RepoURL'].':</span> &nbsp;&nbsp;'.$resp[$gitCommand] .'<br><pre>';
-    echo $ssh->exec( $resp['cd'].$resp[$gitCommand] );
-    echo '</pre></div>';
+
+    $output = $ssh->exec( $resp['cd'].$resp[$gitCommand] );
+
+
+    foreach ($resp['ConsoleError']  as $value) {
+        if (str_contains($output, $value)){
+            $error = 'error';
+        }else{
+            $error = '';
+        }
+    }
+
+    if (empty($resp['RepoURL'])){
+         $error = 'error';
+         $output = $output."\nplease set repository";
+    }
+    
+    
+    echo <<<HTML
+        <div class=response>
+            <span>$resp[RepoURL]:</span>
+            $resp[$gitCommand]\n
+            <pre class="$error">$output</pre>
+        </div>
+        HTML;
+    
     CommandHistory($gitCommand);
 }
 
@@ -51,8 +74,12 @@ $resp = [
     'all commits' => 'git log --pretty=format:"%h - %an, %ar : %s"',
     'abs_path' => dirname(dirname(__FILE__))
 ];
+
+$resp['ConsoleError'] = array('fatal: not a git repository','command not found');
+
+
 // git show -p origin/main
-// print_resp($resp);
+// print_r($resp);
 if( !empty( file_get_contents('php://input') ) ) {
     // print_resp(json_decode(file_get_contents('php://input'), true));
 
@@ -140,16 +167,21 @@ if (rand(0, 1)) {
 
 
 function print_resp($resp){
-    echo "<div class=responsedebug><pre>";
-    foreach ($resp as $key=>$value):
-            echo $key." -> ".$value."<br>"; //"&nbsp;&nbsp;&nbsp;";
-    endforeach;
+    echo "<div class=responsedebug><h3 style='color:var(--pink)'>&#36;resp[]</h3><br><pre>";
+    print_r($resp);
     echo "</pre></div>";
 }
 
+EscapeStringsForHTML($resp);
 // escape strings for HTML 
-foreach ($resp as $key => $value) {
-    $resp[$key] = htmlspecialchars($value);
+function EscapeStringsForHTML(&$resp){
+    foreach ($resp as $key => $value) {
+        if(is_array($value)){
+            EscapeStringsForHTML($value);
+        }else{
+            $resp[$key] = htmlspecialchars($value);
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -272,6 +304,19 @@ foreach ($resp as $key => $value) {
 
 <!--
 
+
+
+
+    // foreach ($resp as $key=>$value):
+    //     if(is_array($value)){
+    //         foreach ($value as $k => $v) {
+    //             echo "<b>".$key."</b> &#8594; <b>".$k."</b> &#8594; ".$v."1<br>";
+    //         }
+    //         continue;
+    //     }else{
+    //             echo "<b>".$key."</b> &#8594; ".$value."2<br>"; //"&nbsp;&nbsp;&nbsp;";
+    //     }    
+    // endforeach;
 
 
 
