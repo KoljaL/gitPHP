@@ -24,11 +24,10 @@ if ( !$ssh->login( $user, $password ) ) {
 
 // // generate new SSH key add it to ~/.ssh and show it
 // $cd = 'cd ~ &&';
-// execPHP( 'ssh-keygen -b 4096 -t rsa -C "lasar@rasal.de" -f ~/.ssh/id_rsa <<<y >/dev/null -N "phrase"' ,$cd);
+// execPHP( 'ssh-keygen -b 4096 -t rsa -C "xxx@xxx.de" -f ~/.ssh/id_rsa <<<y >/dev/null -N "phrase"' ,$cd);
 // execPHP( 'eval "$(ssh-agent -s && ssh-add ~/.ssh/id_rsa)"' ,$cd);
 // execPHP( 'cat ~/.ssh/id_rsa.pub' ,$cd);
 
-$cd = 'cd /www/htdocs/w01c010a/dev.rasal.de/KnowledgeBase &&';
 
 function execPHP( $gitCommand ) {
     global $ssh,$resp;
@@ -106,7 +105,7 @@ exit;
 function CommandHistory($gitCommand){
     global $ssh,$resp;
 $filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
-$filecontent = $filecontent."\n".date("d.m.Y H:i").' "'.$resp['cd'].$resp[$gitCommand].'"';
+$filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp[$gitCommand]."'";
  file_put_contents('history.log',$filecontent);
 }
  
@@ -192,7 +191,7 @@ foreach ($resp as $key => $value) {
                 <div class=text>
                     <h3>Add all files to git index</h3>This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
                 </div>
-                <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>"></button>
+                <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
             </div>
 
 
@@ -282,11 +281,11 @@ From ssh-keygen man page:
 -N new_passphrase provides the new passphrase.
 -q silence ssh-keygen.
 -f filename specifies the filename of the key file.
-ssh-keygen -b 4096 -t rsa -C "lasar@rasal.de" -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1 -q -N ""
+ssh-keygen -b 4096 -t rsa -C "xxx@xxx.de" -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1 -q -N ""
 
 
 // // generate new SSH key add it to ~/.ssh and show it
-// execPHP( 'ssh-keygen -b 4096 -t rsa -C "lasar@rasal.de" -f ~/.ssh/id_rsa <<<y >/dev/null -N "phrase"' );
+// execPHP( 'ssh-keygen -b 4096 -t rsa -C "xxx@xxx.de" -f ~/.ssh/id_rsa <<<y >/dev/null -N "phrase"' );
 // execPHP( 'eval "$(ssh-agent -s && ssh-add ~/.ssh/id_rsa)"' );
 // execPHP( 'cat ~/.ssh/id_rsa.pub' );
 
@@ -294,10 +293,7 @@ ssh-keygen -b 4096 -t rsa -C "lasar@rasal.de" -f ~/.ssh/id_rsa <<<y >/dev/null 2
 // show current working dir
 // execPHP( 'pwd' );
 
-
-// change dir is getting lost, therfore combine with &&
-// execPHP( 'cd /www/htdocs/w01c010a/dev.rasal.de/KnowledgeBase && ls' );
-// execPHP( 'ls' );
+ 
 
 
 // in der shell als php funktioniert es
