@@ -41,6 +41,12 @@ body {
     line-height: 1.5;
 }
 
+h3 {
+    font-size: 1.2em;
+    line-height: 18px;
+    color: var(--blue)
+}
+
 #content {
     margin: auto;
     display: grid;
@@ -66,24 +72,28 @@ fieldset legend {
     grid-column: 1;
 }
 
+#form legend {
+    color: var(--blue)
+}
+
 #console {
     grid-column: 2;
-    /* max-width: 600px; */
+}
+
+#console legend {
+    color: var(--green)
 }
 
 #items {
-    /* max-width: 630px; */
+    margin: 0;
 }
 
 #console_output {
-    /* min-width: 400px; */
-    /* max-width: 630px; */
+    margin: 0;
 }
 
 #console_output,
 #items {
-    /* height: 450px; */
-    /* height: 100%; */
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
@@ -100,39 +110,35 @@ fieldset legend {
     position: fixed;
     z-index: 5;
     width: 100%;
-    height: 50px;
+    height: 40px;
     top: 50px;
     background: var(--dark);
-    /* position: relative; */
 }
 
 #ChooseRepoURL h3 {
+    font-weight: 700;
     display: inline;
-    /* position: relative; */
 }
 
 .item #RepoURL {
-    font-size: 1.1em;
+    font-family: 'LibreBaskerville_Regular', 'Garamond', serif;
+    font-size: 1.2em;
     text-align: right;
     background: var(--dark);
     border: none;
-    color: var(--blue);
+    color: var(--orange);
     float: right;
 }
 
 .item {
     max-width: 600px;
-    /* display: inline-block; */
     margin-bottom: 1.5em;
-    border-bottom: 1px solid var(--bluegreen);
-    /* vertical-align: bottom; */
+    border-bottom: 1px solid var(--darkgrey);
     position: relative;
-    top: 70px;
+    top: 60px;
 }
 
 .item .text {
-    /* font-size: 16px; */
-    /* display: inline-block; */
     padding: 0.5em 0.5em 0.5em 0;
     margin: 0;
     max-width: 480px;
@@ -143,11 +149,7 @@ fieldset legend {
     width: 100%;
 }
 
-#form input:focus {
-    /* outline: 3px solid var(--bluegreen); */
-}
-
-*/ .item button {
+.item button {
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -155,10 +157,11 @@ fieldset legend {
     text-align: center;
     cursor: pointer;
     width: 100px;
+    background: var(--blue);
 }
 
 .item button:hover {
-    background: var(--lightgrey);
+    background: var(--grey);
 }
 
 button:after {
@@ -166,7 +169,7 @@ button:after {
     position: absolute;
     bottom: 120%;
     right: 0;
-    background: var(--lightgrey);
+    background: var(--blue);
     padding: 5px 15px;
     color: var(--dark);
     -webkit-border-radius: 5px;
@@ -186,8 +189,9 @@ button:hover:after {
 input.ff_input {
     display: block;
     color: var(--dark);
-    margin-top: .5em;
+    background: var(--lightgrey);
     width: 200px;
+    margin-top: .5em;
 }
 
  ::-ms-input-placeholder,
@@ -206,7 +210,6 @@ button,
 input {
     font-family: 'JetBrainsMono_SemiLight', 'Courier New', monospace;
     height: 23px;
-    background: grey;
     border: 1px solid var(--dark);
     border-radius: 5px;
     padding: 2px 3px;
@@ -253,3 +256,10 @@ input:focus {
     top: -350px;
     right: 200px;
 }
+
+
+/* 
+#form input:focus {
+    outline: 3px solid var(--bluegreen); 
+}
+*/

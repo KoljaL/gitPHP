@@ -195,8 +195,8 @@ foreach ($resp as $key => $value) {
 
                 <!-- remote.origin.url -->
                 <div class=item>
+                    <h3>Show the remote origin URL</h3>
                     <div class=text>
-                        <h3>Show the remote origin URL</h3>
                     </div>
                     <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">origin.url</button>
                 </div>
@@ -209,8 +209,8 @@ foreach ($resp as $key => $value) {
 
                 <!-- CUSTOM -->
                 <div class=item>
+                    <h3>Custom Command</h3>
                     <div class=text>
-                        <h3>Custom Command</h3>
                         <input type=text data-name="Custom Command" id=CustomCommand class=ff_input value="custom command">
                     </div>
                     <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
@@ -218,8 +218,8 @@ foreach ($resp as $key => $value) {
 
                 <!-- ADD -->
                 <div class=item>
+                    <h3>Add all files to git index</h3>
                     <div class=text>
-                        <h3>Add all files to git index</h3>
                         This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
                         This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
                         This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
@@ -240,8 +240,8 @@ foreach ($resp as $key => $value) {
 
                 <!-- PUSH -->
                 <div class=item>
+                    <h3>Push the local repository to the the remote main branch</h3>
                     <div class=text>
-                        <h3>Push the local repository to the the remote main branch</h3>
                         Updates remote refs using local refs, while sending objects necessary to complete the given refs.
                         Updates remote refs using local refs, while sending objects necessary to complete the given refs.
                         Updates remote refs using local refs, while sending objects necessary to complete the given refs.
