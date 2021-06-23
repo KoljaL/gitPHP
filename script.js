@@ -1,11 +1,12 @@
 function sendCommands(values) {
-    console.log(values);
+    // console.log(values);
+    console.log(document.getElementById('RepoURL'));
 
 
     var params = new Object();
     params.CustomCommand = document.getElementById('CustomCommand').value;
     params.CommitMessage = document.getElementById('CommitMessage').innerText;
-    params.RepoURL = document.getElementById('RepoURL').innerText;
+    params.RepoURL = document.getElementById('RepoURL').value;
     params.GitCommand = values;
 
     // console.log(document.getElementById('RepoURL'));
@@ -55,6 +56,11 @@ document.querySelector('[contenteditable]').addEventListener('keypress', functio
         event.preventDefault();
     }
 });
+
+
+
+
+
 
 // var debug_div = document.querySelectorAll('deb_resp');
 

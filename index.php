@@ -36,6 +36,7 @@ function execPHP( $gitCommand ) {
     echo '<div class=response>'.$resp['cd'].$resp[$gitCommand] .'<br><pre>';
     echo $ssh->exec( $resp['cd'].$resp[$gitCommand] );
     echo '</pre></div>';
+    CommandHistory($gitCommand);
 }
 
 
@@ -47,9 +48,11 @@ $resp = [
     'push' => 'git push origin main ',
     'remote.origin.url' => 'git config --get remote.origin.url ',
     'remote show origin' => 'git remote show origin ',
+    'last commit' => 'git log --stat -1',
+    'all commits' => 'git log --pretty=format:"%h - %an, %ar : %s"',
     'abs_path' => dirname(dirname(__FILE__))
 ];
-
+// git show -p origin/main
 // print_resp($resp);
 if( !empty( file_get_contents('php://input') ) ) {
     print_resp(json_decode(file_get_contents('php://input'), true));
@@ -58,7 +61,7 @@ if( !empty( file_get_contents('php://input') ) ) {
     $resp['cd'] = "cd ".$resp['abs_path']."/".$resp['RepoURL']." && ";
  
 
-
+    
     echo "<div class=deb_resp style='display:none'>";
     print_resp($resp);
     echo "</div>";
@@ -100,7 +103,12 @@ exit;
 }
 
 
-
+function CommandHistory($gitCommand){
+    global $ssh,$resp;
+$filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
+$filecontent = $filecontent."\n".date("d.m.Y H:i").' "'.$resp['cd'].$resp[$gitCommand].'"';
+ file_put_contents('history.log',$filecontent);
+}
  
 
 // // git commit and push
@@ -153,20 +161,27 @@ foreach ($resp as $key => $value) {
     </div>
     <div id="content">
 
+
         <fieldset id=form>
             <legend>Git Actions</legend>
 
             <div class=item>
-                <div class="formfields">
-                    <div data-name="relative path to local repository" id=RepoURL class=ff_input contenteditable>KnowledgeBase</div>
+                <div class=text>
+                    <h3>Repo folder</h3>
+                    <input type="text" list="RepoURLs" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
+                    <datalist id="RepoURLs">
+                        <option value="KnowledgeBase">
+                        <option value="gitPHP">
+                    </datalist>
                 </div>
+                <!-- <div data-name="relative path to local repository" id=RepoURL class=ff_input contenteditable>KnowledgeBase</div> -->
                 <br>
             </div>
 
             <!-- CUSTOM -->
             <div class=item>
-                <div class=text>Custom Command
-                    <!-- <div data-name="Custom Command" id=CustomCommand class=ff_input contenteditable>custom</div> -->
+                <div class=text>
+                    <h3>Custom Command</h3>
                     <input type=text data-name="Custom Command" id=CustomCommand class=ff_input value="custom command">
                 </div>
                 <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
@@ -174,14 +189,17 @@ foreach ($resp as $key => $value) {
 
             <!-- ADD -->
             <div class=item>
-                <div class=text>This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.</div>
-                <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
+                <div class=text>
+                    <h3>Add all files to git index</h3>This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                </div>
+                <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>"></button>
             </div>
 
 
             <!-- COMMIT -->
             <div class=item>
-                <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes. Create a new commit containing the current contents of the index and the given log message describing the changes.
+                <h3>Commit all changes to the local repository</h3>
+                <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes.
                     <div data-name="Commit Message" id=CommitMessage class=ff_input contenteditable>new commit</div>
                 </div>
                 <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commit'] ?>">commit</button>
@@ -189,18 +207,24 @@ foreach ($resp as $key => $value) {
 
             <!-- PUSH -->
             <div class=item>
-                <div class=text>Updates remote refs using local refs, while sending objects necessary to complete the given refs. Updates remote refs using local refs, while sending objects necessary to complete the given refs.</div>
+                <div class=text>
+                    <h3>Push the local repository to the the remote main branch</h3>
+                    Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                </div>
                 <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
             </div>
 
             <!-- remote.origin.url -->
             <div class=item>
-                <div class=text>Updates remote refs using local refs, while sending objects necessary to complete the given refs. Updates remote refs using local refs, while sending objects necessary to complete the given refs.</div>
+                <div class=text>
+                    <h3>Show the remote origin URL</h3>
+                </div>
                 <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">remote.origin.url</button>
             </div>
             <!-- remote show origin  -->
             <div class=item>
-                <div class=text>Updates remote refs using local refs, while sending objects necessary to complete the given refs. Updates remote refs using local refs, while sending objects necessary to complete the given refs.</div>
+                <h3>Show info ablut the remote origin</h3>
+                <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
                 <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">remote show origin</button>
             </div>
 

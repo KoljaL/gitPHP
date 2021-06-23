@@ -1,6 +1,6 @@
 html {
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 body {
@@ -95,6 +95,28 @@ fieldset legend {
     background: lightgrey;
 }
 
+button:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: -20%;
+    background: #afafaf;
+    padding: 5px 15px;
+    color: black;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+button:hover:after {
+    opacity: 1;
+}
+
 input.ff_input {
     float: left;
     background-color: grey;
@@ -120,6 +142,11 @@ input.ff_input {
     width: 300px;
 }
 
+textarea:focus,
+input:focus {
+    outline: none;
+}
+
 .response {
     position: relative;
     top: 350px;
@@ -131,28 +158,6 @@ input.ff_input {
     top: 350px;
     padding-top: 1em;
     color: rgba(45, 112, 48, 0.979)
-}
-
-button:after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 120%;
-    left: -20%;
-    background: #afafaf;
-    padding: 5px 15px;
-    color: black;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    white-space: nowrap;
-    opacity: 0;
-    -webkit-transition: all 0.4s ease;
-    -moz-transition: all 0.4s ease;
-    transition: all 0.4s ease;
-}
-
-button:hover:after {
-    opacity: 1;
 }
 
 #debug {
