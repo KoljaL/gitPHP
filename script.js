@@ -9,7 +9,7 @@ function sendCommands(values) {
     params.RepoURL = document.getElementById('RepoURL').value;
     params.GitCommand = values;
 
-    console.log(document.getElementById('CommitMessage'));
+    // console.log(document.getElementById('CommitMessage'));
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
