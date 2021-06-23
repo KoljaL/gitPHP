@@ -47,24 +47,67 @@ function sendCommands(values) {
     };
 }
 
+// DATALIST
+// https: //dev.to/siddev/customise-datalist-45p0
+RepoURL.onfocus = function() {
+    RepoURLs.style.display = "block";
+    console.log("RepoURL");
+    console.log(RepoURL);
+    console.log(' ');
+};
 
-// (function(win, doc) {
-//     if (doc.querySelectorAll) {
-//         var inputs = doc.querySelectorAll('input[list]'),
-//             total = inputs.length;
-//         for (var i = 0; i < total; i++) {
-//             var input = inputs[i],
-//                 id = input.getAttribute('list'),
-//                 list = doc.getElementById(id),
-//                 options = list.getElementsByTagName('option'),
-//                 amount = options.length,
-//                 rand = Math.floor(Math.random() * amount),
-//                 option = options[rand],
-//                 value = option.getAttribute('value');
-//             input.setAttribute('placeholder', value);
-//         }
-//     }
-// })(this, this.document);
+for (let option of RepoURLs.options) {
+    option.onclick = function() {
+        RepoURL.value = option.value;
+        RepoURLs.style.display = "none";
+        console.log("RepoURL");
+        console.log(RepoURL);
+        console.log(' ');
+    };
+}
+
+RepoURL.oninput = function() {
+    currentFocus = -1;
+    var text = RepoURL.value.toUpperCase();
+    for (let option of RepoURLs.options) {
+        if (option.value.toUpperCase().indexOf(text) > -1) {
+            option.style.display = "block";
+        } else {
+            option.style.display = "none";
+        }
+    }
+};
+var currentFocus = -1;
+RepoURL.onkeydown = function(e) {
+    if (e.keyCode == 40) {
+        currentFocus++;
+        addActive(RepoURLs.options);
+    } else if (e.keyCode == 38) {
+        currentFocus--;
+        addActive(RepoURLs.options);
+    } else if (e.keyCode == 13) {
+        e.preventDefault();
+        if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (RepoURLs.options) RepoURLs.options[currentFocus].click();
+        }
+    }
+};
+
+function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = x.length - 1;
+    x[currentFocus].classList.add("active");
+}
+
+function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("active");
+    }
+}
+// DATALIST
 
 
 
@@ -85,7 +128,7 @@ debugcheck.addEventListener("click", function(event) {
 
 
 
-document.getElementById('RepoURL').setAttribute('placeholder', 'choose Repository');
+// document.getElementById('RepoURL').setAttribute('placeholder', 'choose Repository');
 
 
 

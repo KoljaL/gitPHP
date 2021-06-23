@@ -8,4 +8,6 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [ ] add SSH Key
 - [ ] custom Command datalist
 - [x] command history
+- [x] one dark colors
+- [x] highlighted error messages
 - [ ] rewrite the $repl array?

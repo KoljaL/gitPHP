@@ -215,14 +215,22 @@ function EscapeStringsForHTML(&$resp){
 
                 <!-- ChooseRepoURL -->
                 <div id=ChooseRepoURL class=item>
-                    <div class=text>
-                        <h3>Repo folder</h3>
-                        <input type="text" list="RepoURLs" placeholder="test" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
+                    <!-- <div class=text> -->
+                    <!-- <h3>Repo folder</h3> -->
+                    <input autocomplete="off" role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
+                    <datalist id="RepoURLs" role="listbox">
+                        <option value="KnowledgeBase">KnowledgeBase</option>
+                        <option value="gitPHP">gitPHP</option>
+                    </datalist>
+
+                    <!-- <input type="text" list="RepoURLs" placeholder="test" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
                         <datalist id="RepoURLs">
                             <option value="KnowledgeBase">
                             <option value="gitPHP">
-                        </datalist>
-                    </div>
+                        </datalist> -->
+
+
+                    <!-- </div> -->
                 </div>
 
                 <!-- remote.origin.url -->
@@ -234,8 +242,11 @@ function EscapeStringsForHTML(&$resp){
                 </div>
                 <!-- remote show origin  -->
                 <div class=item>
-                    <h3>Show info ablut the remote origin</h3>
-                    <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
+                    <h3>Show info about remote origin</h3>
+                    <div class=text>
+                        Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).
+                        <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
+                    </div>
                     <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">show&nbsp;origin</button>
                 </div>
 
@@ -253,8 +264,7 @@ function EscapeStringsForHTML(&$resp){
                     <h3>Add all files to git index</h3>
                     <div class=text>
                         This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
-                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
-                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                        <a href="https://git-scm.com/docs/git-add" target="_blanc"></a>
                     </div>
                     <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
                 </div>
@@ -264,8 +274,8 @@ function EscapeStringsForHTML(&$resp){
                 <div class=item>
                     <h3>Commit all changes to the local repository</h3>
                     <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes.
+                        <a href="https://git-scm.com/docs/git-commit" target="_blanc"></a>
                         <input type=text data-name="Commit Message" id=CommitMessage class=ff_input value="new commit">
-
                     </div>
                     <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commit'] ?>">commit</button>
                 </div>
@@ -275,8 +285,7 @@ function EscapeStringsForHTML(&$resp){
                     <h3>Push the local repository to the the remote main branch</h3>
                     <div class=text>
                         Updates remote refs using local refs, while sending objects necessary to complete the given refs.
-                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
-                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                        <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
                     </div>
                     <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
                 </div>
