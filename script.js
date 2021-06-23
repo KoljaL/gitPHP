@@ -1,6 +1,6 @@
 function sendCommands(values) {
     // console.log(values);
-    console.log(document.getElementById('RepoURL'));
+    // console.log(document.getElementById('RepoURL').value);
 
 
     var params = new Object();
@@ -42,20 +42,82 @@ function sendCommands(values) {
 }
 
 
+// (function(win, doc) {
+//     if (doc.querySelectorAll) {
+//         var inputs = doc.querySelectorAll('input[list]'),
+//             total = inputs.length;
+//         for (var i = 0; i < total; i++) {
+//             var input = inputs[i],
+//                 id = input.getAttribute('list'),
+//                 list = doc.getElementById(id),
+//                 options = list.getElementsByTagName('option'),
+//                 amount = options.length,
+//                 rand = Math.floor(Math.random() * amount),
+//                 option = options[rand],
+//                 value = option.getAttribute('value');
+//             input.setAttribute('placeholder', value);
+//         }
+//     }
+// })(this, this.document);
 
-document.querySelector('[contenteditable]').addEventListener('paste', function(event) {
-    console.log(event)
 
-    event.preventDefault();
-    document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
-});
 
-document.querySelector('[contenteditable]').addEventListener('keypress', function(event) {
-    if (event.which === 13) {
-        console.log(event)
-        event.preventDefault();
+
+var debugcheck = document.getElementById("debugcheck");
+debugcheck.addEventListener("click", function(event) {
+    // console.log(debugcheck.checked)
+    if (debugcheck.checked) {
+        document.getElementById("debug").style.display = 'block';
+    } else {
+        document.getElementById("debug").style.display = 'none';
+
     }
+
 });
+
+
+
+
+
+document.getElementById('RepoURL').setAttribute('placeholder', 'choose Repository');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var RepoURL = document.getElementById('RepoURL');
+// if (!RepoURL.value) {
+//     console.log(RepoURL);
+//     document.getElementById('RepoURL').style.border = "red";
+// }
+
+
+
+
+
+// document.querySelector('[contenteditable]').addEventListener('paste', function(event) {
+//     console.log(event)
+//     event.preventDefault();
+//     document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
+// });
+
+// document.querySelector('[contenteditable]').addEventListener('keypress', function(event) {
+//     if (event.which === 13) {
+//         console.log(event)
+//         event.preventDefault();
+//     }
+// });
 
 
 

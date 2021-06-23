@@ -1,3 +1,9 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
 html,
 body {
     height: 100vh;
@@ -12,14 +18,16 @@ body {
 }
 
 #content {
-    /* margin: auto; */
+    margin: auto;
     display: grid;
-    width: 1200px;
+    max-width: 1200px;
     gap: 20px;
 }
 
 fieldset {
-    width: 600px;
+    min-width: 630px;
+    /* width: 430px; */
+    /* width: max-content; */
     height: max-content;
     border-radius: 5px;
     border-color: #aaa;
@@ -35,23 +43,35 @@ fieldset legend {
 
 #console {
     grid-column: 2;
-    max-width: 600px;
+    /* max-width: 600px; */
+}
+
+#items {
+    /* max-width: 630px; */
+}
+
+#console_output {
+    /* min-width: 400px; */
+    /* max-width: 630px; */
 }
 
 #console_output,
 #items {
     /* height: 450px; */
     /* height: 100%; */
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 90vh;
+    scrollbar-width: none;
 }
 
+#items::-webkit-scrollbar,
 #console_output::-webkit-scrollbar {
     display: none;
 }
 
 .item {
-    width: 600px;
+    max-width: 600px;
     /* display: inline-block; */
     margin-bottom: 1em;
     border-bottom: 1px solid #5e5e5e;
@@ -64,23 +84,23 @@ fieldset legend {
     /* display: inline-block; */
     padding: 0.5em 0.5em 0.5em 0;
     margin: 0;
-    width: 480px;
+    max-width: 480px;
     text-align: justify;
 }
 
 
 /* #form input {
-     float: left;
-     margin-bottom: 0.5rem;
-     background: #fff;
-     border: 1px solid #9c9c9c;
-     padding: 0.7em;
- }
- 
- #form input:focus {
-     outline: 3px solid gold;
- }
-  */
+float: left;
+margin-bottom: 0.5rem;
+background: #fff;
+border: 1px solid #9c9c9c;
+padding: 0.7em;
+}
+
+#form input:focus {
+outline: 3px solid gold;
+}
+*/
 
 .item button {
     font-family: monospace;
@@ -131,11 +151,23 @@ input.ff_input {
     color: black;
     margin-top: 5px;
     padding: 2px 3px;
-    width: 300px;
+    width: 200px;
     position: absolute;
     bottom: 0px;
     left: 0px;
     margin-bottom: 0.5em;
+}
+
+::-ms-input-placeholder,
+:-ms-input-placeholder,
+::placeholder {
+    color: rgb(243, 105, 105);
+    opacity: 1;
+}
+
+::placeholder {
+    color: rgb(153, 20, 20);
+    opacity: 1;
 }
 
 .ff_input {
@@ -145,7 +177,7 @@ input.ff_input {
     border-radius: 3px;
     margin-top: 5px;
     padding: 2px 3px;
-    width: 300px;
+    width: 200px;
 }
 
 textarea:focus,
@@ -159,14 +191,30 @@ input:focus {
     padding-top: 1em;
 }
 
+.response {
+    color: rgba(45, 112, 48, 0.979);
+}
+
+.response span {
+    color: rgba(80, 124, 82, 0.979);
+}
+
+.response pre {
+    color: #aaa;
+}
+
 .responsedebug {
     position: relative;
-    top: 350px;
-    padding-top: 1em;
-    color: rgba(45, 112, 48, 0.979)
+    top: 370px;
+    padding: 1em;
+    color: rgba(45, 112, 48, 0.979);
+    background-color: rgb(19, 19, 19);
+    border: 1px solid darkgray;
+    border-radius: 5px;
 }
 
 #debug {
+    display: none;
     position: absolute;
     top: -350px;
     right: 200px;

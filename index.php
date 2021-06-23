@@ -32,7 +32,7 @@ if ( !$ssh->login( $user, $password ) ) {
 function execPHP( $gitCommand ) {
     global $ssh,$resp;
     // echo '<div class=response>/'.$resp['RepoURL'].'~$ '.$resp[$gitCommand] .'<br><pre>';
-    echo '<div class=response>'.$resp['cd'].$resp[$gitCommand] .'<br><pre>';
+    echo '<div class=response><span>'.$resp['RepoURL'].':</span> &nbsp;&nbsp;'.$resp[$gitCommand] .'<br><pre>';
     echo $ssh->exec( $resp['cd'].$resp[$gitCommand] );
     echo '</pre></div>';
     CommandHistory($gitCommand);
@@ -54,7 +54,7 @@ $resp = [
 // git show -p origin/main
 // print_resp($resp);
 if( !empty( file_get_contents('php://input') ) ) {
-    print_resp(json_decode(file_get_contents('php://input'), true));
+    // print_resp(json_decode(file_get_contents('php://input'), true));
 
     $resp = array_merge($resp,json_decode(file_get_contents('php://input'), true));
     $resp['cd'] = "cd ".$resp['abs_path']."/".$resp['RepoURL']." && ";
@@ -158,6 +158,11 @@ foreach ($resp as $key => $value) {
     <div id="debug">
         <?= print_resp($resp)?>
     </div>
+
+    <div id="debugcheckDIV" style="position: absolute;right:20px;top:20px;">
+        <label for="debugcheck" style="font-size: x-large;">&#128027;</label>
+        <input type="checkbox" name="debugcheck" id="debugcheck" style="display:none">
+    </div>
     <div id="content">
 
 
@@ -168,14 +173,27 @@ foreach ($resp as $key => $value) {
                 <div class=item>
                     <div class=text>
                         <h3>Repo folder</h3>
-                        <input type="text" list="RepoURLs" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
+                        <input type="text" list="RepoURLs" placeholder="test" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
                         <datalist id="RepoURLs">
                             <option value="KnowledgeBase">
                             <option value="gitPHP">
                         </datalist>
                     </div>
-                    <!-- <div data-name="relative path to local repository" id=RepoURL class=ff_input contenteditable>KnowledgeBase</div> -->
                     <br>
+                </div>
+
+                <!-- remote.origin.url -->
+                <div class=item>
+                    <div class=text>
+                        <h3>Show the remote origin URL</h3>
+                    </div>
+                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">origin.url</button>
+                </div>
+                <!-- remote show origin  -->
+                <div class=item>
+                    <h3>Show info ablut the remote origin</h3>
+                    <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
+                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">show&nbsp;origin</button>
                 </div>
 
                 <!-- CUSTOM -->
@@ -219,19 +237,7 @@ foreach ($resp as $key => $value) {
                     <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
                 </div>
 
-                <!-- remote.origin.url -->
-                <div class=item>
-                    <div class=text>
-                        <h3>Show the remote origin URL</h3>
-                    </div>
-                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">remote.origin.url</button>
-                </div>
-                <!-- remote show origin  -->
-                <div class=item>
-                    <h3>Show info ablut the remote origin</h3>
-                    <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
-                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">remote show origin</button>
-                </div>
+
 
 
 
