@@ -163,73 +163,79 @@ foreach ($resp as $key => $value) {
 
         <fieldset id=form>
             <legend>Git Actions</legend>
+            <div id="items">
 
-            <div class=item>
-                <div class=text>
-                    <h3>Repo folder</h3>
-                    <input type="text" list="RepoURLs" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
-                    <datalist id="RepoURLs">
-                        <option value="KnowledgeBase">
-                        <option value="gitPHP">
-                    </datalist>
+                <div class=item>
+                    <div class=text>
+                        <h3>Repo folder</h3>
+                        <input type="text" list="RepoURLs" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
+                        <datalist id="RepoURLs">
+                            <option value="KnowledgeBase">
+                            <option value="gitPHP">
+                        </datalist>
+                    </div>
+                    <!-- <div data-name="relative path to local repository" id=RepoURL class=ff_input contenteditable>KnowledgeBase</div> -->
+                    <br>
                 </div>
-                <!-- <div data-name="relative path to local repository" id=RepoURL class=ff_input contenteditable>KnowledgeBase</div> -->
-                <br>
-            </div>
 
-            <!-- CUSTOM -->
-            <div class=item>
-                <div class=text>
-                    <h3>Custom Command</h3>
-                    <input type=text data-name="Custom Command" id=CustomCommand class=ff_input value="custom command">
+                <!-- CUSTOM -->
+                <div class=item>
+                    <div class=text>
+                        <h3>Custom Command</h3>
+                        <input type=text data-name="Custom Command" id=CustomCommand class=ff_input value="custom command">
+                    </div>
+                    <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
                 </div>
-                <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
-            </div>
 
-            <!-- ADD -->
-            <div class=item>
-                <div class=text>
-                    <h3>Add all files to git index</h3>This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit. This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                <!-- ADD -->
+                <div class=item>
+                    <div class=text>
+                        <h3>Add all files to git index</h3>
+                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
+                    </div>
+                    <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
                 </div>
-                <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
-            </div>
 
 
-            <!-- COMMIT -->
-            <div class=item>
-                <h3>Commit all changes to the local repository</h3>
-                <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes.
-                    <div data-name="Commit Message" id=CommitMessage class=ff_input contenteditable>new commit</div>
+                <!-- COMMIT -->
+                <div class=item>
+                    <h3>Commit all changes to the local repository</h3>
+                    <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes.
+                        <div data-name="Commit Message" id=CommitMessage class=ff_input contenteditable>new commit</div>
+                    </div>
+                    <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commit'] ?>">commit</button>
                 </div>
-                <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commit'] ?>">commit</button>
-            </div>
 
-            <!-- PUSH -->
-            <div class=item>
-                <div class=text>
-                    <h3>Push the local repository to the the remote main branch</h3>
-                    Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                <!-- PUSH -->
+                <div class=item>
+                    <div class=text>
+                        <h3>Push the local repository to the the remote main branch</h3>
+                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
+                    </div>
+                    <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
                 </div>
-                <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
-            </div>
 
-            <!-- remote.origin.url -->
-            <div class=item>
-                <div class=text>
-                    <h3>Show the remote origin URL</h3>
+                <!-- remote.origin.url -->
+                <div class=item>
+                    <div class=text>
+                        <h3>Show the remote origin URL</h3>
+                    </div>
+                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">remote.origin.url</button>
                 </div>
-                <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">remote.origin.url</button>
+                <!-- remote show origin  -->
+                <div class=item>
+                    <h3>Show info ablut the remote origin</h3>
+                    <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
+                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">remote show origin</button>
+                </div>
+
+
+
             </div>
-            <!-- remote show origin  -->
-            <div class=item>
-                <h3>Show info ablut the remote origin</h3>
-                <div class=text>Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).</div>
-                <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">remote show origin</button>
-            </div>
-
-
-
-
         </fieldset>
         <fieldset id=console>
             <legend>Console</legend>
