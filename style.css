@@ -1,0 +1,162 @@
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: #111;
+    color: #aaa;
+}
+
+#content {
+    /* margin: auto; */
+    display: grid;
+    width: 1200px;
+    gap: 20px;
+}
+
+fieldset {
+    width: 600px;
+    height: max-content;
+    border-radius: 5px;
+    border-color: #aaa;
+}
+
+fieldset legend {
+    font-size: 2em;
+}
+
+#form {
+    grid-column: 1;
+}
+
+#console {
+    grid-column: 2;
+    max-width: 600px;
+}
+
+#console_output {
+    height: 450px;
+    overflow: auto;
+}
+
+#console_output::-webkit-scrollbar {
+    display: none;
+}
+
+.item {
+    width: 600px;
+    /* display: inline-block; */
+    margin-bottom: 1em;
+    border-bottom: 1px solid #5e5e5e;
+    /* vertical-align: bottom; */
+    position: relative;
+}
+
+.item .text {
+    /* font-size: 16px; */
+    /* display: inline-block; */
+    padding: 0.5em 0.5em 0.5em 0;
+    margin: 0;
+    width: 480px;
+    text-align: justify;
+}
+
+
+/* #form input {
+     float: left;
+     margin-bottom: 0.5rem;
+     background: #fff;
+     border: 1px solid #9c9c9c;
+     padding: 0.7em;
+ }
+ 
+ #form input:focus {
+     outline: 3px solid gold;
+ }
+  */
+
+.item button {
+    font-family: monospace;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    margin-bottom: 0.5em;
+    text-align: center;
+    background: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 23px;
+    width: 100px;
+}
+
+.item button:hover {
+    background: lightgrey;
+}
+
+input.ff_input {
+    float: left;
+    background-color: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+    margin-top: 5px;
+    padding: 2px 3px;
+    width: 300px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    margin-bottom: 0.5em;
+}
+
+.ff_input {
+    background-color: grey;
+    border: 1px solid darkgray;
+    color: black;
+    border-radius: 3px;
+    margin-top: 5px;
+    padding: 2px 3px;
+    width: 300px;
+}
+
+.response {
+    position: relative;
+    top: 350px;
+    padding-top: 1em;
+}
+
+.responsedebug {
+    position: relative;
+    top: 350px;
+    padding-top: 1em;
+    color: rgba(45, 112, 48, 0.979)
+}
+
+button:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: -20%;
+    background: #afafaf;
+    padding: 5px 15px;
+    color: black;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+button:hover:after {
+    opacity: 1;
+}
+
+#debug {
+    position: absolute;
+    top: -350px;
+    right: 200px;
+}
