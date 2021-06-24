@@ -82,6 +82,7 @@ fieldset legend {
 
 #console {
     grid-column: 2;
+    position: relative;
 }
 
 #console legend {
@@ -105,6 +106,7 @@ fieldset legend {
     scrollbar-width: none;
 }
 
+#ChooseRepoURL datalist::-webkit-scrollbar,
 #items::-webkit-scrollbar,
 #console_output::-webkit-scrollbar {
     display: none;
@@ -159,7 +161,11 @@ fieldset legend {
 
 #ChooseRepoURL datalist {
     position: absolute;
+    margin-top: 8px;
     /* top: 8px; */
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
     left: -.5em;
     width: max-content;
     padding: .5em;
@@ -170,8 +176,6 @@ fieldset legend {
     border: 1px solid var(--darkgrey);
     border-radius: 0 0 5px 5px;
     border-top: none;
-    /* width: 200px; */
-    /* padding: 0; */
 }
 
 #ChooseRepoURL option {
@@ -187,10 +191,13 @@ fieldset legend {
     color: var(--orange);
 }
 
+#ChooseRepoURL button {
+    padding-left: .3em;
+    position: relative;
+}
+
 
 /* DATALIST */
-
-#CustomCommand {}
 
 datalist#CustomCommands {
     position: absolute;
@@ -316,26 +323,6 @@ input {
     padding: 2px 3px;
 }
 
-input:focus {
-    background: rgb(59, 4, 4)!important;
-}
-
-input:focus-visible {
-    background: rgb(52, 33, 224)!important;
-}
-
-input:focus-within {
-    background: rgb(19, 252, 240)!important;
-}
-
-input:active {
-    background: rgb(39, 255, 19)!important;
-}
-
-input:target {
-    background: rgb(146, 18, 125)!important;
-}
-
 .response {
     position: relative;
     top: 90vh;
@@ -439,6 +426,7 @@ fieldset#login button {
     #console {
         grid-column: 2;
         height: 33vh;
+        position: relative;
     }
     #console_output,
     #items {
@@ -488,6 +476,29 @@ fieldset#login button {
 
 
 /* @media (max-width: 40em) */
+
+
+/* 
+input:focus {
+    background: rgb(59, 4, 4)!important;
+}
+
+input:focus-visible {
+    background: rgb(52, 33, 224)!important;
+}
+
+input:focus-within {
+    background: rgb(19, 252, 240)!important;
+}
+
+input:active {
+    background: rgb(39, 255, 19)!important;
+}
+
+input:target {
+    background: rgb(146, 18, 125)!important;
+} 
+*/
 
 
 /* 

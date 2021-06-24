@@ -7,19 +7,14 @@ error_reporting( E_ALL );
 // include password & configfile
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
+// echo $password;
+// print_resp($resp);
 
-FolderList();
 
-// makes an option list of all folders 
-function FolderList(){
-    if (isset($_GET['folderlist'])){
-        $folder = glob("../*",GLOB_ONLYDIR);
-        foreach ($folder as $key => $value) {                                
-            echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
-        }
-    exit;
-    }
-}
+
+
+ASscanFolderList();
+
 
 
 // get favivon
@@ -27,6 +22,8 @@ $icon = get_icon();
 
 // sesssion management (login)
 session( $resp );
+
+
 
 // include phpseclib
 // https://phpseclib.com
@@ -112,7 +109,12 @@ function execPHP( $gitCommand ) {
     $output = $ssh->exec( $resp['cd'].$resp[$gitCommand] );
     // search for error strings, in cade add error class
     foreach ($resp['ConsoleError']  as $value) {
-        $error = (str_contains($output, $value)) ? 'error' : '';
+        if (str_contains($output, $value)){
+            $error = 'error';
+            break; // one error is enough to leave the foreach loop
+        }   else{
+            $error = '';
+        }
     }
     echo <<<HTML
         <div class=response>
@@ -122,6 +124,26 @@ function execPHP( $gitCommand ) {
         </div>
         HTML;
     CommandHistory($gitCommand);
+}
+
+
+// read parent folder & make an option list 
+function ASscanFolderList(){
+    if (isset($_GET['folderlist'])){
+        $folder = glob("../*",GLOB_ONLYDIR);
+        foreach ($folder as $key => $value) {                                
+            echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
+        }
+    exit;
+    }
+}
+
+
+// make an option list from preselected_folder[]
+function makeFolderList($resp){
+    foreach ($resp['preselected_folder'] as $key => $value) {                                
+        echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
+    }
 }
 
 
@@ -215,9 +237,8 @@ EscapeStringsForHTML($resp);
                     <div id=ChooseRepoURL>
                         <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
                         <datalist id="RepoURLs" role="listbox">
-                            <option value="KnowledgeBase">KnowledgeBase</option>
-                            <option value="gitPHP">gitPHP</option>
-                            <botton onclick="FolderList();">gitPHP</button>
+                            <?php makeFolderList($resp); ?>
+                            <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
 
 
 
@@ -330,7 +351,10 @@ function session( &$resp ) {
     if ( !isset( $_SESSION['last_visit'] ) ) {
         $_SESSION['last_visit'] = time();
     }
-    if ( isset( $_POST['name'] ) && isset( $_POST['password'] ) && $_POST['password'] === $resp['login_password'] && $_POST['name'] === $resp['login_name'] ) {
+    if ( isset( $_POST['name'] ) 
+            && isset( $_POST['password'] ) 
+            && $_POST['password'] === $resp['login_password'] 
+            && $_POST['name'] === $resp['login_name'] ) {
             $_SESSION['id'] = rand();
     }
     // destroy session
