@@ -9,10 +9,14 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 ![screenshot.png](screenshot.png) 
 
 ## ToDo List
-- [ ] git init
-- [ ] add SSH Key
-- [ ] custom Command datalist
+- [x] custom Command datalist
+- [x] mobile view
 - [x] command history
 - [x] one dark colors
 - [x] highlighted error messages
+- [ ] git init
+- [ ] add SSH Key
+- [ ] create new repo
+- [ ] scan folder for local repos
+- [ ] password protection
 - [ ] rewrite the $repl array?

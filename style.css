@@ -110,17 +110,39 @@ fieldset legend {
     display: none;
 }
 
+#header {
+    width: 100%;
+    position: fixed;
+    z-index: 5;
+    height: 35px;
+    background: var(--dark);
+}
+
+#logout {
+    /* position: fixed; */
+    /* z-index: 5; */
+    /* width: 100%; */
+    border: none;
+    display: block;
+    width: max-content;
+    float: right;
+}
+
+#logout label {
+    float: right;
+}
+
 
 /* DATALIST */
 
 #ChooseRepoURL {
-    position: fixed;
-    z-index: 5;
-    text-align: center;
+    /* text-align: center; */
     width: 100%;
-    height: 35px;
-    top: 35px;
-    background: var(--dark);
+    display: inline;
+    position: relative;
+    left: 40%;
+    /* height: 35px; */
+    /* top: 35px; */
 }
 
 #ChooseRepoURL input {
@@ -136,17 +158,20 @@ fieldset legend {
 }
 
 #ChooseRepoURL datalist {
-    position: relative;
-    top: 8px;
-    text-align: center;
-    margin: auto;
+    position: absolute;
+    /* top: 8px; */
+    left: -.5em;
+    width: max-content;
+    padding: .5em;
+    /* text-align: center; */
+    /* margin: auto; */
     text-align: left;
     background-color: var(--dark);
     border: 1px solid var(--darkgrey);
     border-radius: 0 0 5px 5px;
     border-top: none;
-    width: 200px;
-    padding: 0;
+    /* width: 200px; */
+    /* padding: 0; */
 }
 
 #ChooseRepoURL option {
@@ -329,6 +354,16 @@ input:focus {
     z-index: 15;
 }
 
+#debugcheckDIV {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+#debugcheckDIV label {
+    font-size: x-large;
+}
+
 #debug {
     display: none;
     position: absolute;
@@ -336,12 +371,30 @@ input:focus {
     right: 200px;
 }
 
+fieldset#login {
+    min-width: max-content;
+    height: max-content;
+    margin: auto;
+    border: 2px solid var(--lightgrey);
+    border-radius: 5px;
+    padding: 1em;
+}
+
+fieldset#login label {
+    width: 80px;
+    display: inline-block;
+}
+
+fieldset#login button {
+    float: right;
+}
+
 @media (max-width: 40em) {
     html,
     body {
         height: 100vh;
         margin: 0px;
-        margin-top: 5px;
+        /* margin-top: 5px; */
         /* overflow: hidden; */
     }
     body {
@@ -364,35 +417,55 @@ input:focus {
     }
     #form {
         grid-column: 1;
-        height: 60vh;
+        height: 65vh;
     }
     #console {
         grid-column: 2;
-        height: 30vh;
+        height: 33vh;
     }
     #console_output,
     #items {
         position: relative;
         overflow-y: auto;
         overflow-x: hidden;
-        height: 50vh;
+        /* height: 50vh; */
         width: 90vw;
         scrollbar-width: none;
     }
     #console_output {
         height: 25vh;
     }
+    #header {
+        width: 90vw;
+    }
     #items {
-        /* height: 60vh; */
+        height: 55vh;
     }
     #ChooseRepoURL {
         width: 90vw;
         height: 35px;
-        top: 35px;
+        top: 5px;
+        left: 0;
     }
     .item button {
         position: relative;
         display: block;
+    }
+    #debugcheckDIV {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
+    #debug {
+        right: 0px;
+        top: -300px;
+        width: 90vw;
+        height: max-content;
+        /* overflow-x: auto; */
+    }
+    .responsedebug {
+        width: max-content;
+        z-index: 100;
     }
 }
 
