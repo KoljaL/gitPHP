@@ -16,7 +16,7 @@ $ssh = new SSH2( $host );
 if ( !$ssh->login( $user, $password ) ) {
     throw new \Exception( 'Login failed' );
 }
- 
+
 
  
 // git config --get remote.origin.url 
@@ -189,7 +189,7 @@ function EscapeStringsForHTML(&$resp){
 <head>
     <meta charSet="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Git over PHP</title>
+    <title>Git via PHP</title>
     <meta name="description" content="Git over PHP" />
     <?= $icon ?>
     <link rel="stylesheet" href="style.css">
@@ -215,22 +215,11 @@ function EscapeStringsForHTML(&$resp){
 
                 <!-- ChooseRepoURL -->
                 <div id=ChooseRepoURL class=item>
-                    <!-- <div class=text> -->
-                    <!-- <h3>Repo folder</h3> -->
-                    <input autocomplete="off" role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
+                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
                     <datalist id="RepoURLs" role="listbox">
                         <option value="KnowledgeBase">KnowledgeBase</option>
                         <option value="gitPHP">gitPHP</option>
                     </datalist>
-
-                    <!-- <input type="text" list="RepoURLs" placeholder="test" data-name="relative path to local repository" id=RepoURL class=ff_input onmouseover="focus();old = value;" onmousedown="value = '';" onmouseup="value = old;">
-                        <datalist id="RepoURLs">
-                            <option value="KnowledgeBase">
-                            <option value="gitPHP">
-                        </datalist> -->
-
-
-                    <!-- </div> -->
                 </div>
 
                 <!-- remote.origin.url -->
@@ -254,7 +243,11 @@ function EscapeStringsForHTML(&$resp){
                 <div class=item>
                     <h3>Custom Command</h3>
                     <div class=text>
-                        <input type=text data-name="Custom Command" id=CustomCommand class=ff_input value="custom command">
+                        <input autocomplete="off" class="DropDownDataList ff_input" placeholder="Choose or type" data-name="Custom Command" role="combobox" list="" id="CustomCommand" name="CustomCommands">
+                        <datalist id="CustomCommands" role="listbox">
+                            <option value="git config --get remote.origin.url">git config --get remote.origin.url</option>
+                            <option value="git remote show origin">git remote show origin</option>
+                        </datalist>
                     </div>
                     <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
                 </div>

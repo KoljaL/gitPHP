@@ -49,68 +49,166 @@ function sendCommands(values) {
 
 // DATALIST
 // https: //dev.to/siddev/customise-datalist-45p0
-RepoURL.onfocus = function() {
-    RepoURLs.style.display = "block";
-    console.log("RepoURL");
-    console.log(RepoURL);
-    console.log(' ');
-};
+const DropDownDataLists = document.querySelectorAll("input.DropDownDataList");
+for (let i = 0; i < DropDownDataLists.length; i++) {
+    DropDownDataLists[i].addEventListener("click", function() {
+        var dddlInput = this;
+        var dddlInputName = dddlInput.name;
+        var dddlDatalist = document.getElementById(dddlInputName);
+        // console.log(' ');
+        // console.log(' ');
+        // console.log(dddlInput)
+        // console.log(dddlInputName)
+        // console.log(dddlDatalist)
 
-for (let option of RepoURLs.options) {
-    option.onclick = function() {
-        RepoURL.value = option.value;
-        RepoURLs.style.display = "none";
-        console.log("RepoURL");
-        console.log(RepoURL);
-        console.log(' ');
-    };
-}
+        // onFocus not needed, because of eventlistener()click?
+        // dddlInput.onfocus = function() {
+        dddlDatalist.style.display = "block";
+        // console.log("dddlInputonfocus");
+        // };
 
-RepoURL.oninput = function() {
-    currentFocus = -1;
-    var text = RepoURL.value.toUpperCase();
-    for (let option of RepoURLs.options) {
-        if (option.value.toUpperCase().indexOf(text) > -1) {
-            option.style.display = "block";
-        } else {
-            option.style.display = "none";
+        for (let option of dddlDatalist.options) {
+            option.onclick = function() {
+                dddlInput.value = option.value;
+                dddlDatalist.style.display = "none";
+                // console.log("option.onclick");
+                // console.log(option);
+                // console.log(' ');
+            };
         }
-    }
-};
-var currentFocus = -1;
-RepoURL.onkeydown = function(e) {
-    if (e.keyCode == 40) {
-        currentFocus++;
-        addActive(RepoURLs.options);
-    } else if (e.keyCode == 38) {
-        currentFocus--;
-        addActive(RepoURLs.options);
-    } else if (e.keyCode == 13) {
-        e.preventDefault();
-        if (currentFocus > -1) {
-            /*and simulate a click on the "active" item:*/
-            if (RepoURLs.options) RepoURLs.options[currentFocus].click();
+
+        dddlInput.oninput = function() {
+            currentFocus = -1;
+            var text = dddlInput.value.toUpperCase();
+            for (let option of dddlDatalist.options) {
+                if (option.value.toUpperCase().indexOf(text) > -1) {
+                    option.style.display = "block";
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        };
+        var currentFocus = -1;
+        dddlInput.onkeydown = function(e) {
+            if (e.keyCode == 40) {
+                currentFocus++;
+                addActive(dddlDatalist.options);
+            } else if (e.keyCode == 38) {
+                currentFocus--;
+                addActive(dddlDatalist.options);
+            } else if (e.keyCode == 13) {
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (dddlDatalist.options) dddlDatalist.options[currentFocus].click();
+                }
+            }
+        };
+
+        function addActive(x) {
+            if (!x) return false;
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = x.length - 1;
+            x[currentFocus].classList.add("active");
+            // console.log("active");
+            // console.log(x[currentFocus]);
+            // console.log(' ');
         }
-    }
-};
 
-function addActive(x) {
-    if (!x) return false;
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = x.length - 1;
-    x[currentFocus].classList.add("active");
-}
+        function removeActive(x) {
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("active");
+            }
+        }
 
-function removeActive(x) {
-    for (var i = 0; i < x.length; i++) {
-        x[i].classList.remove("active");
-    }
-}
+    }); // addEventListener("click")
+} // for DropDownDataLists
 // DATALIST
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // DATALIST
+// // https: //dev.to/siddev/customise-datalist-45p0
+// RepoURL.onfocus = function() {
+//     RepoURLs.style.display = "block";
+//     console.log("RepoURL");
+//     console.log(RepoURL);
+//     console.log(' ');
+// };
+
+// for (let option of RepoURLs.options) {
+//     option.onclick = function() {
+//         RepoURL.value = option.value;
+//         RepoURLs.style.display = "none";
+//         console.log("RepoURL");
+//         console.log(RepoURL);
+//         console.log(' ');
+//     };
+// }
+
+// RepoURL.oninput = function() {
+//     currentFocus = -1;
+//     var text = RepoURL.value.toUpperCase();
+//     for (let option of RepoURLs.options) {
+//         if (option.value.toUpperCase().indexOf(text) > -1) {
+//             option.style.display = "block";
+//         } else {
+//             option.style.display = "none";
+//         }
+//     }
+// };
+// var currentFocus = -1;
+// RepoURL.onkeydown = function(e) {
+//     if (e.keyCode == 40) {
+//         currentFocus++;
+//         addActive(RepoURLs.options);
+//     } else if (e.keyCode == 38) {
+//         currentFocus--;
+//         addActive(RepoURLs.options);
+//     } else if (e.keyCode == 13) {
+//         e.preventDefault();
+//         if (currentFocus > -1) {
+//             /*and simulate a click on the "active" item:*/
+//             if (RepoURLs.options) RepoURLs.options[currentFocus].click();
+//         }
+//     }
+// };
+
+// function addActive(x) {
+//     if (!x) return false;
+//     removeActive(x);
+//     if (currentFocus >= x.length) currentFocus = 0;
+//     if (currentFocus < 0) currentFocus = x.length - 1;
+//     x[currentFocus].classList.add("active");
+//     console.log("active");
+//     console.log(x[currentFocus]);
+//     console.log(' ');
+// }
+
+// function removeActive(x) {
+//     for (var i = 0; i < x.length; i++) {
+//         x[i].classList.remove("active");
+//     }
+// }
+// // DATALIST
 
 var debugcheck = document.getElementById("debugcheck");
 debugcheck.addEventListener("click", function(event) {
