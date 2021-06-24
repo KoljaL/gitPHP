@@ -2,11 +2,31 @@
 ini_set( 'display_errors', 1 );
 ini_set( 'display_startup_errors', 1 );
 error_reporting( E_ALL );
+ 
 
-// include passwordfile
+// include password & configfile
 require_once __DIR__.'/pw.php';
+require_once __DIR__.'/config.php';
 
-// https://github.com/spatie/ssh
+FolderList();
+
+// makes an option list of all folders 
+function FolderList(){
+    if (isset($_GET['folderlist'])){
+        $folder = glob("../*",GLOB_ONLYDIR);
+        foreach ($folder as $key => $value) {                                
+            echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
+        }
+    exit;
+    }
+}
+
+
+// get favivon
+$icon = get_icon();
+
+// sesssion management (login)
+session( $resp );
 
 // include phpseclib
 // https://phpseclib.com
@@ -16,75 +36,8 @@ $ssh = new SSH2( $host );
 if ( !$ssh->login( $user, $password ) ) {
     throw new \Exception( 'Login failed' );
 }
-$resp['login_name'] = 'test';
-$resp['login_password'] = 'test';
-$icon = get_icon();
-session( $resp );
- 
-// git config --get remote.origin.url 
-// git remote show origin
 
-// // generate new SSH key add it to ~/.ssh and show it
-// $cd = 'cd ~ &&';
-// execPHP( 'ssh-keygen -b 4096 -t rsa -C "xxx@xxx.de" -f ~/.ssh/id_rsa <<<y >/dev/null -N "phrase"' ,$cd);
-// execPHP( 'eval "$(ssh-agent -s && ssh-add ~/.ssh/id_rsa)"' ,$cd);
-// execPHP( 'cat ~/.ssh/id_rsa.pub' ,$cd);
-
-
-function execPHP( $gitCommand ) {
-    global $ssh,$resp;
-    // echo '<div class=response>/'.$resp['RepoURL'].'~$ '.$resp[$gitCommand] .'<br><pre>';
-
-    $output = $ssh->exec( $resp['cd'].$resp[$gitCommand] );
-
-
-    foreach ($resp['ConsoleError']  as $value) {
-        if (str_contains($output, $value)){
-            $error = 'error';
-        }else{
-            $error = '';
-        }
-    }
-
-    // if (empty($resp['RepoURL'])){
-    //      $error = 'error';
-    //      $output = $output."\nplease set repository";
-    // }
-    
-    
-    echo <<<HTML
-        <div class=response>
-            <span>$resp[RepoURL]:</span>
-            $resp[$gitCommand]\n
-            <pre class="$error">$output</pre>
-        </div>
-        HTML;
-    
-    CommandHistory($gitCommand);
-}
-
-
-
-$resp = [
-    'custom' => '/',
-    'add' => 'git add .',
-    'commit' => 'git commit -m "new commit" ',
-    'push' => 'git push origin main ',
-    'remote.origin.url' => 'git config --get remote.origin.url ',
-    'remote show origin' => 'git remote show origin ',
-    'last commit' => 'git log --stat -1',
-    'all commits' => 'git log --pretty=format:"%h - %an, %ar : %s"',
-    'abs_path' => dirname(dirname(__FILE__))
-];
-
-$resp['ConsoleError'] = array('fatal: not a git repository','command not found','syntax error');
-
-
-// git show -p origin/main
-// print_r($resp);
-// is_array( file_get_contents('php://input') ) &&
-    // print_resp(json_decode(file_get_contents('php://input'), true));
-
+// read POST data
 if(  !empty( json_decode(file_get_contents('php://input'), true) ) ) {
     // print_r(file_get_contents('php://input'));
     // exit;
@@ -92,18 +45,16 @@ if(  !empty( json_decode(file_get_contents('php://input'), true) ) ) {
     $resp['cd'] = "cd ".$resp['abs_path']."/".$resp['RepoURL']." && ";
 }
 
+// if a RepoURL is given, try to execute the command
 if(  isset( $resp['RepoURL'] ) && !empty( $resp['RepoURL'] ) ) {
     // print_resp(json_decode(file_get_contents('php://input'), true));
 
-
- 
-
-    
+    // send hidden data for debugging    
     echo "<div class=deb_resp style='display:none'>";
     print_resp($resp);
     echo "</div>";
 
-
+    // switch for commands
     switch ($resp['GitCommand']) {
 
     case 'custom':
@@ -145,31 +96,45 @@ exit;
     exit;
 }
 
+
+/**
+ * 
+ *  
+ *                  FUNCTIONS
+ * 
+ * 
+ */
+
+// execute SSH commands & echo console output & write CommandHistory
+function execPHP( $gitCommand ) {
+    global $ssh,$resp;
+    // execute SSH
+    $output = $ssh->exec( $resp['cd'].$resp[$gitCommand] );
+    // search for error strings, in cade add error class
+    foreach ($resp['ConsoleError']  as $value) {
+        $error = (str_contains($output, $value)) ? 'error' : '';
+    }
+    echo <<<HTML
+        <div class=response>
+            <span>$resp[RepoURL]:</span>
+            $resp[$gitCommand]\n
+            <pre class="$error">$output</pre>
+        </div>
+        HTML;
+    CommandHistory($gitCommand);
+}
+
+
+// write command log to file
 function CommandHistory($gitCommand){
     global $ssh,$resp;
-$filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
-$filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp[$gitCommand]."'";
- file_put_contents('history.log',$filecontent);
+    $filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
+    $filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp[$gitCommand]."'";
+    file_put_contents('history.log',$filecontent);
 }
  
-
-// // git commit and push
-// $cd = 'cd /www/htdocs/w01c010a/dev.rasal.de/KnowledgeBase &&';
-// execPHP( 'git add .',$cd );
-// execPHP( 'git commit -m "PHP Test1"' ,$cd);
-// // execPHP( 'git remote remove origin',$cd );
-// // execPHP( 'git remote add origin git@github.com:KoljaL/KnowledgeBase.git',$cd );
-// execPHP( 'git push origin main',$cd );
-
-// echo $ssh->exec( 'cd www && ls' );
-// echo $ssh->exec( $cd.$command );
-
-// echo $ssh->read( 'username@username:~$' );
-// $ssh->write( "ls -la\n" ); // note the "\n"
-// echo $ssh->read( 'username@username:~$' );
-// execPHP( $command, $cd );
+// choose randomly between two differend icons
 function get_icon(){
-
     if (rand(0, 1)) { 
         $icon = <<<HTML
         <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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" />
@@ -183,15 +148,12 @@ function get_icon(){
  }
 
  
-
-
+// nicely print ann aray for debugging
 function print_resp($resp){
     echo "<div class=responsedebug><h3 style='color:var(--pink)'>&#36;resp[]</h3><br><pre>";
     print_r($resp);
     echo "</pre></div>";
 }
-
-EscapeStringsForHTML($resp);
 // escape strings for HTML 
 function EscapeStringsForHTML(&$resp){
     foreach ($resp as $key => $value) {
@@ -202,6 +164,24 @@ function EscapeStringsForHTML(&$resp){
         }
     }
 }
+// escape strings for HTML 
+EscapeStringsForHTML($resp);
+
+
+
+
+
+/**
+ * 
+ *  
+ *                  HTML
+ * 
+ * 
+ */
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -237,6 +217,10 @@ function EscapeStringsForHTML(&$resp){
                         <datalist id="RepoURLs" role="listbox">
                             <option value="KnowledgeBase">KnowledgeBase</option>
                             <option value="gitPHP">gitPHP</option>
+                            <botton onclick="FolderList();">gitPHP</button>
+
+
+
                         </datalist>
                     </div>
 

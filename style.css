@@ -152,7 +152,7 @@ fieldset legend {
     background-color: var(--dark);
     padding: 0;
     width: 200px;
-    outline: none;
+    /* outline: red; */
     color: var(--orange);
     border-bottom: none;
 }
@@ -244,9 +244,11 @@ datalist#CustomCommands {
     background-position: left center;
 }
 
+
+/* 
 .item #CustomCommand {
     width: 100%;
-}
+} */
 
 .item button {
     position: absolute;
@@ -289,7 +291,7 @@ input.ff_input {
     display: block;
     color: var(--dark);
     background: var(--lightgrey);
-    width: 200px;
+    width: 100%;
     margin-top: .5em;
 }
 
@@ -314,9 +316,24 @@ input {
     padding: 2px 3px;
 }
 
-textarea:focus,
 input:focus {
-    outline: none;
+    background: rgb(59, 4, 4)!important;
+}
+
+input:focus-visible {
+    background: rgb(52, 33, 224)!important;
+}
+
+input:focus-within {
+    background: rgb(19, 252, 240)!important;
+}
+
+input:active {
+    background: rgb(39, 255, 19)!important;
+}
+
+input:target {
+    background: rgb(146, 18, 125)!important;
 }
 
 .response {
