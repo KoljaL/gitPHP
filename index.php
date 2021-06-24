@@ -213,8 +213,14 @@ EscapeStringsForHTML($resp);
     <title>Git via PHP</title>
     <meta name="description" content="Git over PHP" />
     <?= $icon ?>
+
+    <link rel="preconnect" href="https://fonts.rasal.de" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono" />
+    <link rel="stylesheet" href="https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono" media="print" onload="this.media='all'" />
+
     <link rel="stylesheet" href="style.css">
     <style type="text/css">
+    /* < ?php echo file_get_contents('style.css')?> */
     </style>
 
 </head>
@@ -331,7 +337,7 @@ EscapeStringsForHTML($resp);
     </div>
 
     <script>
-
+    // < ?php echo file_get_contents('script.js')?>
     </script>
     <script src="script.js"></script>
 </body>
