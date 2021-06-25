@@ -141,6 +141,7 @@ DDDL();
 
 
 // loadingDots("console", true);
+
 function loadingDots(divID, switchOn) {
     // switch off
     if (switchOn == false) {
@@ -159,7 +160,8 @@ function loadingDots(divID, switchOn) {
     style.id = "styleLoadingWindow";
     style.innerHTML = `
         // .loading-frame {position: relative;left: 0;right: 0;top: -50vh;z-index: 4;}
-        .loading-frame {position: absolute;right: 50px;top: 50px;width: max-content;height: max-content;z-index: 4;}
+        .loading-frame {position: absolute;right: 0;top: 0;width: 100%;height: 100%;z-index: 4;background-color: rgba(0, 0, 0, 0.2);}
+        // .loading-frame {position: absolute;right: 50px;top: 50px;width: max-content;height: max-content;z-index: 4;}
         .loading-track {height: 50px;display: inline-block;position: absolute;top: calc(50% - 50px);left: 50%;}
         .loading-dot {height: 5px;width: 5px;border-radius: 100%;opacity: 0;}
         .color0{background: #be5046;}

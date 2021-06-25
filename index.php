@@ -7,17 +7,12 @@ error_reporting( E_ALL );
 // include password & configfile
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
-// require_once __DIR__.'/spyc.php';
 // echo $password;
 // print_resp($resp);
 // print_r($resp);
 
 
-// $resp = spyc_load_file('config.yaml');
-// print_r($resp);
-// exit;
 
-// $resp['abs_path'] = dirname(dirname(__FILE__));
 // asyncron function to scall parent folder 
 // and add folders as list of options to dropdown menu 
 ASscanFolderList();
@@ -244,16 +239,15 @@ EscapeStringsForHTML($resp);
     <title>Git via PHP</title>
     <meta name="description" content="Git over PHP" />
     <?= $icon ?>
-
+    <!-- 
     <link rel="preconnect" href="https://fonts.rasal.de" crossorigin />
     <link rel="preload" as="style" href="https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono" />
-    <link rel="stylesheet" href="https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono" media="print" onload="this.media='all'" />
-
+    <link rel="stylesheet" href="https://fonts.rasal.de/?font=LibreBaskerville,Sentinel,OldStandardTT,NewComputerModern,NewComputerModern,JetBrainsMono" media="print" onload="this.media='all'" /> 
+    -->
     <link rel="stylesheet" href="style.css">
     <style type="text/css">
     /* < ?php echo file_get_contents('style.css')?> */
     </style>
-
 </head>
 <body>
     <div id="debug">
@@ -269,6 +263,7 @@ EscapeStringsForHTML($resp);
             <legend>Git Actions</legend>
             <div id="items">
 
+                <!-- HEADER -->
                 <div id=header class=item>
                     <!-- ChooseRepoURL -->
                     <div id=ChooseRepoURL>
@@ -276,12 +271,8 @@ EscapeStringsForHTML($resp);
                         <datalist id="RepoURLs" role="listbox">
                             <?php makeFolderList($resp); ?>
                             <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
-
-
-
                         </datalist>
                     </div>
-
                     <!-- LOGOUT -->
                     <div id="logout">
                         <form action='' method='post'>
@@ -353,10 +344,6 @@ EscapeStringsForHTML($resp);
                     </div>
                     <button onclick="sendCommands('push');" data-tooltip="<?= $resp['commands']['push']['command'] ?>">push</button>
                 </div>
-
-
-
-
 
             </div>
         </fieldset>
