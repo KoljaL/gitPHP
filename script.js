@@ -6,11 +6,11 @@ function sendCommands(values) {
     }
     loadingDots("console", true);
     var params = new Object();
-    params.CustomCommand = document.getElementById('CustomCommand').value;
-    params.CommitMessage = document.getElementById('CommitMessage').value;
+    params.custom_command_inputID = document.getElementById('custom_command_inputID').value;
+    params.commit_inputID = document.getElementById('commit_inputID').value;
     params.RepoURL = document.getElementById('RepoURL').value;
     params.GitCommand = values;
-    // console.log(document.getElementById('CommitMessage'));
+    // console.log(document.getElementById('commit_inputID'));
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -149,16 +149,16 @@ DDDL();
 
 
 
-
+//
 // loadingDots("console", true);
-
+//
 function loadingDots(divID, switchOn) {
     // switch off
     if (switchOn == false) {
-        // var spinningFrame = document.getElementById(divID);
-        // spinningFrame.removeChild(document.getElementById("divLoadingFrame"));
-        // spinningFrame.removeChild(document.getElementById("styleLoadingWindow"));
-        // return;
+        var spinningFrame = document.getElementById(divID);
+        spinningFrame.removeChild(document.getElementById("divLoadingFrame"));
+        spinningFrame.removeChild(document.getElementById("styleLoadingWindow"));
+        return;
     }
     // do nothing 
     if (document.getElementById("divLoadingFrame") != null) {
@@ -228,17 +228,35 @@ function eventFire(el, etype) {
 
 
 
+
+
+//
+// DEBUG WINDOW
+//
 var debugcheck = document.getElementById("debugcheck");
-debugcheck.addEventListener("click", function(event) {
-    // console.log(debugcheck.checked)
-    if (debugcheck.checked) {
-        document.getElementById("debug").style.display = 'block';
-    } else {
-        document.getElementById("debug").style.display = 'none';
-
-    }
-
+var debugwindow = document.getElementById("debug");
+var debugconsole = document.getElementById("console_output");
+debugconsole.addEventListener("contextmenu", function(event) {
+    toggleDebug();
 });
+debugcheck.addEventListener("click", function(event) {
+    toggleDebug();
+});
+debugwindow.addEventListener("dblclick", function(event) {
+    toggleDebug();
+});
+
+function toggleDebug() {
+    if (debugcheck.checked) {
+        debugwindow.style.display = 'block';
+    } else {
+        debugwindow.style.display = 'none';
+    }
+}
+
+
+
+
 
 
 

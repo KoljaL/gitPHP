@@ -97,6 +97,7 @@ fieldset legend {
     margin: 0;
 }
 
+#debug,
 #console_output,
 #items {
     position: relative;
@@ -106,6 +107,7 @@ fieldset legend {
     scrollbar-width: none;
 }
 
+#debug::-webkit-scrollbar,
 #ChooseRepoURL datalist::-webkit-scrollbar,
 #items::-webkit-scrollbar,
 #console_output::-webkit-scrollbar {
@@ -377,6 +379,9 @@ input:focus {
     position: absolute;
     top: -350px;
     right: 200px;
+    z-index: 200;
+    overflow: auto;
+    height: calc(99vh + 350px);
 }
 
 fieldset#login {
@@ -439,7 +444,7 @@ fieldset#login button {
         overflow-x: hidden;
         /* height: 50vh; */
         width: 90vw;
-        scrollbar-width: none;
+        /* scrollbar-width: none; */
     }
     #console_output {
         height: 25vh;

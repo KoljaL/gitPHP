@@ -4,123 +4,133 @@ ini_set( 'display_startup_errors', 1 );
 error_reporting( E_ALL );
  
 
+//
 // include password & configfile
+//
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
-// echo $password;
-// print_resp($resp);
-// print_r($resp);
 
-
-
-// asyncron function to scall parent folder 
-// and add folders as list of options to dropdown menu 
-ASscanFolderList();
-
-
-
-// get favivon
-$icon = get_icon();
-
-// sesssion management (login)
-session( $resp );
-
-
-
-// include phpseclib
-// https://phpseclib.com
+//
+// include phpseclib.com
+//
 require_once __DIR__.'/vendor/autoload.php';
 use phpseclib3\Net\SSH2;
-$ssh = new SSH2( $host );
-if ( !$ssh->login( $user, $password ) ) {
-    throw new \Exception( 'Login failed' );
+
+
+
+
+
+
+
+//
+// asyncron function to scall parent folder
+// and add folders as list of options to dropdown menu
+//
+ASscanFolderList();
+
+//
+// get favivon
+//
+$icon = get_icon();
+
+//
+// sesssion management (login)
+//
+session( $resp );
+
+//
+// if POST data in JSON are available 
+//
+ASreadPOSTandExecuteCommand($resp);
+
+
+/**
+*
+*
+* FUNCTIONS
+*
+*
+*/
+
+
+//
+// if POST data in JSON are available 
+//
+function ASreadPOSTandExecuteCommand(&$resp){
+
+    if( !empty( json_decode(file_get_contents('php://input'), true) ) ) {
+        // print_r(file_get_contents('php://input'));
+        // exit;
+        
+        // merge the decoded POST data with array from config file
+        $resp = array_merge(json_decode(file_get_contents('php://input'), true),$resp);
+        $resp['cd'] = "cd ".$resp['abs_path']."/".$resp['RepoURL']." && ";
+        
+        
+        //
+        // complete commands with data from form (*_inputID)
+        //
+
+        // replace preset message for commit 
+        $preset_message = $resp['commands']['commit']['formfield']['value'];
+        $resp['commands']['commit']['command'] = str_replace($preset_message, $resp['commit_inputID'], $resp['commands']['commit']['command']);
+        
+        // get custom command from input field
+        $resp['commands']['custom_command']['command'] = $resp['custom_command_inputID'];
+        
+        // send command name from form (same as key in config)
+        // to execute the matching command
+        execPHP( $resp['GitCommand'] );
+        
+        exit;
+    } 
 }
 
-// read POST data
-if(  !empty( json_decode(file_get_contents('php://input'), true) ) ) {
-    // print_r(file_get_contents('php://input'));
-    // exit;
-    $resp = array_merge($resp,json_decode(file_get_contents('php://input'), true));
-    $resp['cd'] = "cd ".$resp['abs_path']."/".$resp['RepoURL']." && ";
-}
 
-// if a RepoURL is given, try to execute the command
-if(  isset( $resp['RepoURL'] ) && !empty( $resp['RepoURL'] ) ) {
-    // print_resp(json_decode(file_get_contents('php://input'), true));
 
-    // send hidden data for debugging    
+
+//
+// execute SSH commands & echo console output & write CommandHistory
+//
+function execPHP( $gitCommand ) {
+    global $resp;
+    
+    
+    // make SSH connection
+    global $host, $user, $password;// just fur development 
+    $ssh = new SSH2( $host );
+    if ( !$ssh->login( $user, $password ) ) {
+        throw new \Exception( 'Login failed' );
+    }
+    
+
+
+    // send hidden data for debugging
     echo "<div class=deb_resp style='display:none'>";
     print_resp($resp);
     echo "</div>";
 
-    // switch for commands
-    switch ($resp['GitCommand']) {
 
-    case 'custom':
-        $resp['custom'] = $resp['CustomCommand'];
-        execPHP(  'custom' );
-        break;
-
-    case 'add':
-        execPHP(  'add' );
-        break;
-
-    case 'commit':
-        $resp['commit'] = str_replace('new commit',$resp['CommitMessage'] , $resp['commit']);
-        execPHP(  'commit' );
-        break;
-
-    case 'push':
-        execPHP(  'push' );
-        break;
-
-    case 'remote.origin.url':
-        execPHP(  'remote.origin.url' );
-        break;
-
-    case 'remote show origin':
-        execPHP(  'remote show origin' );
-        break;
-     
-    default:
-        echo 'no command found';
-    }
-exit;
-}elseif(  isset( $resp['RepoURL'] ) && empty( $resp['RepoURL'] ) ) {
-    echo <<<HTML
-        <div class=response>
-            <pre class=error>\nplease set repository</pre>
-        </div>
-        <script> loadingDots("console", false);</script>
-        HTML;
-    exit;
-}
-
-
-/**
- * 
- *  
- *                  FUNCTIONS
- * 
- * 
- */
-
-// execute SSH commands & echo console output & write CommandHistory
-function execPHP( $gitCommand ) {
-    global $ssh,$resp;
     // execute SSH
     $output = $ssh->exec( $resp['cd'].$resp['commands'][$gitCommand]['command'] );
     // $output = $resp['cd'].$resp['commands'][$gitCommand]['command'];
+    // $output = $gitCommand;
+
+
     // search for error strings, in cade add error class
-    foreach ($resp['ConsoleError']  as $value) {
+    foreach ($resp['ConsoleError'] as $value) {
         if (str_contains($output, $value)){
             $error = 'error';
             break; // one error is enough to leave the foreach loop
-        }   else{
+        } else{
             $error = '';
         }
     }
+
+    // prepare var for heredoc
     $output_command = $resp['commands'][$gitCommand]['command'];
+
+    // console output
     echo <<<HTML
         <div class=response>
             <span>$resp[RepoURL]:</span>
@@ -128,93 +138,111 @@ function execPHP( $gitCommand ) {
             <pre class="$error">$output</pre>
         </div>
         HTML;
+
+    // write command in logfile 
     CommandHistory($gitCommand);
 }
 
 
-// read parent folder & make an option list 
+//
+// read parent folder & make an option list
+//
 function ASscanFolderList(){
     if (isset($_GET['folderlist'])){
         $folder = glob("../*",GLOB_ONLYDIR);
-        foreach ($folder as $key => $value) {                                
+        foreach ($folder as $key => $value) {
             echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
         }
-    exit;
+        exit;
     }
 }
 
 
-// make an option list from preselected_folder[]
-function makeFolderList($resp){
-    foreach ($resp['preselected_folder'] as $key => $value) {                                
-        echo "<option value='".basename($value)."'>".basename($value)."</option>\n";
+//
+// make an option list from preselected_folder[] // was $resp['preselected_folder']
+//
+function makeOptionList($array){
+    $option ='';
+    foreach ($array as $value) {
+        $option .= "<option value='".basename($value)."'>".basename($value)."</option>\n";
     }
+    return $option;
 }
 
 
+//
 // write command log to file
+//
 function CommandHistory($gitCommand){
     global $ssh,$resp;
     $filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
     $filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp['commands'][$gitCommand]['command']."'";
     file_put_contents('history.log',$filecontent);
 }
- 
+
+//
 // choose randomly between two differend icons
+//
 function get_icon(){
-    if (rand(0, 1)) { 
+    if (rand(0, 1)) {
         $icon = <<<HTML
-        <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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" />
+            <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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" />
         HTML;
-    }else{    
-        $icon = <<<HTML
-        <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAfCAYAAACGVs+MAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TtSKVDhYs4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi5uak6CIl/i8ptIj14Lgf7+497t4BQr3MNKtrHNB020wl4mImuyoGXtGDQYQQQVRmljEnSUl0HF/38PH1LsazOp/7c/SrOYsBPpF4lhmmTbxBPL1pG5z3icOsKKvE58RjJl2Q+JHrisdvnAsuCzwzbKZT88RhYrHQxkobs6KpEU8RR1VNp3wh47HKeYuzVq6y5j35C4M5fWWZ6zSHkcAiliBBhIIqSijDRoxWnRQLKdqPd/APuX6JXAq5SmDkWEAFGmTXD/4Hv7u18pMTXlIwDnS/OM7HCBDYBRo1x/k+dpzGCeB/Bq70lr9SB2Y+Sa+1tOgRENoGLq5bmrIHXO4AkSdDNmVX8tMU8nng/Yy+KQsM3AJ9a15vzX2cPgBp6ip5AxwcAqMFyl7v8O7e9t7+PdPs7wdwlHKmKe334gAAAAZiS0dEADIAZAD/QH7c6AAAAAlwSFlzAAAuIwAALiMBeKU/dgAABm5JREFUSMetl1+MVVcVxn9r7X3OvXcGxuHcKaQEmaqJpaSRxGJSqLH1hTSVNDIxmqopBaS2Ppim1TZtqiHRFmtpQjBpmoKtmtZYH6hpQBNemuC/JtI/PlALJqZgClq8B2SYO/eec/ZePpzLBJChKLPezs7KWt9a+1v7W0e4TOtk7UVd7POG3FbBOLACMRITBAORP0ezIwq/DvCr8Tz/5+XElQ9yOJ4tWKnodyqx2wsENUMAD1TUyRsCBmBCD/AYKryi8L1FnfzA/wXgH+1stDT5sRebMOrABijQNFCMOPB1AmZCwAgIXgwFKgOQ3RW2aTzPT102gPey7EZEXsJsKUBE8AMAguGEmeTBhEANSAA9J6IZVCKIcdSELy3tdF77QACdh7I15WF52YwhGThUESxC4sAGhyog0SgDiApRQA3EwHnDoiAKwc4msW4YZ93i7fm+WQGc+Xn7phjYBwzFYIjW91r0DO9BveCbtW8sjRhlpi/OQQg1UHVQ9Q2R2j8GwwLEQLcqWbPw3vz3/wVg8oX21cABYLFFCMHwqbxd9uyQ83zGN6SNGrEQYoCqAPXgPKgzAKoSkobURAl0yp7tr0quRVjuXA0sRo7FSla2N3eOM+BUXVFkh6gtVm+IMxpDIGrbsk35RNJgHGFj1ZNO1TfMbDJt8SZmb6jyhqi8GSqZVAcidIhsBMZHN+QTaUu2JQ1BpL6qJJXFqrbjvA5MvjC2qpiOf1AHSVNQR32ZyMqhL3Zen+HHzuwqUVnovf1lZH0ez+POrhFV569zCe+PfDU/cfa8+4v2DTFwwKwmpQw4FEpWj97V+aMHQOPj6ZBg0Sh7dVuRc6g+sPbm/ARw4mKT0/7a6QgcvPA8hpmZAIQYDecF59gK3OI772XXxEJuKUvDKYQIvaImnW/KcuB1rsB6q2x5Q8E5oazAqWCAU7u5m2fXeIO1XTNIoAQ0AT8Eqhz3KXu5QmuNsjdUcrxb2NXJsGBSz2VEKAtbqyrcqg58Ao0WNFtGkgres2X+WCe/UgDDWZ6HyBafDkbWhGjQL4wYuVXLkiWqkCSQelAFr1Y54UXmyETsRYGqflUHWuIF71miIrIiSQQRoayEEARMjs27Kp+aKwCji/IpJ3bMDd5ps3oszWSF33/E49KABcNMUIHQjyeZY9v7jk41UxnUH4lRUOfxd7/ThNgfDGiEMkApn5hrAPe+LcuQtP6oioFqVSgm0zQy8B8CHJiDofmS7frY2Fwlbz/3kTE0FVxaC0ZhUAToxWmlKg5x+gRYCY0F0BgeSOCZdXMFwMreunrOe5CkkM4owCGlKg6SCvQnoXcSKKA3BUW8f8G2zF0xAZ8dc1h1P+UZoIJyGgi1TmMHPXzyVaaHv4IKdCN4gQKAZRLaT8Gu+64EgJ6eeIr0X8sorY4dYy0GIpBMvSrtO06OYJZjUldbBGj5mZXGnLxM09+T75r3/v+SOLvz9ELMnsFYJ5MlNt9DACkjBMOGfcBJJgDZhtPPSWQDUyVEnhEvvzSVJ4EbLHVgVjBV7ZGR5DcGb+U/Gbnootn+QmclkRut5T6LyFrpVindCoY91qq1WopQP4hN/3z+s5GNZ9mwxYL1EMEaeo/14yrKajXwFhhSxJSmTlDEnWDfnrXsyh424UcSbEL6ITUn2Ly6m3KyRE4W0I+Y1x7ClpmFJH9+5KicKrYyVdXkSOQxG05vMidfltJOWEOR1NVveS8+O7vy+KeZn2BNVzO95ZFE6++WYqnW11+ErflPR44yWO9r3TZ7QofdWhE+RTDkTPVYZ3d79ej6f1/nutUdNpw0afm/iupvZ8sfE17TbgXTAfoBGUmw+Und8kSRYFjkT1JVT1x0Kb1t7d8+fO2Rg79LzZZSGmPd3pM6Nf3dB/K7epdDvIev36PxTBnEK+KUpOUpJBDLgDelTPTooY9e/+lXdo//fda1/PvZ0x9v0twXCOMOJRBzRfekJNMIS8zs9vvy9fFiAH6Q7dQUHwRFgIISQaioMOyIx615MN98+LwxvTDIo/k3DgusVnS/ooBlgXBnn/7Xzexzl+qAQxERjEhFQKihKLI/IV19YfLzOHCuPZBvPAbc/MNs5zcV97ggw6kkGEZBOSuABI/YQHJrAFNGfPSh/O7tsz5Ul6rowXzzDjGWJLhHzOzdvvVPmdX/oRezrkxbQdE17F1BHknwS76Vb9p+qRz/AcNW8kmQ/dt/AAAAAElFTkSuQmCC" />
+    }else{
+    $icon = <<<HTML
+            <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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" />
         HTML;
     }
     return $icon;
- }
-
- 
-// nicely print ann aray for debugging
-function print_resp($resp){
-    echo "<div class=responsedebug><h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br><pre>";
-    pprint($resp);
-    echo "</pre></div>";
 }
 
+//
+// nicely print ann aray for debugging
+//
+function print_resp($resp){
+    echo "<div class=responsedebug>
+        <h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br>
+        <pre>";
+            pprint($resp);
+            echo "</pre>
+    </div>";
+}
 
+//
+// smallest prettyprint i ever done :-)
+//
 function pprint($array) {
     $array_str = print_r($array, true);
     $lines = explode("\n", $array_str);
     foreach ($lines as $line) {
         $line = str_replace(array('Array','(',')'), '', $line);
         $line = str_replace('[', '<span style="color: var(--orange)">', $line);
-        $line = str_replace(']', '</span>', $line); 
+        $line = str_replace(']', '</span>', $line);
         if (trim($line) != ''){
             $indentation = (strlen($line) - strlen(ltrim($line))) / 4;
             $space ="";
-            for ($i = 1;$i < $indentation/2;$i++){
-                // echo "   ";
-                $space .="    ";
-            }
-            echo "<pre style='margin:0'>".$space.trim($line)."</pre>";
+            for ($i = 1;$i < $indentation/2;$i++){ 
+                $space .="    " ; 
+                } 
+            echo "<pre style='margin:0'>" .$space.trim($line)."</pre>";
         }       
     }
 }
 
-
-// escape strings for HTML 
-function EscapeStringsForHTML(&$resp){
-    foreach ($resp as $key => $value) {
-        if(is_array($value)){
-            EscapeStringsForHTML($value);
-        }else{
-            $resp[$key] = htmlspecialchars($value);
-        }
-    }
-}
-// escape strings for HTML 
-EscapeStringsForHTML($resp);
+//          OLD
+// // escape strings for HTML 
+// function EscapeStringsForHTML(&$resp){
+//     foreach ($resp as $key => $value) {
+//         if(is_array($value)){
+//             EscapeStringsForHTML($value);
+//         }else{
+//             $resp[$key] = htmlspecialchars($value);
+//         }
+//     }
+// }
+// // escape strings for HTML 
+// EscapeStringsForHTML($resp);
+//          OLD
 
 
 
@@ -227,10 +255,6 @@ EscapeStringsForHTML($resp);
  * 
  * 
  */
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -251,14 +275,17 @@ EscapeStringsForHTML($resp);
     </style>
 </head>
 <body>
+    <!-- DEBUG OUTPUT -->
     <div id="debug">
         <?= print_resp($resp)?>
     </div>
+    <!-- DEBUG ICON -->
     <div id=debugcheckDIV>
         <label for=debugcheck>&#128027;</label>
         <input type="checkbox" name="debugcheck" id="debugcheck" style="display:none">
     </div>
 
+    <!-- CONTENT -->
     <div id="content">
         <fieldset id=form>
             <legend>Git Actions</legend>
@@ -270,10 +297,11 @@ EscapeStringsForHTML($resp);
                     <div id=ChooseRepoURL>
                         <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
                         <datalist id="RepoURLs" role="listbox">
-                            <?php makeFolderList($resp); ?>
+                            <?php echo makeOptionList($resp['preselected_folder']); ?>
                             <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
                         </datalist>
                     </div>
+
                     <!-- LOGOUT -->
                     <div id="logout">
                         <form action='' method='post'>
@@ -284,70 +312,11 @@ EscapeStringsForHTML($resp);
                     </div>
                 </div>
 
-
-                <!-- remote.origin.url -->
-                <div class=item>
-                    <h3>Show the remote origin URL</h3>
-                    <div class=text>
-                    </div>
-                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['commands']['remote.origin.url']['command'] ?>">origin.url</button>
-                </div>
-                <!-- remote show origin  -->
-                <div class=item>
-                    <h3>Show info about remote origin</h3>
-                    <div class=text>
-                        Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).
-                        <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
-                    </div>
-                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['commands']['remote show origin']['command'] ?>">show&nbsp;origin</button>
-                </div>
-
-                <!-- CUSTOM -->
-                <div class=item>
-                    <h3>Custom Command</h3>
-                    <div class=text>
-                        <input autocomplete="off" class="DropDownDataList ff_input" placeholder="Choose or type" data-name="Custom Command" role="combobox" list="" id="CustomCommand" name="CustomCommands">
-                        <datalist id="CustomCommands" role="listbox">
-                            <option value="git config --get remote.origin.url">git config --get remote.origin.url</option>
-                            <option value="git remote show origin">git remote show origin</option>
-                        </datalist>
-                    </div>
-                    <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['commands']['custom']['command'] ?>">custom</button>
-                </div>
-
-                <!-- ADD -->
-                <div class=item>
-                    <h3>Add all files to git index</h3>
-                    <div class=text>
-                        This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
-                        <a href="https://git-scm.com/docs/git-add" target="_blanc"></a>
-                    </div>
-                    <button onclick="sendCommands('add');" data-tooltip="<?= $resp['commands']['add']['command'] ?>">add</button>
-                </div>
-
-
-                <!-- COMMIT -->
-                <div class=item>
-                    <h3>Commit all changes to the local repository</h3>
-                    <div class=text>Create a new commit containing the current contents of the index and the given log message describing the changes.
-                        <a href="https://git-scm.com/docs/git-commit" target="_blanc"></a>
-                        <input type=text data-name="Commit Message" id=CommitMessage class=ff_input value="new commit">
-                    </div>
-                    <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commands']['commit']['command'] ?>">commit</button>
-                </div>
-
-                <!-- PUSH -->
-                <div class=item>
-                    <h3>Push the local repository to the the remote main branch</h3>
-                    <div class=text>
-                        Updates remote refs using local refs, while sending objects necessary to complete the given refs.
-                        <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
-                    </div>
-                    <button onclick="sendCommands('push');" data-tooltip="<?= $resp['commands']['push']['command'] ?>">push</button>
-                </div>
-
+                <!-- COMMAND ITEMS -->
+                <?php makeItemsForCommands($resp); ?>
             </div>
         </fieldset>
+        <!-- CONSOLE -->
         <fieldset id=console>
             <legend>Console</legend>
             <div id="console_output">
@@ -363,8 +332,80 @@ EscapeStringsForHTML($resp);
 </html>
 
 <?php 
+
+
+
+
 /**
+ * 
+ * makes for every command in config file an item on frontend
+ * 
+ */
+function makeItemsForCommands($resp){    
+    $html = '';
+    foreach ($resp['commands'] as $c_name => $c_value) {
+        // echo $c_value['tooltip']."<br>";
+        $title  = $c_value['title'];
+        $link = (!empty($c_value['infolink']))?'<a href="$c_value[infolink]" target="_blanc"></a>':'';
+        $tooltip = htmlspecialchars($c_value['tooltip']);
+        $button =htmlspecialchars($c_value['button']);
+
+        //
+        // make inputfield an datalist for custom commands
+        //
+        if ($c_name == 'custom_command'){
+            $placeholder =htmlspecialchars($c_value['formfield']['placeholder']);
+            $options = makeOptionList($resp['CustomCommandList']);
+            $datalist_custom_command = <<< HTML
+                <input autocomplete="off" class="DropDownDataList ff_input" placeholder="$placeholder" data-name="$title" role="combobox" list="" id="{$c_name}_inputID" name="{$c_name}_dlID">
+                <datalist id="{$c_name}_dlID" role="listbox"> 
+                    $options
+                </datalist>
+                HTML;
+        }else{
+            $datalist_custom_command = '';
+        }
+        
+        //
+        // make inputfield an datalist for custom commands
+        //
+        if ($c_name == 'commit'){
+            $value = htmlspecialchars($c_value['formfield']['value']);
+
+            $input_commit = <<< HTML
+                <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
+                HTML;
+        }else{
+            $input_commit = '';
+        }
+        
+        //
+        // make item for every command 
+        //
+        $html .= <<<HTML
+        <div class=item>
+            <h3>$title</h3>
+            <div class=text>
+                $c_value[text]
+                $link
+                $datalist_custom_command 
+                $input_commit
+            </div>
+            <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
+        </div>
+        HTML;
+    }
+    echo $html;
+}
+    
+
+
+
+
+/**
+ * 
  * session management
+ * 
  */
 function session( &$resp ) {
     session_start();
@@ -411,7 +452,6 @@ function session( &$resp ) {
                 <link rel="stylesheet" href="style.css">
                 <style type="text/css">
                 </style>
-
             </head>
             <body id=body>
                 <div id="content">
