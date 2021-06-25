@@ -1,23 +1,46 @@
-'user' : 
-    'test' : 
-        'login_password' : 'test'
-'commands' : 
-    'custom' : '/'
-    'add' : 'git add .'
-    'commit' : 'git commit -m "new commit" '
-    'push' : 'git push origin main '
-    'remote.origin.url' : 'git config --get remote.origin.url '
-    'remote show origin' : 'git remote show origin '
-    'last commit' : 'git log --stat -1'
-    'all commits' : 'git log --pretty=format:"%h - %an, %ar : %s"'
+user : 
+    test : 
+        login_password : test1
+commands : 
 
-'abs_path' : dirname(dirname(__FILE__))
-'preselected_folder' : 
-    'gitPHP'
-    'KnowledgeBase'
-'ConsoleError' : 
-    'fatal'
-    'not a git repository'
-    'command not found'
-    'syntax error'
+    custom : 
+        command: /
+        tooltip: "executes /"
+
+    add :  
+        command: git add .
+        tooltip: "executes git add ."
+
+    commit : 
+        command:  git commit -m "new commit" 
+        tooltip: "executes  git commit -m "new commit" "
+    push :  
+        command: git push origin main 
+        tooltip: "executes git push origin main "
+
+    remote.origin.url :  
+        command: git config --get remote.origin.url 
+        tooltip: "executes git config --get remote.origin.url "
+
+    remote show origin :  
+        command: git remote show origin 
+        tooltip: "executes git remote show origin "
+
+    last commit :  
+        command: git log --stat -1
+        tooltip: "executes git log --stat -1"
+
+    all commits:  
+        command: "git log --pretty=format:"%h - %an, %ar : %s""
+        tooltip: 'executes "git log --pretty=format:"%h - %an, %ar : %s""'
+
+abs_path : {dirname(dirname(__FILE__))}
+preselected_folder : 
+    gitPHP
+    KnowledgeBase
+ConsoleError : 
+    fatal
+    not a git repository
+    command not found
+    syntax error
  

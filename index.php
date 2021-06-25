@@ -7,12 +7,19 @@ error_reporting( E_ALL );
 // include password & configfile
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
+// require_once __DIR__.'/spyc.php';
 // echo $password;
 // print_resp($resp);
+// print_r($resp);
 
 
+// $resp = spyc_load_file('config.yaml');
+// print_r($resp);
+// exit;
 
-
+// $resp['abs_path'] = dirname(dirname(__FILE__));
+// asyncron function to scall parent folder 
+// and add folders as list of options to dropdown menu 
 ASscanFolderList();
 
 
@@ -64,7 +71,7 @@ if(  isset( $resp['RepoURL'] ) && !empty( $resp['RepoURL'] ) ) {
         break;
 
     case 'commit':
-        $resp['commit'] = str_replace('new commit',$resp['CommitMessage'] , $resp['commit']);
+        // $resp['commit'] = str_replace('new commit',$resp['CommitMessage'] , $resp['commit']);
         execPHP(  'commit' );
         break;
 
@@ -106,7 +113,8 @@ exit;
 function execPHP( $gitCommand ) {
     global $ssh,$resp;
     // execute SSH
-    $output = $ssh->exec( $resp['cd'].$resp[$gitCommand] );
+    $output = $ssh->exec( $resp['cd'].$resp['commands'][$gitCommand]['command'] );
+    // $output = $resp['cd'].$resp['commands'][$gitCommand]['command'];
     // search for error strings, in cade add error class
     foreach ($resp['ConsoleError']  as $value) {
         if (str_contains($output, $value)){
@@ -116,10 +124,11 @@ function execPHP( $gitCommand ) {
             $error = '';
         }
     }
+    $output_command = $resp['commands'][$gitCommand]['command'];
     echo <<<HTML
         <div class=response>
             <span>$resp[RepoURL]:</span>
-            $resp[$gitCommand]\n
+            $output_command\n
             <pre class="$error">$output</pre>
         </div>
         HTML;
@@ -151,7 +160,7 @@ function makeFolderList($resp){
 function CommandHistory($gitCommand){
     global $ssh,$resp;
     $filecontent = (file_exists('history.log'))? file_get_contents('history.log'): '';
-    $filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp[$gitCommand]."'";
+    $filecontent = $filecontent."\n".date("d.m.Y H:i")." '".$resp['cd'].$resp['commands'][$gitCommand]['command']."'";
     file_put_contents('history.log',$filecontent);
 }
  
@@ -289,7 +298,7 @@ EscapeStringsForHTML($resp);
                     <h3>Show the remote origin URL</h3>
                     <div class=text>
                     </div>
-                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['remote.origin.url'] ?>">origin.url</button>
+                    <button onclick="sendCommands('remote.origin.url');" data-tooltip="<?= $resp['commands']['remote.origin.url']['command'] ?>">origin.url</button>
                 </div>
                 <!-- remote show origin  -->
                 <div class=item>
@@ -298,7 +307,7 @@ EscapeStringsForHTML($resp);
                         Augment the output of all queried config options with the origin type (file, standard input, blob, command line) and the actual origin (config file path, ref, or blob id if applicable).
                         <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
                     </div>
-                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['remote show origin'] ?>">show&nbsp;origin</button>
+                    <button onclick="sendCommands('remote show origin');" data-tooltip="<?= $resp['commands']['remote show origin']['command'] ?>">show&nbsp;origin</button>
                 </div>
 
                 <!-- CUSTOM -->
@@ -311,7 +320,7 @@ EscapeStringsForHTML($resp);
                             <option value="git remote show origin">git remote show origin</option>
                         </datalist>
                     </div>
-                    <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['custom'] ?>">custom</button>
+                    <button onclick="sendCommands('custom');" data-tooltip="<?= $resp['commands']['custom']['command'] ?>">custom</button>
                 </div>
 
                 <!-- ADD -->
@@ -321,7 +330,7 @@ EscapeStringsForHTML($resp);
                         This command updates the index using the current content found in the working tree, to prepare the content staged for the next commit.
                         <a href="https://git-scm.com/docs/git-add" target="_blanc"></a>
                     </div>
-                    <button onclick="sendCommands('add');" data-tooltip="<?= $resp['add'] ?>">add</button>
+                    <button onclick="sendCommands('add');" data-tooltip="<?= $resp['commands']['add']['command'] ?>">add</button>
                 </div>
 
 
@@ -332,7 +341,7 @@ EscapeStringsForHTML($resp);
                         <a href="https://git-scm.com/docs/git-commit" target="_blanc"></a>
                         <input type=text data-name="Commit Message" id=CommitMessage class=ff_input value="new commit">
                     </div>
-                    <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commit'] ?>">commit</button>
+                    <button onclick="sendCommands('commit');" data-tooltip="<?= $resp['commands']['commit']['command'] ?>">commit</button>
                 </div>
 
                 <!-- PUSH -->
@@ -342,7 +351,7 @@ EscapeStringsForHTML($resp);
                         Updates remote refs using local refs, while sending objects necessary to complete the given refs.
                         <a href="https://git-scm.com/docs/git-push" target="_blanc"></a>
                     </div>
-                    <button onclick="sendCommands('push');" data-tooltip="<?= $resp['push'] ?>">push</button>
+                    <button onclick="sendCommands('push');" data-tooltip="<?= $resp['commands']['push']['command'] ?>">push</button>
                 </div>
 
 
