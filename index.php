@@ -91,6 +91,7 @@ exit;
         <div class=response>
             <pre class=error>\nplease set repository</pre>
         </div>
+        <script> loadingDots("console", false);</script>
         HTML;
     exit;
 }

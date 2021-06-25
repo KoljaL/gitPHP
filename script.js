@@ -1,4 +1,9 @@
 function sendCommands(values) {
+    if (document.getElementById('RepoURL').value == '') {
+        // alert('Please select a repository');
+        eventFire(RepoURL, 'click');
+        return;
+    }
     loadingDots("console", true);
     var params = new Object();
     params.CustomCommand = document.getElementById('CustomCommand').value;
@@ -86,6 +91,11 @@ function DDDL() {
                 };
             }
 
+            // hide datalist when mouse is leaving the list
+            dddlDatalist.addEventListener('mouseleave', e => {
+                dddlDatalist.style.display = "none";
+            });
+
             dddlInput.oninput = function() {
                 currentFocus = -1;
                 var text = dddlInput.value.toUpperCase();
@@ -145,10 +155,10 @@ DDDL();
 function loadingDots(divID, switchOn) {
     // switch off
     if (switchOn == false) {
-        var spinningFrame = document.getElementById(divID);
-        spinningFrame.removeChild(document.getElementById("divLoadingFrame"));
-        spinningFrame.removeChild(document.getElementById("styleLoadingWindow"));
-        return;
+        // var spinningFrame = document.getElementById(divID);
+        // spinningFrame.removeChild(document.getElementById("divLoadingFrame"));
+        // spinningFrame.removeChild(document.getElementById("styleLoadingWindow"));
+        // return;
     }
     // do nothing 
     if (document.getElementById("divLoadingFrame") != null) {
@@ -160,10 +170,11 @@ function loadingDots(divID, switchOn) {
     style.id = "styleLoadingWindow";
     style.innerHTML = `
         // .loading-frame {position: relative;left: 0;right: 0;top: -50vh;z-index: 4;}
-        .loading-frame {position: absolute;right: 0;top: 0;width: 100%;height: 100%;z-index: 4;background-color: rgba(0, 0, 0, 0.2);}
+        .loading-frame {position: absolute;right: 0;top: 0;width: 100%;height: 100%;z-index: 4;}
         // .loading-frame {position: absolute;right: 50px;top: 50px;width: max-content;height: max-content;z-index: 4;}
         .loading-track {height: 50px;display: inline-block;position: absolute;top: calc(50% - 50px);left: 50%;}
         .loading-dot {height: 5px;width: 5px;border-radius: 100%;opacity: 0;}
+        fieldset#console{background-color: rgba(0, 0, 0, 0.2);z-index:3;}
         .color0{background: #be5046;}
         .color1{background: #e06c75;}
         .color2{background: #d19a66;}
