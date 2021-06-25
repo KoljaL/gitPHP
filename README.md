@@ -16,6 +16,8 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] highlighted error messages
 - [x] password protection
 - [x] scan folder for local repos
+- [x] colores spinner
+- [ ] link to remote repo after push
 - [ ] close dropdown list
 - [ ] git init
 - [ ] add SSH Key

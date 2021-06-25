@@ -178,26 +178,45 @@ function print_resp($resp){
 }
 
 
-function tabs($ind){
-    for ($i = 0;$i < $ind;$i++){
-        echo "&nbsp;&nbsp;";
-    }
-}
+// function tabs($ind){
+//     for ($i = 0;$i < $ind;$i++){
+//         echo "&nbsp;&nbsp;";
+//     }
+// }
+// function pprint($array) {
+//     $array_str = print_r($array, true);
+//     $lines = explode("\n", $array_str);
+//     foreach ($lines as $line) {
+//         $line = str_replace(array('Array','(',')'), '', $line);
+//         $line = str_replace('[', '[<span style="color: var(--orange)">', $line);
+//         $line = str_replace(']', '</span>]', $line); 
+//         if (trim($line) != ''){
+//             $indentation = ((strlen($line) - strlen(ltrim($line)))-4)/8 ;
+//             tabs($indentation);
+//             echo trim($line)."<br>";
+//         }
+//     }
+// }
+
+
 function pprint($array) {
     $array_str = print_r($array, true);
     $lines = explode("\n", $array_str);
     foreach ($lines as $line) {
         $line = str_replace(array('Array','(',')'), '', $line);
-        $line = str_replace('[', '[<span style="color: var(--orange)">', $line);
-        $line = str_replace(']', '</span>]', $line); 
+        $line = str_replace('[', '<span style="color: var(--orange)">', $line);
+        $line = str_replace(']', '</span>', $line); 
         if (trim($line) != ''){
-            $indentation = ((strlen($line) - strlen(ltrim($line)))-4)/8 ;
-            tabs($indentation);
-            echo trim($line)."<br>";
-        }
+            $indentation = (strlen($line) - strlen(ltrim($line))) / 4;
+            $space ="";
+            for ($i = 1;$i < $indentation/2;$i++){
+                // echo "   ";
+                $space .="    ";
+            }
+            echo "<pre style='margin:0'>".$space.trim($line)."</pre>";
+        }       
     }
 }
-
 
 
 // escape strings for HTML 
