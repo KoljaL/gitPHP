@@ -71,7 +71,7 @@ if(  isset( $resp['RepoURL'] ) && !empty( $resp['RepoURL'] ) ) {
         break;
 
     case 'commit':
-        // $resp['commit'] = str_replace('new commit',$resp['CommitMessage'] , $resp['commit']);
+        $resp['commit'] = str_replace('new commit',$resp['CommitMessage'] , $resp['commit']);
         execPHP(  'commit' );
         break;
 
