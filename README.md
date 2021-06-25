@@ -14,9 +14,12 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] command history
 - [x] one dark colors
 - [x] highlighted error messages
+- [x] password protection
+- [x] scan folder for local repos
+- [ ] close dropdown list
 - [ ] git init
 - [ ] add SSH Key
 - [ ] create new repo
-- [ ] scan folder for local repos
-- [ ] password protection
 - [ ] rewrite the $repl array?
+- [ ] clean CSS
+- [ ] clean HTML

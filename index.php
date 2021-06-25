@@ -172,10 +172,34 @@ function get_icon(){
  
 // nicely print ann aray for debugging
 function print_resp($resp){
-    echo "<div class=responsedebug><h3 style='color:var(--pink)'>&#36;resp[]</h3><br><pre>";
-    print_r($resp);
+    echo "<div class=responsedebug><h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br><pre>";
+    pprint($resp);
     echo "</pre></div>";
 }
+
+
+function tabs($ind){
+    for ($i = 0;$i < $ind;$i++){
+        echo "&nbsp;&nbsp;";
+    }
+}
+function pprint($array) {
+    $array_str = print_r($array, true);
+    $lines = explode("\n", $array_str);
+    foreach ($lines as $line) {
+        $line = str_replace(array('Array','(',')'), '', $line);
+        $line = str_replace('[', '[<span style="color: var(--orange)">', $line);
+        $line = str_replace(']', '</span>]', $line); 
+        if (trim($line) != ''){
+            $indentation = ((strlen($line) - strlen(ltrim($line)))-4)/8 ;
+            tabs($indentation);
+            echo trim($line)."<br>";
+        }
+    }
+}
+
+
+
 // escape strings for HTML 
 function EscapeStringsForHTML(&$resp){
     foreach ($resp as $key => $value) {
@@ -343,8 +367,7 @@ EscapeStringsForHTML($resp);
 </body>
 </html>
 
-<?php
-
+<?php 
 /**
  * session management
  */
@@ -357,10 +380,9 @@ function session( &$resp ) {
     if ( !isset( $_SESSION['last_visit'] ) ) {
         $_SESSION['last_visit'] = time();
     }
-    if ( isset( $_POST['name'] ) 
-            && isset( $_POST['password'] ) 
-            && $_POST['password'] === $resp['login_password'] 
-            && $_POST['name'] === $resp['login_name'] ) {
+    // check login values & create session
+    if ( isset( $_POST['name'] ) && isset( $_POST['password'] ) 
+            && $_POST['password'] === $resp['user'][$_POST['name']]['login_password']){
             $_SESSION['id'] = rand();
     }
     // destroy session
