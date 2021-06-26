@@ -136,6 +136,14 @@ fieldset legend {
     float: right;
 }
 
+#logout label#large {
+    float: left;
+    position: absolute;
+    right: 70px;
+    font-size: large;
+    line-height: 20px;
+}
+
 
 /* DATALIST */
 

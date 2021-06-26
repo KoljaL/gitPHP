@@ -227,6 +227,21 @@ function eventFire(el, etype) {
 }
 
 
+//
+// enlarge the page
+//
+var large = document.getElementById("large");
+var div_content = document.getElementById("content");
+large.addEventListener("click", function(event) {
+
+    console.log(div_content.offsetWidth);
+    console.log(div_content.clientWidth);
+    if (div_content.clientWidth == 1200) {
+        div_content.style.maxWidth = "95%";
+    } else {
+        div_content.style.maxWidth = '1200px';
+    }
+});
 
 
 

@@ -10,6 +10,10 @@ $resp = [
     'CustomCommandList' => array(
         'git config --get remote.origin.url',' git remote show origin'
     ),
+    'presets' => array(
+        'one' => array('add', 'commit', 'push'),
+        'two' => array('add', 'commit', 'push'),
+    ),
     // to avoit WARNINGs every entry has to have every key set
     'commands' => array(
 

@@ -20,8 +20,6 @@ use phpseclib3\Net\SSH2;
 
 
 
-
-
 //
 // asyncron function to scall parent folder
 // and add folders as list of options to dropdown menu
@@ -162,9 +160,15 @@ function ASscanFolderList(){
 // make an option list from preselected_folder[] // was $resp['preselected_folder']
 //
 function makeOptionList($array){
+    // print_r($array);
     $option ='';
-    foreach ($array as $value) {
-        $option .= "<option value='".basename($value)."'>".basename($value)."</option>\n";
+    foreach ($array as $key => $value) {
+        if (!is_array($value)) {
+            // $key = array_flip($key);
+            $key = $value; 
+            // print_r($value);
+        }
+        $option .= "<option value='".basename($key)."'>".basename($key)."</option>\n";
     }
     return $option;
 }
@@ -293,6 +297,13 @@ function pprint($array) {
 
                 <!-- HEADER -->
                 <div id=header class=item>
+
+
+
+
+
+
+
                     <!-- ChooseRepoURL -->
                     <div id=ChooseRepoURL>
                         <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
@@ -302,8 +313,28 @@ function pprint($array) {
                         </datalist>
                     </div>
 
+
+
+
+
+                    <!-- PRESETS -->
+                    <div id=SelectPreset>
+                        <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                        <datalist id="Presets" role="listbox">
+                            <?php echo makeOptionList($resp['presets']); ?>
+                            <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
+                        </datalist>
+                    </div>
+
+
+
+
+
+
                     <!-- LOGOUT -->
                     <div id="logout">
+                    <label id=large> &Longleftrightarrow; </label>
+                        
                         <form action='' method='post'>
                             <input type='hidden' name='destroy'>
                             <input id=logout_submit type='submit' value='Log Out' style="display:none">
@@ -341,9 +372,29 @@ function pprint($array) {
  * makes for every command in config file an item on frontend
  * 
  */
-function makeItemsForCommands($resp){    
+function makeItemsForCommands($resp, $preset = 'all'){
+    
+    if ($preset == 'all'){
+        $commandlist = $resp['commands'];
+    } else {
+
+        $presets = $resp['presets'][$preset];
+        $commands = $resp['commands'];
+        // flip values to keys
+        $presets=array_flip($presets);
+        // make blacklist  - remove presets from commands
+        $blacklist = array_diff_key($commands, $presets);
+        // make whitelist - remove blacklist from commands
+        $commandlist = array_diff_key($commands, $blacklist);
+    }
+
+
+
+
+
+
     $html = '';
-    foreach ($resp['commands'] as $c_name => $c_value) {
+    foreach ($commandlist as $c_name => $c_value) {
         // echo $c_value['tooltip']."<br>";
         $title  = $c_value['title'];
         $link = (!empty($c_value['infolink']))?'<a href="$c_value[infolink]" target="_blanc"></a>':'';
@@ -396,6 +447,10 @@ function makeItemsForCommands($resp){
         HTML;
     }
     echo $html;
+
+    if ($preset != 'all'){
+        // exit;
+    }
 }
     
 
