@@ -17,11 +17,11 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] password protection
 - [x] scan folder for local repos
 - [x] colores spinner
+- [x] rewrite the $repl array
+- [x] close dropdown list
 - [ ] link to remote repo after push
-- [ ] close dropdown list
 - [ ] git init
 - [ ] add SSH Key
 - [ ] create new repo
-- [ ] rewrite the $repl array?
 - [ ] clean CSS
 - [ ] clean HTML

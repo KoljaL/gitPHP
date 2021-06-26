@@ -1,16 +1,31 @@
-function sendCommands(values) {
+function sendCommands(command) {
     if (document.getElementById('RepoURL').value == '') {
         // alert('Please select a repository');
         eventFire(RepoURL, 'click');
         return;
     }
     loadingDots("console", true);
+
+
+
+
+
+    //
+    // array for input field IDs
+    //
+    var InputIdValues = ['custom_command_inputID', 'commit_inputID', 'RepoURL'];
+
     var params = new Object();
-    params.custom_command_inputID = document.getElementById('custom_command_inputID').value;
-    params.commit_inputID = document.getElementById('commit_inputID').value;
-    params.RepoURL = document.getElementById('RepoURL').value;
-    params.GitCommand = values;
-    // console.log(document.getElementById('commit_inputID'));
+    params.GitCommand = command;
+
+    InputIdValues.forEach(InputId => {
+        if (document.getElementById(InputId) !== null) {
+            params[InputId] = document.getElementById(InputId).value;
+        } else {
+            params[InputId] = ' ';
+        }
+    });
+    // console.log(params);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -53,12 +68,40 @@ function FolderList() {
 
 
 
+// change tehe preset with dropdown menu
+document.getElementById("Preset").addEventListener("change", function(event) {
+    var PresetValue = this.value;
+    // console.log(PresetValue);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", 'index.php?presetlist=' + PresetValue, true);
+    xhr.send(null);
+    xhr.onload = function() {
+        var data = this.responseText;
+        // console.log(data);
+        // add new options zo existing list
+        // var content = document.getElementById('items').innerHTML;
+        document.getElementById('items').innerHTML = data;
+        // hide the more... button
+        // document.querySelector('#ChooseRepoURL button').style.display = 'none';
+        // click on input to initalize the new items
+        // eventFire(RepoURL, 'click');
+    };
+
+});
+
+
+
+
+
+
 
 
 function DDDL() {
     // DATALIST
     // https: //dev.to/siddev/customise-datalist-45p0
     const DropDownDataLists = document.querySelectorAll("input.DropDownDataList");
+
     // console.log(DropDownDataLists);
     for (let i = 0; i < DropDownDataLists.length; i++) {
         DropDownDataLists[i].addEventListener("click", function() {
@@ -66,28 +109,12 @@ function DDDL() {
             var dddlInputName = dddlInput.name;
             var dddlDatalist = document.getElementById(dddlInputName);
             dddlDatalist.style.display = "block";
-            // console.log(' ');
-            // console.log(' ');
-            // console.log(dddlInputName)
-            // console.log(dddlDatalist)
-            // onFocus not needed, because of eventlistener()click?
-            // dddlInput.onfocus = function() {
-            // console.log("dddlInputonfocus");
-            // };
-            // console.log(' ');
-            // console.log(dddlInput)
-            // console.log(dddlInputName)
-            // console.log(dddlDatalist)
-            // console.log(dddlDatalist.options)
 
             // make option.value to input.value & hide option list
             for (let option of dddlDatalist.options) {
                 option.onclick = function() {
                     dddlInput.value = option.value;
                     dddlDatalist.style.display = "none";
-                    // console.log("option.onclick");
-                    // console.log(option);
-                    // console.log(' ');
                 };
             }
 
@@ -174,7 +201,7 @@ function loadingDots(divID, switchOn) {
         // .loading-frame {position: absolute;right: 50px;top: 50px;width: max-content;height: max-content;z-index: 4;}
         .loading-track {height: 50px;display: inline-block;position: absolute;top: calc(50% - 50px);left: 50%;}
         .loading-dot {height: 5px;width: 5px;border-radius: 100%;opacity: 0;}
-        fieldset#console{z-index:3;filter: brightness(85%);}
+        #console_output{z-index:3;filter: brightness(55%);}
         .color0{background: #be5046;}
         .color1{background: #e06c75;}
         .color2{background: #d19a66;}
@@ -273,7 +300,11 @@ function toggleDebug() {
 
 
 
-
+// var params = new Object();
+// params.custom_command_inputID = document.getElementById('custom_command_inputID').value;
+// params.commit_inputID = document.getElementById('commit_inputID').value;
+// params.RepoURL = document.getElementById('RepoURL').value;
+// params.GitCommand = values;
 
 
 

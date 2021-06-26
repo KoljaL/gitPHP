@@ -12,7 +12,7 @@ $resp = [
     ),
     'presets' => array(
         'one' => array('add', 'commit', 'push'),
-        'two' => array('add', 'commit', 'push'),
+        'two' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
     ),
     // to avoit WARNINGs every entry has to have every key set
     'commands' => array(

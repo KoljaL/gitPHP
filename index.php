@@ -37,6 +37,16 @@ $icon = get_icon();
 session( $resp );
 
 //
+//
+// change the preset
+
+if (isset($_GET['presetlist'])){
+    makeItemsForCommands($resp, $preset = $_GET['presetlist']);
+    exit;
+}
+
+
+//
 // if POST data in JSON are available 
 //
 ASreadPOSTandExecuteCommand($resp);
@@ -293,55 +303,55 @@ function pprint($array) {
     <div id="content">
         <fieldset id=form>
             <legend>Git Actions</legend>
-            <div id="items">
-
-                <!-- HEADER -->
-                <div id=header class=item>
 
 
 
+            <!-- HEADER -->
+            <div id=header class=item>
+ 
 
-
-
-
-                    <!-- ChooseRepoURL -->
-                    <div id=ChooseRepoURL>
-                        <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
-                        <datalist id="RepoURLs" role="listbox">
-                            <?php echo makeOptionList($resp['preselected_folder']); ?>
-                            <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
-                        </datalist>
-                    </div>
-
-
-
-
-
-                    <!-- PRESETS -->
-                    <div id=SelectPreset>
-                        <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
-                        <datalist id="Presets" role="listbox">
-                            <?php echo makeOptionList($resp['presets']); ?>
-                            <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
-                        </datalist>
-                    </div>
-
-
-
-
-
-
-                    <!-- LOGOUT -->
-                    <div id="logout">
-                    <label id=large> &Longleftrightarrow; </label>
-                        
-                        <form action='' method='post'>
-                            <input type='hidden' name='destroy'>
-                            <input id=logout_submit type='submit' value='Log Out' style="display:none">
-                            <label id=logoutButton for=logout_submit class=button>Log Out</label>
-                        </form>
-                    </div>
+                <!-- ChooseRepoURL -->
+                <div id=ChooseRepoURL>
+                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
+                    <datalist id="RepoURLs" role="listbox">
+                        <?php echo makeOptionList($resp['preselected_folder']); ?>
+                        <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
+                    </datalist>
                 </div>
+
+
+
+
+
+                <!-- PRESETS -->
+                <div id=SelectPreset>
+                    <!-- <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset"> -->
+                    <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                        <!-- <datalist id="Presets" role="listbox"> -->
+                        <?php echo makeOptionList($resp['presets']); ?>
+                        <!-- </datalist> -->
+                    </select>
+                </div>
+
+
+
+
+
+
+                <!-- LOGOUT -->
+                <div id="logout">
+                    <label id=large> &Longleftrightarrow; </label>
+
+                    <form action='' method='post'>
+                        <input type='hidden' name='destroy'>
+                        <input id=logout_submit type='submit' value='Log Out' style="display:none">
+                        <label id=logoutButton for=logout_submit class=button>Log Out</label>
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="items">
 
                 <!-- COMMAND ITEMS -->
                 <?php makeItemsForCommands($resp); ?>
