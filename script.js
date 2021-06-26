@@ -164,7 +164,7 @@ function loadingDots(divID, switchOn) {
     if (document.getElementById("divLoadingFrame") != null) {
         return;
     }
-    // load dots
+    // load dots   background-color: rgba(0, 0, 0, 0.2);
     var spinningFrame = document.getElementById(divID);
     var style = document.createElement("style");
     style.id = "styleLoadingWindow";
@@ -174,7 +174,7 @@ function loadingDots(divID, switchOn) {
         // .loading-frame {position: absolute;right: 50px;top: 50px;width: max-content;height: max-content;z-index: 4;}
         .loading-track {height: 50px;display: inline-block;position: absolute;top: calc(50% - 50px);left: 50%;}
         .loading-dot {height: 5px;width: 5px;border-radius: 100%;opacity: 0;}
-        fieldset#console{background-color: rgba(0, 0, 0, 0.2);z-index:3;}
+        fieldset#console{z-index:3;filter: brightness(85%);}
         .color0{background: #be5046;}
         .color1{background: #e06c75;}
         .color2{background: #d19a66;}
