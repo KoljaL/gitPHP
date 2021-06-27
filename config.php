@@ -7,6 +7,7 @@ $resp = [
             'login_password' => 'test'
         ),
     ),
+    'session_time' => 300,
     'CustomCommandList' => array(
         'git config --get remote.origin.url',' git remote show origin'
     ),

@@ -17,17 +17,10 @@ require_once __DIR__.'/vendor/autoload.php';
 use phpseclib3\Net\SSH2;
 
 
-if (isset($_GET['history'])){
-    $file = file_get_contents('history.log');
-    $lines = explode("\n",$file);
-    foreach ($lines as $key => $line) {
-        $part = explode("'", $line);
-        $date = $part[0];
-        $command = str_replace($date,'',$line);
-        echo "<span class=date>".$date."</span><span class=command>".$command."</span><br>";
-    }
-    exit;
-}
+//
+// ASYNC read the history.log file & make a nice output
+//
+getHistoryLog();
 
 
 //
@@ -367,8 +360,8 @@ function pprint($array) {
                 <label id=debug_label>debug array</label>
             </div>
             <div id="console_output"></div>
-            <div id="debug_output"></div>
-            <div id="history_output"></div>
+            <div id="debug_output" style="display:none"></div>
+            <div id="history_output" style="display:none"></div>
         </fieldset>
     </div>
 
@@ -383,6 +376,25 @@ function pprint($array) {
 
 
 
+//
+// read the history.log file & make a nice output
+//
+function getHistoryLog(){
+    if (isset($_GET['history'])){
+        $file = file_get_contents('history.log');
+        $lines = explode("\n",$file);
+        foreach ($lines as $key => $line) {
+            $part = explode("'", $line);
+            $date = $part[0];
+            $command = str_replace($date,'',$line);
+            echo "<span class=date>".$date."</span><span class=command>".$command."</span><br>";
+        }
+        exit;
+    }
+}
+
+
+
 
 /**
  * 
@@ -390,9 +402,6 @@ function pprint($array) {
  * 
  */
 function makeItemsForCommands($resp, $preset = 'start'){
-
-    
-    
     if ($preset == 'start'){
         $html = <<< HTML
             <div class="item startpage">
@@ -427,73 +436,64 @@ function makeItemsForCommands($resp, $preset = 'start'){
         // make whitelist - remove blacklist from commands
         $commandlist = array_diff_key($commands, $blacklist);
     }
-
-
-
-
-
+ 
+    // create item for every command
     if ($preset !== 'start'){
-    $html = '';
-    foreach ($commandlist as $c_name => $c_value) {
-        // echo $c_value['tooltip']."<br>";
-        $title  = $c_value['title'];
-        $link = (!empty($c_value['infolink']))?'<a href="$c_value[infolink]" target="_blanc"></a>':'';
-        $tooltip = htmlspecialchars($c_value['tooltip']);
-        $button =htmlspecialchars($c_value['button']);
+        $html = '';
+        foreach ($commandlist as $c_name => $c_value) {
+            // echo $c_value['tooltip']."<br>";
+            $title  = $c_value['title'];
+            $link = (!empty($c_value['infolink']))?'<a href="$c_value[infolink]" target="_blanc"></a>':'';
+            $tooltip = htmlspecialchars($c_value['tooltip']);
+            $button =htmlspecialchars($c_value['button']);
 
-        //
-        // make inputfield an datalist for custom commands
-        //
-        if ($c_name == 'custom_command'){
-            $placeholder =htmlspecialchars($c_value['formfield']['placeholder']);
-            $options = makeOptionList($resp['CustomCommandList']);
-            $datalist_custom_command = <<< HTML
-                <input autocomplete="off" class="DropDownDataList ff_input" placeholder="$placeholder" data-name="$title" role="combobox" list="" id="{$c_name}_inputID" name="{$c_name}_dlID">
-                <datalist id="{$c_name}_dlID" class="DDDL_small" role="listbox"> 
-                    $options
-                </datalist>
-                HTML;
-        }else{
-            $datalist_custom_command = '';
-        }
-        
-        //
-        // make inputfield an datalist for custom commands
-        //
-        if ($c_name == 'commit'){
-            $value = htmlspecialchars($c_value['formfield']['value']);
+            //
+            // make inputfield an datalist for custom commands
+            //
+            if ($c_name == 'custom_command'){
+                $placeholder =htmlspecialchars($c_value['formfield']['placeholder']);
+                $options = makeOptionList($resp['CustomCommandList']);
+                $datalist_custom_command = <<< HTML
+                    <input autocomplete="off" class="DropDownDataList ff_input" placeholder="$placeholder" data-name="$title" role="combobox" list="" id="{$c_name}_inputID" name="{$c_name}_dlID">
+                    <datalist id="{$c_name}_dlID" class="DDDL_small" role="listbox"> 
+                        $options
+                    </datalist>
+                    HTML;
+            }else{
+                $datalist_custom_command = '';
+            }
+            
+            //
+            // make inputfield an datalist for custom commands
+            //
+            if ($c_name == 'commit'){
+                $value = htmlspecialchars($c_value['formfield']['value']);
 
-            $input_commit = <<< HTML
-                <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
-                HTML;
-        }else{
-            $input_commit = '';
-        }
-        
-        //
-        // make item for every command 
-        //
-        $html .= <<<HTML
-        <div class=item>
-            <h3>$title</h3>
-            <div class=text>
-                $c_value[text]
-                $link
-                $datalist_custom_command 
-                $input_commit
+                $input_commit = <<< HTML
+                    <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
+                    HTML;
+            }else{
+                $input_commit = '';
+            }
+            
+            //
+            // make item for every command 
+            //
+            $html .= <<<HTML
+            <div class=item>
+                <h3>$title</h3>
+                <div class=text>
+                    $c_value[text]
+                    $link
+                    $datalist_custom_command 
+                    $input_commit
+                </div>
+                <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
             </div>
-            <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
-        </div>
-        HTML;
+            HTML;
+        }
     }
-}
-
-
     echo $html;
-
-    if ($preset != 'all'){
-        // exit;
-    }
 }
     
 
@@ -509,7 +509,7 @@ function session( &$resp ) {
     session_start();
     // print_r($_SESSION);
     // check userdata and create session
-    $session_timeout = 60 * 30000;
+    $session_timeout = 60 * $resp['session_time'];
     // seconds * minutes
     if ( !isset( $_SESSION['last_visit'] ) ) {
         $_SESSION['last_visit'] = time();

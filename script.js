@@ -278,8 +278,10 @@ var hidden_debug = document.querySelector("#debug .responsedebug");
 debug_label.addEventListener("click", function(event) {
     if (debug_output.innerHTML == '') {
         // console.log(hidden_debug)
+        debug_output.style.display = 'block';
         debug_output.innerHTML = hidden_debug.innerHTML;
     } else {
+        debug_output.style.display = 'none';
         debug_output.innerHTML = '';
     }
 });
@@ -294,43 +296,23 @@ var history_label = document.getElementById("history_label");
 var history_output = document.getElementById("history_output");
 history_label.addEventListener("click", function(event) {
     if (history_output.innerHTML == '') {
-
-
-
-        // console.log(hidden_debug)
-        // history_output.innerHTML = "hidden_debug.innerHTML";
-        // getCommandHistory() 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'index.php?history', true);
         xhr.send(null);
         xhr.onload = function() {
             var data = this.responseText;
-            console.log(data);
+            // console.log(data);
+        history_output.style.display = 'block';
 
             history_output.innerHTML = data;
         };
 
-
-
-
     } else {
+        history_output.style.display = 'none';
+
         history_output.innerHTML = '';
     }
 });
-
-
-
-
-function getCommandHistory() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'index.php?history', true);
-    xhr.send(null);
-    xhr.onload = function() {
-        var data = this.responseText;
-        history_output.innerHTML
-    };
-};
-
 
 
 
