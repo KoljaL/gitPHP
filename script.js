@@ -49,7 +49,7 @@ function sendCommands(command) {
 
 
 
-function FolderList() {
+function FolderList() { 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'index.php?folderlist', true);
     xhr.send(null);
@@ -68,33 +68,25 @@ function FolderList() {
 
 
 
-// change tehe preset with dropdown menu
-document.getElementById("Preset").addEventListener("change", function(event) {
-    var PresetValue = this.value;
-    // console.log(PresetValue);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'index.php?presetlist=' + PresetValue, true);
-    xhr.send(null);
-    xhr.onload = function() {
-        var data = this.responseText;
-        // console.log(data);
-        // add new options zo existing list
-        // var content = document.getElementById('items').innerHTML;
-        document.getElementById('items').innerHTML = data;
-        // hide the more... button
-        // document.querySelector('#ChooseRepoURL button').style.display = 'none';
-        // click on input to initalize the new items
-        // eventFire(RepoURL, 'click');
-    };
-
+// change the preset with dropdown menu
+var options = document.querySelectorAll("#Presets option");
+options.forEach(option => {
+    option.addEventListener("click", function(event) {
+        var PresetValue = this.value;
+        // console.log(PresetValue);
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", 'index.php?presetlist=' + PresetValue, true);
+        xhr.send(null);
+        xhr.onload = function() {
+            var data = this.responseText;
+            document.getElementById('items').innerHTML = data;
+        };
+    });
 });
 
 
-
-
-
-
+//  debugger;
+//  console.trace('trace var');
 
 
 function DDDL() {
@@ -108,11 +100,14 @@ function DDDL() {
             var dddlInput = this;
             var dddlInputName = dddlInput.name;
             var dddlDatalist = document.getElementById(dddlInputName);
+
+
             dddlDatalist.style.display = "block";
 
             // make option.value to input.value & hide option list
             for (let option of dddlDatalist.options) {
                 option.onclick = function() {
+                    // console.log(dddlInput);
                     dddlInput.value = option.value;
                     dddlDatalist.style.display = "none";
                 };
@@ -260,9 +255,8 @@ function eventFire(el, etype) {
 var large = document.querySelector("#form legend");
 var div_content = document.getElementById("content");
 large.addEventListener("click", function(event) {
-
-    console.log(div_content.offsetWidth);
-    console.log(div_content.clientWidth);
+    // console.log(div_content.offsetWidth);
+    // console.log(div_content.clientWidth);
     if (div_content.clientWidth == 1200) {
         div_content.style.maxWidth = "95%";
     } else {

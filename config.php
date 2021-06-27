@@ -11,8 +11,10 @@ $resp = [
         'git config --get remote.origin.url',' git remote show origin'
     ),
     'presets' => array(
-        'one' => array('add', 'commit', 'push'),
-        'two' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
+        'startpage' => 'start', 
+        'commit and push' => array('add', 'commit', 'push'),
+        'info and stats' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
+        'all' => 'all',
     ),
     // to avoit WARNINGs every entry has to have every key set
     'commands' => array(

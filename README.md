@@ -19,7 +19,12 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] colores spinner
 - [x] rewrite the $repl array
 - [x] close dropdown list
+- [x] "responsive"
+- [x] make preset command lists
+- [x] startpage as preset 
 - [ ] link to remote repo after push
+- [ ] debug array in console
+- [ ] history.log in console
 - [ ] git init
 - [ ] add SSH Key
 - [ ] create new repo

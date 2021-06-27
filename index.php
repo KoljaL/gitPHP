@@ -305,10 +305,16 @@ function pprint($array) {
 
                  <!-- PRESETS -->
                  <div id=SelectPreset>
-                    <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                    <!-- <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
                         <option value="" disabled selected hidden>select Command List</option>
+                        <   ?php echo makeOptionList($resp['presets']); ?>
+                    </select> -->
+
+                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                    <datalist id="Presets" class="DDDL_small" role="listbox">
                         <?php echo makeOptionList($resp['presets']); ?>
-                    </select>
+                    </datalist>
+
                 </div> 
 
                 <!-- ChooseRepoURL -->
@@ -367,9 +373,32 @@ function pprint($array) {
  * makes for every command in config file an item on frontend
  * 
  */
-function makeItemsForCommands($resp, $preset = 'all'){
+function makeItemsForCommands($resp, $preset = 'start'){
+
     
-    if ($preset == 'all'){
+    
+    if ($preset == 'start'){
+        $html = <<< HTML
+            <div class="item">
+                <h3>bla bla info text</h3>
+                <div class="text">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                </div>
+            </div>
+            <div class="item">
+                <h3>Presets</h3>
+                <div class="text">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                </div>
+            </div>
+            <div class="item">
+                <h3>Repositotries</h3>
+                <div class="text">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                </div>
+            </div>
+        HTML;
+    }elseif ($preset == 'all'){
         $commandlist = $resp['commands'];
     } else {
 
@@ -387,7 +416,7 @@ function makeItemsForCommands($resp, $preset = 'all'){
 
 
 
-
+    if ($preset !== 'start'){
     $html = '';
     foreach ($commandlist as $c_name => $c_value) {
         // echo $c_value['tooltip']."<br>";
@@ -404,7 +433,7 @@ function makeItemsForCommands($resp, $preset = 'all'){
             $options = makeOptionList($resp['CustomCommandList']);
             $datalist_custom_command = <<< HTML
                 <input autocomplete="off" class="DropDownDataList ff_input" placeholder="$placeholder" data-name="$title" role="combobox" list="" id="{$c_name}_inputID" name="{$c_name}_dlID">
-                <datalist id="{$c_name}_dlID" role="listbox"> 
+                <datalist id="{$c_name}_dlID" class="DDDL_small" role="listbox"> 
                     $options
                 </datalist>
                 HTML;
@@ -441,6 +470,9 @@ function makeItemsForCommands($resp, $preset = 'all'){
         </div>
         HTML;
     }
+}
+
+
     echo $html;
 
     if ($preset != 'all'){
