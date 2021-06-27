@@ -21,7 +21,7 @@ use phpseclib3\Net\SSH2;
 
 
 //
-// asyncron function to scall parent folder
+// ASYNC function to scall parent folder
 // and add folders as list of options to dropdown menu
 //
 ASscanFolderList();
@@ -38,8 +38,7 @@ session( $resp );
 
 //
 //
-// change the preset
-
+// ASCNC load another preset
 if (isset($_GET['presetlist'])){
     makeItemsForCommands($resp, $preset = $_GET['presetlist']);
     exit;
@@ -47,7 +46,7 @@ if (isset($_GET['presetlist'])){
 
 
 //
-// if POST data in JSON are available 
+// ASYNC if POST data in JSON are available 
 //
 ASreadPOSTandExecuteCommand($resp);
 
@@ -292,12 +291,7 @@ function pprint($array) {
     <!-- DEBUG OUTPUT -->
     <div id="debug">
         <?= print_resp($resp)?>
-    </div>
-    <!-- DEBUG ICON -->
-    <div id=debugcheckDIV>
-        <label for=debugcheck>&#128027;</label>
-        <input type="checkbox" name="debugcheck" id="debugcheck" style="display:none">
-    </div>
+    </div> 
 
     <!-- CONTENT -->
     <div id="content">
@@ -308,47 +302,38 @@ function pprint($array) {
 
             <!-- HEADER -->
             <div id=header class=item>
- 
+
+                 <!-- PRESETS -->
+                 <div id=SelectPreset>
+                    <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                        <option value="" disabled selected hidden>select Command List</option>
+                        <?php echo makeOptionList($resp['presets']); ?>
+                    </select>
+                </div> 
 
                 <!-- ChooseRepoURL -->
                 <div id=ChooseRepoURL>
                     <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
                     <datalist id="RepoURLs" role="listbox">
                         <?php echo makeOptionList($resp['preselected_folder']); ?>
-                        <button data-tooltip="scan parent folder" onclick="FolderList();"> more...</button>
+                        <button onclick="FolderList();">scan folder</button>
                     </datalist>
-                </div>
-
-
-
-
-
-                <!-- PRESETS -->
-                <div id=SelectPreset>
-                    <!-- <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset"> -->
-                    <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
-                        <!-- <datalist id="Presets" role="listbox"> -->
-                        <?php echo makeOptionList($resp['presets']); ?>
-                        <!-- </datalist> -->
-                    </select>
-                </div>
-
-
-
+                </div> 
 
 
 
                 <!-- LOGOUT -->
                 <div id="logout">
-                    <label id=large> &Longleftrightarrow; </label>
-
+                    
                     <form action='' method='post'>
                         <input type='hidden' name='destroy'>
                         <input id=logout_submit type='submit' value='Log Out' style="display:none">
-                        <label id=logoutButton for=logout_submit class=button>Log Out</label>
+                        <label id=logoutButton for=logout_submit class=button>Log&nbsp;Out</label>
                     </form>
                 </div>
-            </div>
+                
+                
+            </div><!-- HEADER -->
 
 
             <div id="items">

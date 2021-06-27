@@ -55,7 +55,7 @@ function FolderList() {
     xhr.send(null);
     xhr.onload = function() {
         var data = this.responseText;
-        // add new options zo existing list
+        // add new options to existing list
         var content = document.getElementById('RepoURLs').innerHTML;
         document.getElementById('RepoURLs').innerHTML = content + data;
         // hide the more... button
@@ -257,7 +257,7 @@ function eventFire(el, etype) {
 //
 // enlarge the page
 //
-var large = document.getElementById("large");
+var large = document.querySelector("#form legend");
 var div_content = document.getElementById("content");
 large.addEventListener("click", function(event) {
 
@@ -275,7 +275,7 @@ large.addEventListener("click", function(event) {
 //
 // DEBUG WINDOW
 //
-var debugcheck = document.getElementById("debugcheck");
+var debugcheck = document.querySelector("#console legend");
 var debugwindow = document.getElementById("debug");
 var debugconsole = document.getElementById("console_output");
 debugconsole.addEventListener("contextmenu", function(event) {
@@ -289,7 +289,7 @@ debugwindow.addEventListener("dblclick", function(event) {
 });
 
 function toggleDebug() {
-    if (debugcheck.checked) {
+    if (debugwindow.style.display == 'none') {
         debugwindow.style.display = 'block';
     } else {
         debugwindow.style.display = 'none';
