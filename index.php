@@ -17,7 +17,17 @@ require_once __DIR__.'/vendor/autoload.php';
 use phpseclib3\Net\SSH2;
 
 
-
+if (isset($_GET['history'])){
+    $file = file_get_contents('history.log');
+    $lines = explode("\n",$file);
+    foreach ($lines as $key => $line) {
+        $part = explode("'", $line);
+        $date = $part[0];
+        $command = str_replace($date,'',$line);
+        echo "<span class=date>".$date."</span><span class=command>".$command."</span><br>";
+    }
+    exit;
+}
 
 
 //
@@ -348,11 +358,17 @@ function pprint($array) {
                 <?php makeItemsForCommands($resp); ?>
             </div>
         </fieldset>
+        <div id=resize_gap></div>
         <!-- CONSOLE -->
         <fieldset id=console>
             <legend>Console</legend>
-            <div id="console_output">
+            <div id=console_header>
+                <label id=history_label>history log</label>
+                <label id=debug_label>debug array</label>
             </div>
+            <div id="console_output"></div>
+            <div id="debug_output"></div>
+            <div id="history_output"></div>
         </fieldset>
     </div>
 
@@ -379,19 +395,19 @@ function makeItemsForCommands($resp, $preset = 'start'){
     
     if ($preset == 'start'){
         $html = <<< HTML
-            <div class="item">
+            <div class="item startpage">
                 <h3>bla bla info text</h3>
                 <div class="text">
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
                 </div>
             </div>
-            <div class="item">
+            <div class="item startpage">
                 <h3>Presets</h3>
                 <div class="text">
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
                 </div>
             </div>
-            <div class="item">
+            <div class="item startpage">
                 <h3>Repositotries</h3>
                 <div class="text">
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 

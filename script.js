@@ -49,7 +49,7 @@ function sendCommands(command) {
 
 
 
-function FolderList() { 
+function FolderList() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'index.php?folderlist', true);
     xhr.send(null);
@@ -266,30 +266,218 @@ large.addEventListener("click", function(event) {
 
 
 
+
+
+
 //
 // DEBUG WINDOW
 //
-var debugcheck = document.querySelector("#console legend");
-var debugwindow = document.getElementById("debug");
-var debugconsole = document.getElementById("console_output");
-debugconsole.addEventListener("contextmenu", function(event) {
-    toggleDebug();
-});
-debugcheck.addEventListener("click", function(event) {
-    toggleDebug();
-});
-debugwindow.addEventListener("dblclick", function(event) {
-    toggleDebug();
-});
-
-function toggleDebug() {
-    if (debugwindow.style.display == 'none') {
-        debugwindow.style.display = 'block';
+var debug_label = document.getElementById("debug_label");
+var debug_output = document.getElementById("debug_output");
+var hidden_debug = document.querySelector("#debug .responsedebug");
+debug_label.addEventListener("click", function(event) {
+    if (debug_output.innerHTML == '') {
+        // console.log(hidden_debug)
+        debug_output.innerHTML = hidden_debug.innerHTML;
     } else {
-        debugwindow.style.display = 'none';
+        debug_output.innerHTML = '';
     }
-}
+});
 
+
+
+
+//
+// show command history
+//
+var history_label = document.getElementById("history_label");
+var history_output = document.getElementById("history_output");
+history_label.addEventListener("click", function(event) {
+    if (history_output.innerHTML == '') {
+
+
+
+        // console.log(hidden_debug)
+        // history_output.innerHTML = "hidden_debug.innerHTML";
+        // getCommandHistory() 
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", 'index.php?history', true);
+        xhr.send(null);
+        xhr.onload = function() {
+            var data = this.responseText;
+            console.log(data);
+
+            history_output.innerHTML = data;
+        };
+
+
+
+
+    } else {
+        history_output.innerHTML = '';
+    }
+});
+
+
+
+
+function getCommandHistory() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", 'index.php?history', true);
+    xhr.send(null);
+    xhr.onload = function() {
+        var data = this.responseText;
+        history_output.innerHTML
+    };
+};
+
+
+
+
+
+
+//
+// resize both container horizontally 
+//
+const resizer = document.getElementById("resize_gap");
+const leftSide = resizer.previousElementSibling;
+const rightSide = resizer.nextElementSibling;
+// let x = 0;
+// let y = 0;
+// let leftWidth = 0;
+let leftWidth = x = y = 0;
+const mouseDownHandler = function(e) {
+    x = e.clientX;
+    y = e.clientY;
+    leftWidth = leftSide.getBoundingClientRect().width;
+    document.addEventListener("mousemove", mouseMoveHandler);
+    document.addEventListener("mouseup", mouseUpHandler);
+};
+const mouseMoveHandler = function(e) {
+    // How far the mouse has been moved
+    const dx = e.clientX - x;
+    const dy = e.clientY - y;
+    const newLeftWidth =
+        ((leftWidth + dx) * 100) / resizer.parentNode.getBoundingClientRect().width;
+    leftSide.style.width = `${newLeftWidth}%`;
+    resizer.style.cursor = "col-resize";
+    document.body.style.cursor = "col-resize";
+    leftSide.style.userSelect = "none";
+    leftSide.style.pointerEvents = "none";
+    rightSide.style.userSelect = "none";
+    rightSide.style.pointerEvents = "none";
+};
+const mouseUpHandler = function() {
+    resizer.style.removeProperty("cursor");
+    document.body.style.removeProperty("cursor");
+    leftSide.style.removeProperty("user-select");
+    leftSide.style.removeProperty("pointer-events");
+    rightSide.style.removeProperty("user-select");
+    rightSide.style.removeProperty("pointer-events");
+    document.removeEventListener("mousemove", mouseMoveHandler);
+    document.removeEventListener("mouseup", mouseUpHandler);
+};
+resizer.addEventListener("mousedown", mouseDownHandler);
+//
+// resize both container horizontally 
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// DEBUG WINDOW
+//
+// var debugcheck = document.querySelector("#console legend");
+// var debugwindow = document.getElementById("debug");
+// var debugconsole = document.getElementById("console_output");
+// debugconsole.addEventListener("contextmenu", function(event) {
+//     toggleDebug();
+// });
+// debugcheck.addEventListener("click", function(event) {
+//     toggleDebug();
+// });
+// debugwindow.addEventListener("dblclick", function(event) {
+//     toggleDebug();
+// });
+// function toggleDebug() {
+//     if (debugwindow.style.display == 'none') {
+//         debugwindow.style.display = 'block';
+//     } else {
+//         debugwindow.style.display = 'none';
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const left_side = document.getElementById("form");
+// const right_side = document.getElementById("console");
+// const resize_gap = document.getElementById("resize_gap");
+
+// let m_pos;
+// function resize(e){
+//     console.log('resize');
+
+//   const dx = m_pos - e.x;
+//   m_pos = e.x;
+//     console.log(dx);
+
+
+
+//   left_side.style.width = (parseInt(getComputedStyle(left_side, '').width) - dx) + "px";
+//   right_side.style.width = (parseInt(getComputedStyle(right_side, '').width) + dx) + "px";
+// }
+
+// resize_gap.addEventListener("mousedown", function(e){
+//     console.log('mousedown');
+//     console.log(e.offsetX);
+
+//     m_pos = e.x;
+
+//     document.addEventListener("mousemove", resize, false);
+// }, false);
+
+// document.addEventListener("mouseup", function(){
+//     document.removeEventListener("mousemove", resize, false);
+// }, false);
 
 
 

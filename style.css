@@ -18,14 +18,19 @@ select {-moz-appearance: none;-webkit-appearance: none;appearance: none;border: 
 /* HIDE SCROLLBAR */
 
 /* OUTER CONTAINER */
-#content{margin:auto;display:grid;max-width:1200px;gap:20px;grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);}
+
+
+#content{margin:auto;display:flex;max-width:1200px;}
 fieldset{min-width:590px;height:99vh;border:2px solid var(--lightgrey);border-radius:5px;padding:1em}
 fieldset legend{font-size:2em;z-index:99;position:relative}
-#form{grid-column:1}
+#form{width: 50%;}
 #form legend{color:var(--blue)}
-#console{grid-column:2;position:relative}
+#console{flex: 1;
+    /* position:relative */
+}
 #console legend{color:var(--green)}
 #console_output{margin:0;-webkit-transition:.3s;transition:.3s} 
+#resize_gap {cursor: ew-resize;min-width: 20px;}
 /* OUTER CONTAINER */
 
  /* HEADER */
@@ -38,9 +43,16 @@ fieldset legend{font-size:2em;z-index:99;position:relative}
 #ChooseRepoURL button{padding-left:.3em;position:relative;margin-top: .5em;}
 #SelectPreset input{font-family:LibreBaskerville_Regular,Garamond,serif;font-size:14px;background-color:var(--dark);padding:0;margin:0;width:200px;color:var(--orange);outline:none;border-bottom:none}
 #logout label{word-wrap: normal;}
-
-
 /* HEADER */
+
+#console_header{float:right; z-index:5;height:20px; top:-30px;position: relative;}
+#history_label{padding-left:1em; color:var(--pink);}
+#debug_label{padding-left:1em; color:var(--bluegreen);}
+#history_output{margin:0;z-index: 4;position: relative;overflow-y: auto;overflow-x: auto;height: 90vh;scrollbar-width: none;top: -180vh;    font-family: monospace;white-space: pre;} 
+#history_output .date{color:var(--orange)}
+#history_output .command{color:var(--green)}
+
+#debug_output{margin:0;z-index: 4;position: relative;overflow-y: auto;overflow-x: auto;height: 90vh;scrollbar-width: none;top: -90vh;} 
 
 
 /* DropDownDataList small */
@@ -58,6 +70,10 @@ fieldset legend{font-size:2em;z-index:99;position:relative}
 .item button:after:empty{content:attr(data-tooltip);position:absolute;bottom:120%;right:0;background:var(--blue);padding:5px 15px;color:var(--dark);-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;white-space:nowrap;opacity:0;-webkit-transition:.4s;-moz-transition:.4s;transition:.4s}
 .item button:hover:after{opacity:1}
 /* COMMAND ITEMS */
+
+.item.startpage .text{padding:.5em .5em .5em 0;margin:0;max-width: max-content;text-align:justify}
+
+
 
 /* SPECIAL COMMAND ITEMS */
 /* .item #custom_command_dlID{position:absolute;text-align:left;background-color:var(--dark);border:1px solid var(--darkgrey);border-radius:0 0 5px 5px;border-top:none;height:100%;padding:0;z-index:99}
@@ -78,7 +94,10 @@ fieldset legend{font-size:2em;z-index:99;position:relative}
 .responsedebug{position:relative;top:370px;padding:1em;background-color:var(--dark);border:1px solid var(--darkgrey);border-radius:5px;z-index:15}
 #debugcheckDIV{position:absolute;right:20px;top:20px}
 #debugcheckDIV label{font-size:x-large}
-#debug{display:none;position:absolute;top:-350px;right:200px;z-index:200;overflow:auto;height:calc(99vh + 350px)}
+#debug{
+    /* display:none; */
+    position:absolute;
+    top:1350px;right:200px;z-index:200;overflow:auto;height:calc(99vh + 350px)}
 /* DEBUG */
 
 /* LOGIN */
