@@ -1,4 +1,7 @@
 <?php
+
+// input rewrite
+
 ini_set( 'display_errors', 1 );
 ini_set( 'display_startup_errors', 1 );
 error_reporting( E_ALL );
@@ -9,6 +12,8 @@ error_reporting( E_ALL );
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
 
+// echo is_dir('../AHA/.git');
+// exit;
 //
 // include phpseclib.com
 //
@@ -76,6 +81,13 @@ function ASreadPOSTandExecuteCommand( &$resp ) {
         // replace preset message for commit
         $preset_message                        = $resp['commands']['commit']['formfield']['value'];
         $resp['commands']['commit']['command'] = str_replace( $preset_message, $resp['commit_inputID'], $resp['commands']['commit']['command'] );
+        
+        // replace placeholder REPONAME with local RepoURL
+        $resp['commands']['create_repo']['command'] = str_replace( 'REPONAME', $resp['RepoURL'], $resp['commands']['create_repo']['command'] );
+        // replace plachholder description with input string
+        $preset_description                        = $resp['commands']['create_repo']['formfield']['value'];
+        $resp['commands']['create_repo']['command'] = str_replace( $preset_description, $resp['create_repo_inputID'], $resp['commands']['create_repo']['command'] );
+
 
         // get custom command from input field
         $resp['commands']['custom_command']['command'] = $resp['custom_command_inputID'];
@@ -105,6 +117,11 @@ function execPHP( $gitCommand ) {
     echo "<div class=deb_resp style='display:none'>";
     print_resp( $resp );
     echo '</div>';
+
+    echo "<div class=deb_resp>";
+    // echo 
+    echo '</div>';
+
 
     // execute SSH
     $output = $ssh->exec( $resp['cd'].$resp['commands'][$gitCommand]['command'] );
@@ -144,7 +161,12 @@ function ASscanFolderList() {
     if ( isset( $_GET['folderlist'] ) ) {
         $folder = glob( '../*', GLOB_ONLYDIR );
         foreach ( $folder as $key => $value ) {
-            echo "<option value='".basename( $value )."'>".basename( $value )."</option>\n";
+            if (is_dir('../'.basename($value).'/.git')){
+                $rep_exists = 'repo';
+            }else{
+                $rep_exists = '';
+            }
+            echo "<option value='".basename( $value )."' class='".$rep_exists."'>".basename( $value )."</option>\n";
         }
         exit;
     }
@@ -285,11 +307,7 @@ function pprint( $array ) {
             <div id=header class=item>
 
                 <!-- PRESETS -->
-                <div id=SelectPreset>
-                    <!-- <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
-                        <option value="" disabled selected hidden>select Command List</option>
-                        <   ?php echo makeOptionList($resp['presets']); ?>
-                    </select> -->
+                <div id=SelectPreset> 
 
                     <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
                     <datalist id="Presets" class="DDDL_small" role="listbox">
@@ -334,8 +352,8 @@ function pprint( $array ) {
         <fieldset id=console>
             <legend>Console</legend>
             <div id=console_header>
-                <label id=history_label>history log</label>
-                <label id=debug_label>debug array</label>
+                <label id=history_label>command history</label>
+                <label id=debug_label>config file</label>
             </div>
             <div id="console_output"></div>
             <div id="debug_output" style="display:none"></div>
@@ -423,6 +441,13 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
         $blacklist = array_diff_key( $commands, $presets );
         // make whitelist - remove blacklist from commands
         $commandlist = array_diff_key( $commands, $blacklist );
+        // sort commandlist in preset order
+        $commandlist = array_merge($presets, $commandlist);
+
+        // print_r($commandlist);
+        // exit;
+
+
     }
 
     // create item for every command
@@ -454,7 +479,7 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
             //
             // make inputfield an datalist for custom commands
             //
-            if ( 'commit' == $c_name ) {
+            if ( 'commit' == $c_name || 'create_repo' == $c_name ) {
                 $value = htmlspecialchars( $c_value['formfield']['value'] );
 
                 $input_commit = <<< HTML

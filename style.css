@@ -93,7 +93,8 @@ select {
 
 #ChooseRepoURL datalist::-webkit-scrollbar,
 #console_output::-webkit-scrollbar,
-#debug::-webkit-scrollbar,
+#history_output::-webkit-scrollbar,
+#debug_output::-webkit-scrollbar,
 #items::-webkit-scrollbar {
     display: none
 }
@@ -139,12 +140,14 @@ fieldset legend {
 }
 
 #form legend {
-    color: var(--blue)
+    color: var(--blue);
+    cursor: pointer;
+
 }
 
 #console {
     flex: 1;
-    /* position:relative */
+    position: relative
 }
 
 #console legend {
@@ -189,7 +192,9 @@ fieldset legend {
     margin: 0;
     color: var(--orange);
     outline: none;
-    border-bottom: none
+    border-bottom: none;
+    cursor: pointer;
+
 }
 
 #ChooseRepoURL datalist {
@@ -214,6 +219,13 @@ fieldset legend {
     cursor: pointer
 }
 
+
+#ChooseRepoURL option.repo {
+    color: var(--red);
+}
+
+
+
 #ChooseRepoURL .active,
 #ChooseRepoURL option:hover {
     color: var(--orange)
@@ -228,17 +240,20 @@ fieldset legend {
 #SelectPreset input {
     font-family: LibreBaskerville_Regular, Garamond, serif;
     font-size: 14px;
+    cursor: pointer;
     background-color: var(--dark);
     padding: 0;
     margin: 0;
     width: 200px;
     color: var(--orange);
     outline: none;
-    border-bottom: none
+    border-bottom: none;
+    margin-bottom: 6px;
 }
 
 #logout label {
     word-wrap: normal;
+    cursor: pointer;
 }
 
 
@@ -251,17 +266,19 @@ fieldset legend {
     position: relative;
     top: -30px;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 #history_label {
     padding-left: 1em;
     color: var(--pink);
+    cursor: pointer;
 }
 
 #debug_label {
     padding-left: 1em;
     color: var(--bluegreen);
+    cursor: pointer;
 }
 
 #history_output {
