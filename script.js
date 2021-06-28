@@ -6,10 +6,6 @@ function sendCommands(command) {
     }
     loadingDots("console", true);
 
-
-
-
-
     //
     // array for input field IDs
     //
@@ -275,9 +271,14 @@ large.addEventListener("click", function(event) {
 var debug_label = document.getElementById("debug_label");
 var debug_output = document.getElementById("debug_output");
 var hidden_debug = document.querySelector("#debug .responsedebug");
+
+
+
 debug_label.addEventListener("click", function(event) {
-    if (debug_output.innerHTML == '') {
+    if (debug_output.style.display == 'none') {
         // console.log(hidden_debug)
+        history_output.style.display = 'none';
+
         debug_output.style.display = 'block';
         debug_output.innerHTML = hidden_debug.innerHTML;
     } else {
@@ -295,16 +296,22 @@ debug_label.addEventListener("click", function(event) {
 var history_label = document.getElementById("history_label");
 var history_output = document.getElementById("history_output");
 history_label.addEventListener("click", function(event) {
-    if (history_output.innerHTML == '') {
+    if (history_output.style.display == 'none') {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", 'index.php?history', true);
         xhr.send(null);
         xhr.onload = function() {
             var data = this.responseText;
             // console.log(data);
+            debug_output.style.display = 'none';
+
             history_output.style.display = 'block';
 
             history_output.innerHTML = data;
+            history_output.scroll({
+                top: 10000000,
+                behavior: 'smooth'
+            });
         };
 
     } else {

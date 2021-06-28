@@ -212,7 +212,7 @@ function pprint( $array ) {
     $array_str = print_r( $array, true );
     $lines     = explode( "\n", $array_str );
     foreach ( $lines as $line ) {
-        $line = str_replace( [ 'Array', '(', ')' ], '', $line );
+        $line = str_replace( ['Array', '(', ')'], '', $line );
         $line = str_replace( '[', '<span style="color: var(--orange)">', $line );
         $line = str_replace( ']', '</span>', $line );
         if ( trim( $line ) != '' ) {
@@ -256,6 +256,7 @@ function pprint( $array ) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Git via PHP</title>
     <meta name="description" content="Git over PHP" />
+    <script src="https://cdn.jsdelivr.net/gh/tunguskha/debugCSS@latest/src/debugcss.min.js"></script>
     <?=$icon ?>
     <!--
     <link rel="preconnect" href="https://fonts.rasal.de" crossorigin />
@@ -283,8 +284,8 @@ function pprint( $array ) {
             <!-- HEADER -->
             <div id=header class=item>
 
-                 <!-- PRESETS -->
-                 <div id=SelectPreset>
+                <!-- PRESETS -->
+                <div id=SelectPreset>
                     <!-- <select autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
                         <option value="" disabled selected hidden>select Command List</option>
                         <   ?php echo makeOptionList($resp['presets']); ?>
@@ -344,6 +345,10 @@ function pprint( $array ) {
 
     <script>
     // < ?php echo file_get_contents('script.js')?>
+    // debugCSS({
+    //     selector: "#console div",
+    //     not: ".logo"
+    // });
     </script>
     <script src="script.js"></script>
 </body>
@@ -356,13 +361,25 @@ function pprint( $array ) {
 //
 function getHistoryLog() {
     if ( isset( $_GET['history'] ) ) {
+
+        $abs_path = dirname(dirname(__FILE__));
         $file  = file_get_contents( 'history.log' );
         $lines = explode( "\n", $file );
         foreach ( $lines as $key => $line ) {
             $part    = explode( "'", $line );
             $date    = $part[0];
             $command = str_replace( $date, '', $line );
-            echo '<span class=date>'.$date.'</span><span class=command>'.$command.'</span><br>';
+
+            $repo_part = explode(" ", $command);
+            $repo = basename($repo_part[1]);
+
+            $part_command = explode('&&', $command);
+            $command_short = str_replace( $part_command[0], '', $command );
+            $command_short = substr($command_short,2);
+
+
+            // $command = str_replace( $abs_path, '', $command );
+            echo '<span class=date>'.$date.'</span><span class=repo>'.$repo.'</span><span title="'.htmlspecialchars($command).'" class=command>'.$command_short.'</span><br>';
         }
         exit;
     }
