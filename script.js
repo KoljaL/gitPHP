@@ -302,7 +302,7 @@ history_label.addEventListener("click", function(event) {
         xhr.onload = function() {
             var data = this.responseText;
             // console.log(data);
-        history_output.style.display = 'block';
+            history_output.style.display = 'block';
 
             history_output.innerHTML = data;
         };
