@@ -143,13 +143,6 @@ function execPHP( $post_array ) {
     }
 
 
-
-
-
-            
-
-
-
     // git add . && git commit -m "rewrite the item input" && git push origin input_rewrite 
     $gh_link_identi = 'To github.com:';
     $gh_link_tail = '.git';
@@ -167,7 +160,6 @@ function execPHP( $post_array ) {
             $gh_link = '';
         }
     }
-    // exit;
 
 
 

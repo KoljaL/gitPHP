@@ -14,7 +14,7 @@ $resp = [
     'presets' => array(
         'startpage' => 'start', 
         'create new repo' => array('init', 'add', 'branch', 'commit', 'create_repo', 'push'),
-        'commit and push' => array('add', 'commit', 'push'),
+        'commit and push' => array('commit_and_push', 'add', 'commit', 'push'),
         'info and stats' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
         'all' => 'all',
     ),
@@ -32,6 +32,15 @@ $resp = [
                 'datalist' => 'datalist_customcommand',
                 'placeholder' => 'Choose or type'
             )
+        ),
+
+        'commit_and_push' => array(
+            'command' => 'git add . && git commit -m "new commit" && git push origin input_rewrite ',
+            'title' => 'Add, commit & push in onecommand',  
+            'button' => 'add & push',
+            'tooltip' => 'git add .',
+            'infolink' => '',
+            'text' => 'Mention the commit message and the origin branch name (main)'
         ),
 
         'add' => array(
