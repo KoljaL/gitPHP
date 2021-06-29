@@ -142,33 +142,29 @@ function execPHP( $post_array ) {
         }
     }
 
+
+
+
+
+            
+
+
+
+    // git add . && git commit -m "rewrite the item input" && git push origin input_rewrite 
+    $gh_link = 'null';
     $optputs_parts = explode("\n", $output);
+    // print_r($optputs_parts);
 
 
+    foreach ($optputs_parts as $key => $value) {
+        if ( str_contains($value , 'main') ) {
+            $gh_link = $value;
 
-
-
-
-
-
-    // // git add . && git commit -m "rewrite the item input" && git push origin input_rewrite 
-    // $gh_link = 'null';
-
-    // foreach ($optputs_parts as $key => $value) {
-    //     // echo $value;
-    //     $gh_link = $value;
-    //     if ( str_contains( 'modified', $value ) ) {
-    // // echo "<br>q".$value;
-
-    //         break;
-    //     } else {
-    // // echo "<br>qqq".$value;
-
-    //         // $gh_link = 'xx';
-    //     }
-    // }
-    // echo "<br>q".$gh_link;
-    // // print_r($optputs_parts);
+            break;
+        } else {
+            $gh_link = '';
+        }
+    }
     // exit;
 
 

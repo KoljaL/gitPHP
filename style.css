@@ -449,6 +449,10 @@ fieldset legend {
 .response pre.error {
     color: var(--red)
 }
+.response a {
+    font-size: 1.2em;
+    color: var(--red)
+}
 
 
 /* CONSOLE RESPONSE */
