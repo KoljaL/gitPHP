@@ -68,33 +68,39 @@ ASreadPOSTandExecuteCommand( $resp );
 function ASreadPOSTandExecuteCommand( &$resp ) {
     if ( !empty( json_decode( file_get_contents( 'php://input' ), true ) ) ) {
         // print_r(file_get_contents('php://input'));
+        // print_r(json_decode( file_get_contents( 'php://input' ), true ) );
+
+        $post_array = json_decode( file_get_contents( 'php://input' ), true );
+        $post_array['abs_path'] = $resp['abs_path'];
+
+        // print_r($post_array);
         // exit;
 
         // merge the decoded POST data with array from config file
-        $resp       = array_merge( json_decode( file_get_contents( 'php://input' ), true ), $resp );
-        $resp['cd'] = 'cd '.$resp['abs_path'].'/'.$resp['RepoURL'].' && ';
+        // $resp       = array_merge( json_decode( file_get_contents( 'php://input' ), true ), $resp );
+        // $resp['cd'] = 'cd '.$resp['abs_path'].'/'.$resp['RepoURL'].' && ';
 
-        //
-        // complete commands with data from form (*_inputID)
-        //
+        // //
+        // // complete commands with data from form (*_inputID)
+        // //
 
-        // replace preset message for commit
-        $preset_message                        = $resp['commands']['commit']['formfield']['value'];
-        $resp['commands']['commit']['command'] = str_replace( $preset_message, $resp['commit_inputID'], $resp['commands']['commit']['command'] );
+        // // replace preset message for commit
+        // $preset_message                        = $resp['commands']['commit']['formfield']['value'];
+        // $resp['commands']['commit']['command'] = str_replace( $preset_message, $resp['commit_inputID'], $resp['commands']['commit']['command'] );
         
-        // replace placeholder REPONAME with local RepoURL
-        $resp['commands']['create_repo']['command'] = str_replace( 'REPONAME', $resp['RepoURL'], $resp['commands']['create_repo']['command'] );
-        // replace plachholder description with input string
-        $preset_description                        = $resp['commands']['create_repo']['formfield']['value'];
-        $resp['commands']['create_repo']['command'] = str_replace( $preset_description, $resp['create_repo_inputID'], $resp['commands']['create_repo']['command'] );
+        // // replace placeholder REPONAME with local RepoURL
+        // $resp['commands']['create_repo']['command'] = str_replace( 'REPONAME', $resp['RepoURL'], $resp['commands']['create_repo']['command'] );
+        // // replace plachholder description with input string
+        // $preset_description                        = $resp['commands']['create_repo']['formfield']['value'];
+        // $resp['commands']['create_repo']['command'] = str_replace( $preset_description, $resp['create_repo_inputID'], $resp['commands']['create_repo']['command'] );
 
 
         // get custom command from input field
-        $resp['commands']['custom_command']['command'] = $resp['custom_command_inputID'];
+        // $resp['commands']['custom_command']['command'] = $resp['custom_command_inputID'];
 
         // send command name from form (same as key in config)
         // to execute the matching command
-        execPHP( $resp['GitCommand'] );
+        execPHP( $post_array );
 
         exit;
     }
@@ -103,10 +109,8 @@ function ASreadPOSTandExecuteCommand( &$resp ) {
 //
 // execute SSH commands & echo console output & write CommandHistory
 //
-function execPHP( $gitCommand ) {
-    global $resp;
-
-                                    // make SSH connection
+function execPHP( $post_array ) {
+    global $resp;    // make SSH connection
     global $host, $user, $password; // just fur development
     $ssh = new SSH2( $host );
     if ( !$ssh->login( $user, $password ) ) {
@@ -114,18 +118,18 @@ function execPHP( $gitCommand ) {
     }
 
     // send hidden data for debugging
-    echo "<div class=deb_resp style='display:none'>";
-    print_resp( $resp );
+    echo "<div class=deb_resp style='display:none;'>";
+    print_resp( $post_array );
     echo '</div>';
 
-    echo "<div class=deb_resp>";
-    // echo 
-    echo '</div>';
+    // exit;
 
 
     // execute SSH
-    $output = $ssh->exec( $resp['cd'].$resp['commands'][$gitCommand]['command'] );
-    // $output = $resp['cd'].$resp['commands'][$gitCommand]['command'];
+    // $output = $ssh->exec( $resp['cd'].$resp['commands'][$gitCommand]['command'] );
+    $output = $ssh->exec( 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'] );
+    // $output = 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'];
+
     // $output = $gitCommand;
 
     // search for error strings, in cade add error class
@@ -139,19 +143,19 @@ function execPHP( $gitCommand ) {
     }
 
     // prepare var for heredoc
-    $output_command = $resp['commands'][$gitCommand]['command'];
+    $output_command = $post_array['Command'];
 
     // console output
     echo <<<HTML
         <div class=response>
-            <span>$resp[RepoURL]:</span>
+            <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
         </div>
         HTML;
 
     // write command in logfile
-    CommandHistory( $gitCommand );
+    CommandHistory( $post_array );
 }
 
 //
@@ -192,10 +196,11 @@ function makeOptionList( $array ) {
 //
 // write command log to file
 //
-function CommandHistory( $gitCommand ) {
+function CommandHistory( $post_array ) {
     global $ssh, $resp;
     $filecontent = ( file_exists( 'history.log' ) ) ? file_get_contents( 'history.log' ) : '';
-    $filecontent = $filecontent."\n".date( 'd.m.Y H:i' )." '".$resp['cd'].$resp['commands'][$gitCommand]['command']."'";
+    $filecontent = $filecontent."\n".date( 'd.m.Y H:i' )." 'cd ".$post_array['abs_path']."/".$post_array['RepoURL']." && ".$post_array['Command']."'";
+
     file_put_contents( 'history.log', $filecontent );
 }
 
@@ -307,7 +312,7 @@ function pprint( $array ) {
             <div id=header class=item>
 
                 <!-- PRESETS -->
-                <div id=SelectPreset> 
+                <div id=SelectPreset>
 
                     <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
                     <datalist id="Presets" class="DDDL_small" role="listbox">
@@ -453,12 +458,15 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
     // create item for every command
     if ( 'start' !== $preset ) {
         $html = '';
+        $no = 0;
         foreach ( $commandlist as $c_name => $c_value ) {
             // echo $c_value['tooltip']."<br>";
             $title   = $c_value['title'];
             $link    = ( !empty( $c_value['infolink'] ) ) ? '<a href="$c_value[infolink]" target="_blanc"></a>' : '';
             $tooltip = htmlspecialchars( $c_value['tooltip'] );
             $button  = htmlspecialchars( $c_value['button'] );
+            $command  = htmlspecialchars( $c_value['command'] );
+            $no++;
 
             //
             // make inputfield an datalist for custom commands
@@ -476,18 +484,36 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                 $datalist_custom_command = '';
             }
 
-            //
-            // make inputfield an datalist for custom commands
-            //
-            if ( 'commit' == $c_name || 'create_repo' == $c_name ) {
-                $value = htmlspecialchars( $c_value['formfield']['value'] );
+            // //
+            // // make inputfield an datalist for custom commands
+            // //
+            // if ( 'commit' == $c_name || 'create_repo' == $c_name ) {
+            //     $value = htmlspecialchars( $c_value['formfield']['value'] );
 
-                $input_commit = <<< HTML
-                    <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
-                    HTML;
-            } else {
-                $input_commit = '';
-            }
+            //     $input_commit = <<< HTML
+            //         <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
+            //         HTML;
+            // } else {
+            //     $input_commit = '';
+            // }
+
+            // //
+            // // make item for every command
+            // //
+            // $html .= <<<HTML
+            // <div class=item>
+            //     <h3>$title</h3>
+            //     <div class=text>
+            //         $c_value[text]
+            //         $link
+            //         $datalist_custom_command
+            //         $input_commit
+            //     </div>
+            //     <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
+            // </div>
+            // HTML;
+
+
 
             //
             // make item for every command
@@ -499,9 +525,12 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                     $c_value[text]
                     $link
                     $datalist_custom_command
-                    $input_commit
                 </div>
-                <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
+
+                <form action="javascript:;" onsubmit="sendCommands(this)" id="$no">
+                    <input type="text" id="Command" value="$command" name="Command">
+                    <button type="submit" form="$no" value="Submit">$button</button> 
+                </form>
             </div>
             HTML;
         }

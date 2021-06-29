@@ -74,7 +74,9 @@ select {
 input {
     display: block;
     width: 100%;
-    margin-top: .5em
+    margin-top: .5em;
+    margin-bottom: .5em;
+    max-width: max(450px, 100% - 105px);
 }
 
 input:focus {
@@ -142,7 +144,6 @@ fieldset legend {
 #form legend {
     color: var(--blue);
     cursor: pointer;
-
 }
 
 #console {
@@ -194,7 +195,6 @@ fieldset legend {
     outline: none;
     border-bottom: none;
     cursor: pointer;
-
 }
 
 #ChooseRepoURL datalist {
@@ -219,12 +219,9 @@ fieldset legend {
     cursor: pointer
 }
 
-
 #ChooseRepoURL option.repo {
     color: var(--red);
 }
-
-
 
 #ChooseRepoURL .active,
 #ChooseRepoURL option:hover {
@@ -361,7 +358,6 @@ fieldset legend {
 .item .text {
     padding: .5em .5em .5em 0;
     margin: 0;
-    max-width: max(450px, 100% - 100px);
     text-align: justify
 }
 
@@ -589,4 +585,4 @@ fieldset#login button {
         width: max-content;
         z-index: 100
     }
-}
+} 

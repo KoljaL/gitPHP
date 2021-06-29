@@ -6,21 +6,25 @@ function sendCommands(command) {
     }
     loadingDots("console", true);
 
-    //
-    // array for input field IDs
-    //
-    var InputIdValues = ['custom_command_inputID', 'create_repo_inputID', 'commit_inputID', 'RepoURL'];
+
+    console.log(command.Command.value)
+    console.log(document.getElementById('RepoURL').value)
+        //
+        // array for input field IDs
+        //
+        // var InputIdValues = ['custom_command_inputID', 'create_repo_inputID', 'commit_inputID', 'RepoURL'];
 
     var params = new Object();
-    params.GitCommand = command;
+    params.Command = command.Command.value;
+    params.RepoURL = document.getElementById('RepoURL').value;
 
-    InputIdValues.forEach(InputId => {
-        if (document.getElementById(InputId) !== null) {
-            params[InputId] = document.getElementById(InputId).value;
-        } else {
-            params[InputId] = ' ';
-        }
-    });
+    // InputIdValues.forEach(InputId => {
+    //     if (document.getElementById(InputId) !== null) {
+    //         params[InputId] = document.getElementById(InputId).value;
+    //     } else {
+    //         params[InputId] = ' ';
+    //     }
+    // });
     // console.log(params);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
@@ -392,9 +396,7 @@ resizer.addEventListener("mousedown", mouseDownHandler);
 
 
 
-
-
-
+ 
 
 
 
