@@ -7,12 +7,12 @@ function sendCommands(command) {
     loadingDots("console", true);
 
 
-    console.log(command.Command.value)
-    console.log(document.getElementById('RepoURL').value)
-        //
-        // array for input field IDs
-        //
-        // var InputIdValues = ['custom_command_inputID', 'create_repo_inputID', 'commit_inputID', 'RepoURL'];
+    // console.log(command.Command.value)
+    // console.log(document.getElementById('RepoURL').value)
+    //
+    // array for input field IDs
+    //
+    // var InputIdValues = ['custom_command_inputID', 'create_repo_inputID', 'commit_inputID', 'RepoURL'];
 
     var params = new Object();
     params.Command = command.Command.value;
@@ -43,12 +43,39 @@ function sendCommands(command) {
         var debug_div = document.getElementsByClassName('deb_resp');
         var last_debug_div = debug_div[debug_div.length - 1].innerHTML;
         document.getElementById('debug').innerHTML = last_debug_div;
+        // stop playing loadingDots
         loadingDots("console", false);
+        hide_overlay();
+
+        // // search for a GH_link in the console output
+        // var gh_link = detectURLs(data);
+        // // eventFire(document.getElementById('GH_link'), 'click');
+        // clickLink(document.getElementById('GH_link'));
+        // // window.open(gh_link[0],"_blank", "width=300, height=300");
+        // console.log(gh_link[0])
     };
+
 }
 
 
+//
+// hide GH_link overlay
+//
+function hide_overlay() {
+    var overlay_div = document.getElementsByClassName('overlay');
+    console.log(overlay_div);
+    for (let i = 0; i < overlay_div.length; i++) {
+    console.log(overlay_div[i]);
+        overlay_div[i].addEventListener("click", function() {
+            overlay_div[i].style.display = "none";
+        });
+    }
+}
+  
 
+//
+// calls index and gets an option list with folders (for select repository)
+//
 function FolderList() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'index.php?folderlist', true);
@@ -239,6 +266,7 @@ function loadingDots(divID, switchOn) {
 
 // creates an event on an element eg 'click'
 function eventFire(el, etype) {
+    console.log(el);
     if (el.fireEvent) {
         el.fireEvent('on' + etype);
     } else {
@@ -390,16 +418,32 @@ resizer.addEventListener("mousedown", mouseDownHandler);
 
 
 
+//
+// find all links in a string
+//
+function detectURLs(message) {
+    var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+    return message.match(urlRegex)
+}
 
-
-
-
-
-
- 
-
-
-
+//
+// click link,will not open _blank target
+function clickLink(link) {
+    var cancelled = false;
+    if (document.createEvent) {
+        var event = document.createEvent("MouseEvents");
+        event.initMouseEvent("click", true, true, window,
+            0, 0, 0, 0, 0,
+            false, false, false, false,
+            0, null);
+        cancelled = !link.dispatchEvent(event);
+    } else if (link.fireEvent) {
+        cancelled = !link.fireEvent("onclick");
+    }
+    if (!cancelled) {
+        window.location = link.href;
+    }
+}
 
 
 

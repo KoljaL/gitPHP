@@ -181,10 +181,22 @@ function execPHP( $post_array ) {
             <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
-            <a href="https://github.com/$gh_link" target="_blank">$gh_link</a>
-            <script type="text/javascript" language="Javascript">window.open('http://www.example.com');</script>
         </div>
         HTML;
+
+        if(!empty($gh_link)){
+            echo <<< HTML
+        <div class=overlay>
+        <div class=GH_link_text>
+            <h2>push successful</h2>
+            visit remote repo: <a href="https://github.com/$gh_link" id=GH_link target="_blank">$gh_link</a>
+        </div>
+        </div>
+
+
+        HTML;
+    }
+
 
     // write command in logfile
     CommandHistory( $post_array );
