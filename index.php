@@ -59,13 +59,14 @@ if (isset($_GET)){
 
     $RepoURL = key($_GET);
     $Command = $_GET[$RepoURL];
+    $Command = $resp['commands'][$Command]['command'];
     
     $get_array = array(
         'Command' => $Command,
         'RepoURL' => $RepoURL,
         'abs_path' => dirname(dirname(__FILE__)),
     );
-        print_r($get_array);
+        // print_r($get_array);
         execPHP( $get_array );
 }
 
