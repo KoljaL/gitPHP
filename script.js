@@ -383,7 +383,7 @@ const mouseUpHandler = function() {
 };
 resizer.addEventListener("mousedown", mouseDownHandler);
 //
-// resize both container horizontally 
+// resize both container  horizontally 
 //
 
 
