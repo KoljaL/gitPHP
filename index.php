@@ -49,26 +49,11 @@ if ( isset( $_GET['presetlist'] ) ) {
     exit;
 }
 
-// Command => git config --get remote.origin.url
+//
+// read parameter for repo & command from URL & execute
+//
+commandOverGet($resp);
 
-// RepoURL => gitPHP
-
-// abs_path => /www/htdocs/w01c010a/dev.rasal.de
-
-if (isset($_GET)){
-
-    $RepoURL = key($_GET);
-    $Command = $_GET[$RepoURL];
-    $Command = $resp['commands'][$Command]['command'];
-    
-    $get_array = array(
-        'Command' => $Command,
-        'RepoURL' => $RepoURL,
-        'abs_path' => dirname(dirname(__FILE__)),
-    );
-        // print_r($get_array);
-        execPHP( $get_array );
-}
 
 
 //
@@ -76,13 +61,34 @@ if (isset($_GET)){
 //
 ASreadPOSTandExecuteCommand( $resp );
 
-/**
- *
- *
- * FUNCTIONS
- *
- *
- */
+
+
+//======================================================================
+//
+//                               FUNCTIONS
+//
+//======================================================================
+
+//
+// read parameter for repo & command from URL & execute
+//
+function commandOverGet($resp){
+    if (isset($_GET)){
+        $RepoURL = key($_GET);
+        if (!empty($RepoURL)){
+            $Command = $_GET[$RepoURL];
+            $Command = $resp['commands'][$Command]['command'];     
+            $get_array = array(
+            'Command' => $Command,
+            'RepoURL' => $RepoURL,
+            'abs_path' => dirname(dirname(__FILE__)),
+        );
+        // print_r($get_array);
+        execPHP( $get_array );
+        }
+    }
+}
+
 
 //
 // if POST data in JSON are available
@@ -266,14 +272,14 @@ function pprint( $array ) {
     }
 }
  
+ 
 
-/**
- *
- *
- *                  HTML
- *
- *
- */
+//======================================================================
+//
+//                               HTML
+//
+//======================================================================
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

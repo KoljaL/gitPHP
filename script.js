@@ -4,28 +4,13 @@ function sendCommands(command) {
         eventFire(RepoURL, 'click');
         return;
     }
+
     loadingDots("console", true);
-
-
-    // console.log(command.Command.value)
-    // console.log(document.getElementById('RepoURL').value)
-    //
-    // array for input field IDs
-    //
-    // var InputIdValues = ['custom_command_inputID', 'create_repo_inputID', 'commit_inputID', 'RepoURL'];
 
     var params = new Object();
     params.Command = command.Command.value;
     params.RepoURL = document.getElementById('RepoURL').value;
 
-    // InputIdValues.forEach(InputId => {
-    //     if (document.getElementById(InputId) !== null) {
-    //         params[InputId] = document.getElementById(InputId).value;
-    //     } else {
-    //         params[InputId] = ' ';
-    //     }
-    // });
-    // console.log(params);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'index.php', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -46,13 +31,6 @@ function sendCommands(command) {
         // stop playing loadingDots
         loadingDots("console", false);
         hide_overlay();
-
-        // // search for a GH_link in the console output
-        // var gh_link = detectURLs(data);
-        // // eventFire(document.getElementById('GH_link'), 'click');
-        // clickLink(document.getElementById('GH_link'));
-        // // window.open(gh_link[0],"_blank", "width=300, height=300");
-        // console.log(gh_link[0])
     };
 
 }
@@ -128,9 +106,7 @@ function DDDL() {
             var dddlInputName = dddlInput.name;
             var dddlDatalist = document.getElementById(dddlInputName);
 
-
             dddlDatalist.style.display = "block";
-
             // make option.value to input.value & hide option list
             for (let option of dddlDatalist.options) {
                 option.onclick = function() {
@@ -148,9 +124,6 @@ function DDDL() {
             dddlInput.oninput = function() {
                 currentFocus = -1;
                 var text = dddlInput.value.toUpperCase();
-                // console.log("text");
-                // console.log(text);
-                // console.log(' ');
                 for (let option of dddlDatalist.options) {
                     if (option.value.toUpperCase().indexOf(text) > -1) {
                         option.style.display = "block";
@@ -299,6 +272,7 @@ large.addEventListener("click", function(event) {
 
 //
 // DEBUG WINDOW
+// & show command history
 //
 var debug_label = document.getElementById("debug_label");
 var debug_output = document.getElementById("debug_output");
@@ -309,31 +283,22 @@ var history_output = document.getElementById("history_output");
 
 debug_label.addEventListener("click", function(event) {
     if (debug_output.style.display == 'none') {
-
         // hide history output & set label fontweight        
         history_output.style.display = 'none';
         history_label.style.fontWeight = "400";
-
         // show debug output
         debug_output.style.display = 'block';
         debug_output.innerHTML = hidden_debug.innerHTML;
         debug_label.style.fontWeight = "900";
-
     } else {
         debug_output.style.display = 'none';
         debug_output.innerHTML = '';
         debug_label.style.fontWeight = "400";
-
     }
 });
-
-
-
-
 //
 // show command history
 //
-
 history_label.addEventListener("click", function(event) {
     if (history_output.style.display == 'none') {
         var xhr = new XMLHttpRequest();
@@ -341,11 +306,9 @@ history_label.addEventListener("click", function(event) {
         xhr.send(null);
         xhr.onload = function() {
             var data = this.responseText;
-
             // hide debug output
             debug_output.style.display = 'none';
             debug_label.style.fontWeight = "400";
-
             // show history output & fill with data & scroll down
             history_output.style.display = 'block';
             history_output.innerHTML = data;
@@ -355,12 +318,10 @@ history_label.addEventListener("click", function(event) {
             });
             history_label.style.fontWeight = "900";
         };
-
     } else {
         history_output.style.display = 'none';
         history_output.innerHTML = '';
         history_label.style.fontWeight = "400";
-
     }
 });
 
@@ -374,9 +335,6 @@ history_label.addEventListener("click", function(event) {
 const resizer = document.getElementById("resize_gap");
 const leftSide = resizer.previousElementSibling;
 const rightSide = resizer.nextElementSibling;
-// let x = 0;
-// let y = 0;
-// let leftWidth = 0;
 let leftWidth = x = y = 0;
 const mouseDownHandler = function(e) {
     x = e.clientX;
@@ -410,12 +368,15 @@ const mouseUpHandler = function() {
     document.removeEventListener("mouseup", mouseUpHandler);
 };
 resizer.addEventListener("mousedown", mouseDownHandler);
-//
-// resize both container  horizontally 
-//
 
 
 
+
+
+
+
+
+//          NOT IN USE
 
 
 //
@@ -450,7 +411,12 @@ function clickLink(link) {
 
 
 
-
+// // search for a GH_link in the console output
+// var gh_link = detectURLs(data);
+// // eventFire(document.getElementById('GH_link'), 'click');
+// clickLink(document.getElementById('GH_link'));
+// // window.open(gh_link[0],"_blank", "width=300, height=300");
+// console.log(gh_link[0])
 
 
 

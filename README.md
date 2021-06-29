@@ -24,10 +24,10 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] startpage as preset 
 - [x] debug array in console
 - [x] history.log in console
+- [x] link to remote repo after push
+- [x] git init
+- [x] create new repo
 - [ ] welcomem essage afert choosing a repo and testing ssh connection
-- [ ] link to remote repo after push
-- [ ] git init
 - [ ] add SSH Key
-- [ ] create new repo
 - [ ] clean CSS
 - [ ] clean HTML
