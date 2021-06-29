@@ -144,17 +144,22 @@ function execPHP( $post_array ) {
 
     $optputs_parts = explode("\n", $output);
 // echo "pj";
-//     print_r($optputs_parts);
 
+// git add . && git commit -m "rewrite the item input" && git push origin input_rewrite 
+$gh_link = 'null';
 
     foreach ($optputs_parts as $key => $value) {
         // echo $value;
-        if ( str_contains( 'To github.com', $value ) ) {
+        if ( str_contains( 'no changes', $value ) ) {
             $gh_link = $value;
+            break;
         } else {
-            $gh_link = '';
+            $gh_link = 'xx';
         }
     }
+    echo "<br>q".$gh_link;
+    // print_r($optputs_parts);
+    exit;
 
     // prepare var for heredoc
     $output_command = $post_array['Command'];
@@ -165,7 +170,7 @@ function execPHP( $post_array ) {
             <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
-            $gh_link
+            <a href="">$gh_link xxx</a>
         </div>
         HTML;
 
