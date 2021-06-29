@@ -142,6 +142,20 @@ function execPHP( $post_array ) {
         }
     }
 
+    $optputs_parts = explode("\n", $output);
+// echo "pj";
+//     print_r($optputs_parts);
+
+
+    foreach ($optputs_parts as $key => $value) {
+        // echo $value;
+        if ( str_contains( 'To github.com', $value ) ) {
+            $gh_link = $value;
+        } else {
+            $gh_link = '';
+        }
+    }
+
     // prepare var for heredoc
     $output_command = $post_array['Command'];
 
@@ -151,6 +165,7 @@ function execPHP( $post_array ) {
             <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
+            $gh_link
         </div>
         HTML;
 
