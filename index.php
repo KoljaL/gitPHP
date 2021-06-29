@@ -484,35 +484,7 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                 $datalist_custom_command = '';
             }
 
-            // //
-            // // make inputfield an datalist for custom commands
-            // //
-            // if ( 'commit' == $c_name || 'create_repo' == $c_name ) {
-            //     $value = htmlspecialchars( $c_value['formfield']['value'] );
-
-            //     $input_commit = <<< HTML
-            //         <input type=text data-name="$title" id={$c_name}_inputID class=ff_input value="$value">
-            //         HTML;
-            // } else {
-            //     $input_commit = '';
-            // }
-
-            // //
-            // // make item for every command
-            // //
-            // $html .= <<<HTML
-            // <div class=item>
-            //     <h3>$title</h3>
-            //     <div class=text>
-            //         $c_value[text]
-            //         $link
-            //         $datalist_custom_command
-            //         $input_commit
-            //     </div>
-            //     <button onclick="sendCommands('$c_name');" data-tooltip="$tooltip" >$button</button>
-            // </div>
-            // HTML;
-
+      
 
 
             //
