@@ -302,15 +302,21 @@ function pprint( $array ) {
 </head>
 <body>
     <!-- DEBUG OUTPUT -->
-    <div id="debug">
-        <?=print_resp( $resp ) ?>
-    </div>
+    <div id="debug" style="display:none"></div>
     <!-- CONTENT -->
-    <div id="content">
-        <fieldset id=form>
+    <div id="Content">
+        <fieldset id=leftFS>
             <legend>Git Actions</legend>
             <!-- HEADER -->
-            <div id=header class=item>
+            <div id=HeaderLeft class=item>
+                <!-- LOGOUT -->
+                <div id="Logout">
+                    <form action='' method='post'>
+                        <input id=LogoutSubmit type='submit' name='destroy' style="display:none">
+                        <label id=LogoutLogo title="Log Out" for=LogoutSubmit>&nbsp;</label>
+                    </form>
+                </div>
+
                 <!-- PRESETS -->
                 <div id=SelectPreset>
                     <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
@@ -326,31 +332,28 @@ function pprint( $array ) {
                         <button onclick="FolderList();">scan folder</button>
                     </datalist>
                 </div>
-                <!-- LOGOUT -->
-                <div id="logout">
-                    <form action='' method='post'>
-                        <input type='hidden' name='destroy'>
-                        <input id=logout_submit type='submit' value='Log Out' style="display:none">
-                        <label id=logoutButton for=logout_submit class=button>Log&nbsp;Out</label>
-                    </form>
-                </div>
+
             </div><!-- HEADER -->
             <!-- COMMAND ITEMS -->
-            <div id="items">
+            <div id="Items">
                 <?php makeItemsForCommands( $resp ); ?>
             </div>
         </fieldset>
-        <div id=resize_gap></div>
+        <div id=ResizeGap></div>
         <!-- CONSOLE -->
-        <fieldset id=console>
+        <fieldset id=rightFS>
             <legend>Console</legend>
-            <div id=console_header>
-                <label id=history_label>command history</label>
-                <label id=debug_label>config file</label>
+            <!-- <div id=console_header> -->
+            <div id=HeaderRight class=item>
+
+                <label id=HistoryLabel>command history</label>
+                <label id=DebugLabel>config file</label>
             </div>
-            <div id="console_output"></div>
-            <div id="debug_output" style="display:none"></div>
-            <div id="history_output" style="display:none"></div>
+            <div id="ConsoleOutput"></div>
+            <div id="DebugOutput" style="display:none">
+                <?=print_resp( $resp ) ?>
+            </div>
+            <div id="HistoryOutput" style="display:none"></div>
         </fieldset>
     </div>
 
@@ -461,7 +464,10 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                     $link
                 </div>
                 <form action="javascript:;" onsubmit="sendCommands(this)" id="$no">
-                    <input type="text" id="Command" value="$command" name="Command">
+                    <div class="HL_outer">
+                        <div class="HL_behind"></div>
+                        <input class=HL_input type="text" id="Command" value="$command" name="Command">
+                    </div>
                     <button type="submit" form="$no" value="Submit">$button</button> 
                 </form>
             </div>
@@ -496,17 +502,17 @@ function session( &$resp ) {
         session_destroy();
     }
     // reset session time & show logout button
-    if ( isset( $_SESSION['id'] ) ) {
-        $_SESSION['last_visit'] = time();
-        $html                   = <<<HTML
-            <form action='' method='post'>
-            <input type='hidden' name='destroy'>
-            <input id=logout type='submit' value='Log Out' style="display:none">
-            <label id=logoutButton for=logout class=button>Log Out</label>
-            </form>
-        HTML;
-        return $html;
-    }
+    // if ( isset( $_SESSION['id'] ) ) {
+    //     $_SESSION['last_visit'] = time();
+    //     $html                   = <<<HTML
+    //         <form action='' method='post'>
+    //         <input type='hidden' name='destroy'>
+    //         <input id=logout type='submit' value='Log Out' style="display:none">
+    //         <label id=logoutButton for=logout class=button>Log Out</label>
+    //         </form>
+    //     HTML;
+    //     return $html;
+    // }
     // show login form
     if ( !isset( $_SESSION['id'] ) ) {
         $html = <<<HTML
@@ -524,7 +530,7 @@ function session( &$resp ) {
             </head>
             <body id=body>
                 <div id="content">
-                    <fieldset id=login>
+                    <fieldset id=Login>
                         <legend>Log In</legend>
                         <form id=Form action='' method='post'>
                             <label>Name</label>
@@ -533,8 +539,8 @@ function session( &$resp ) {
                             <label>Password</label>
                             <input class=login type='password' size='15' name='password'>
                             <br><br>
-                            <input id=login type='submit' value='Log In' style="display:none">
-                            <button id=loginButton for=login class=button>Log In</button>
+                            <input id=Login type='submit' value='Log In' style="display:none">
+                            <button id=LoginButton for=login class=button>Log In</button>
                         </form>
                     </fieldset>
                 </div>

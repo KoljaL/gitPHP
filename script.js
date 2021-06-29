@@ -5,7 +5,7 @@ function sendCommands(command) {
         return;
     }
 
-    loadingDots("console", true);
+    loadingDots("rightFS", true);
 
     var params = new Object();
     params.Command = command.Command.value;
@@ -17,19 +17,19 @@ function sendCommands(command) {
     xhr.send(JSON.stringify(params));
     xhr.onload = function() {
         var data = this.responseText;
-        var content = document.getElementById('console_output').innerHTML;
-        document.getElementById('console_output').innerHTML = content + data;
+        var content = document.getElementById('ConsoleOutput').innerHTML;
+        document.getElementById('ConsoleOutput').innerHTML = content + data;
         // scroll to bottom
-        document.getElementById('console_output').scroll({
+        document.getElementById('ConsoleOutput').scroll({
             top: 10000000,
             behavior: 'smooth'
         });
         // send last hidden debug array 
-        var debug_div = document.getElementsByClassName('deb_resp');
-        var last_debug_div = debug_div[debug_div.length - 1].innerHTML;
-        document.getElementById('debug').innerHTML = last_debug_div;
+        // var debug_div = document.getElementsByClassName('deb_resp');
+        // var last_debug_div = debug_div[debug_div.length - 1].innerHTML;
+        // document.getElementById('Debug').innerHTML = last_debug_div;
         // stop playing loadingDots
-        loadingDots("console", false);
+        loadingDots("rightFS", false);
         hide_overlay();
     };
 
@@ -43,13 +43,13 @@ function hide_overlay() {
     var overlay_div = document.getElementsByClassName('overlay');
     console.log(overlay_div);
     for (let i = 0; i < overlay_div.length; i++) {
-    console.log(overlay_div[i]);
+        console.log(overlay_div[i]);
         overlay_div[i].addEventListener("click", function() {
             overlay_div[i].style.display = "none";
         });
     }
 }
-  
+
 
 //
 // calls index and gets an option list with folders (for select repository)
@@ -84,8 +84,10 @@ options.forEach(option => {
         xhr.send(null);
         xhr.onload = function() {
             var data = this.responseText;
-            document.getElementById('items').innerHTML = data;
+            document.getElementById('Items').innerHTML = data;
         };
+        setTimeout(function() { trigger_highlighting(); }, 300);
+
     });
 });
 
@@ -253,8 +255,8 @@ function eventFire(el, etype) {
 //
 // enlarge the page
 //
-var large = document.querySelector("#form legend");
-var div_content = document.getElementById("content");
+var large = document.querySelector("#leftFS legend");
+var div_content = document.getElementById("Content");
 large.addEventListener("click", function(event) {
     // console.log(div_content.offsetWidth);
     // console.log(div_content.clientWidth);
@@ -274,11 +276,11 @@ large.addEventListener("click", function(event) {
 // DEBUG WINDOW
 // & show command history
 //
-var debug_label = document.getElementById("debug_label");
-var debug_output = document.getElementById("debug_output");
-var hidden_debug = document.querySelector("#debug .responsedebug");
-var history_label = document.getElementById("history_label");
-var history_output = document.getElementById("history_output");
+var debug_label = document.getElementById("DebugLabel");
+var debug_output = document.getElementById("DebugOutput");
+// var hidden_debug = document.querySelector("#debug .responsedebug");
+var history_label = document.getElementById("HistoryLabel");
+var history_output = document.getElementById("HistoryOutput");
 
 
 debug_label.addEventListener("click", function(event) {
@@ -288,7 +290,7 @@ debug_label.addEventListener("click", function(event) {
         history_label.style.fontWeight = "400";
         // show debug output
         debug_output.style.display = 'block';
-        debug_output.innerHTML = hidden_debug.innerHTML;
+        // debug_output.innerHTML = hidden_debug.innerHTML;
         debug_label.style.fontWeight = "900";
     } else {
         debug_output.style.display = 'none';
@@ -332,7 +334,7 @@ history_label.addEventListener("click", function(event) {
 //
 // resize both container horizontally 
 //
-const resizer = document.getElementById("resize_gap");
+const resizer = document.getElementById("ResizeGap");
 const leftSide = resizer.previousElementSibling;
 const rightSide = resizer.nextElementSibling;
 let leftWidth = x = y = 0;
@@ -372,7 +374,75 @@ resizer.addEventListener("mousedown", mouseDownHandler);
 
 
 
+function trigger_highlighting() {
+    var strings = ["lorem", "amet", "main", "new commit"];
+    var outer_input = document.getElementsByClassName('HL_outer');
+    // console.log(outer_input)
+    highlightInput(outer_input, strings);
+}
 
+
+
+//
+// loops outer_input, finds behind_input & input
+// copy input value to behind_input
+// highlights & sets eventlistener
+//
+function highlightInput(outer_input, strings) {
+    for (let i = 0; i < outer_input.length; i++) {
+        let behind_input = outer_input[i].children[0];
+        let input = outer_input[i].children[1];
+        // console.log(input);
+        behind_input.innerHTML = input.value;
+        highlight(behind_input, strings);
+        input.addEventListener("keyup", event => {
+            behind_input.innerHTML = input.value;
+            highlight(behind_input, strings);
+        });
+    }
+}
+
+
+
+
+
+/**
+ * Highlight keywords inside a DOM element
+ * @param {string} elem Element to search for keywords in
+ * @param {string[]} keywords Keywords to highlight
+ * @param {boolean} caseSensitive Differenciate between capital and lowercase letters
+ * @param {string} cls Class to apply to the highlighted keyword
+ */
+function highlight(elem, keywords, caseSensitive = false, cls = "HL_highlight") {
+    const flags = caseSensitive ? "gi" : "g";
+    // Sort longer matches first to avoid
+    // highlighting keywords within keywords.
+    keywords.sort((a, b) => b.length - a.length);
+    Array.from(elem.childNodes).forEach((child) => {
+        const keywordRegex = RegExp(keywords.join("|"), flags);
+        if (child.nodeType !== 3) {
+            // not a text node
+            highlight(child, keywords, caseSensitive, cls);
+        } else if (keywordRegex.test(child.textContent)) {
+            const frag = document.createDocumentFragment();
+            let lastIdx = 0;
+            child.textContent.replace(keywordRegex, (match, idx) => {
+                const part = document.createTextNode(
+                    child.textContent.slice(lastIdx, idx)
+                );
+                const highlighted = document.createElement("span");
+                highlighted.textContent = match;
+                highlighted.classList.add(cls);
+                frag.appendChild(part);
+                frag.appendChild(highlighted);
+                lastIdx = idx + match.length;
+            });
+            const end = document.createTextNode(child.textContent.slice(lastIdx));
+            frag.appendChild(end);
+            child.parentNode.replaceChild(frag, child);
+        }
+    });
+}
 
 
 
