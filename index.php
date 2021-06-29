@@ -181,7 +181,8 @@ function execPHP( $post_array ) {
             <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
-            <a href="https://github.com/$gh_link">$gh_link</a>
+            <a href="https://github.com/$gh_link" target="_blank">$gh_link</a>
+            <script type="text/javascript" language="Javascript">window.open('http://www.example.com');</script>
         </div>
         HTML;
 
