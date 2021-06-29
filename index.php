@@ -151,15 +151,17 @@ function execPHP( $post_array ) {
 
 
     // git add . && git commit -m "rewrite the item input" && git push origin input_rewrite 
-    $gh_link = 'null';
+    $gh_link_identi = 'To github.com:';
+    $gh_link_tail = '.git';
     $optputs_parts = explode("\n", $output);
     // print_r($optputs_parts);
 
 
     foreach ($optputs_parts as $key => $value) {
-        if ( str_contains($value , 'main') ) {
+        if ( str_contains($value , $gh_link_identi) ) {
             $gh_link = $value;
-
+            $gh_link = str_replace($gh_link_identi,'',$gh_link);
+            $gh_link = str_replace($gh_link_tail,'',$gh_link);
             break;
         } else {
             $gh_link = '';
@@ -179,7 +181,7 @@ function execPHP( $post_array ) {
             <span>$post_array[RepoURL]:</span>
             $output_command\n
             <pre class="$error">$output</pre>
-            <a href="">$gh_link</a>
+            <a href="http://$gh_link">$gh_link</a>
         </div>
         HTML;
 
