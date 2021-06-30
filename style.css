@@ -64,11 +64,20 @@ input,
 select {
     font-family: JetBrainsMono_SemiLight, 'Courier New', monospace;
     height: 23px;
-    color: var(--dark);
-    background: var(--lightgrey);
+    color: var(--lightgrey);
+    background: var(--darkgrey);
     border: 1px solid var(--dark);
     border-radius: 5px;
-    padding: 2px 3px
+    padding: 2px 3px;
+}
+button{
+    background: var(--blue);
+    color: var(--dark);text-align: center;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--grey);
 }
 
 input {
@@ -92,7 +101,7 @@ select {
 
 
 /* HIDE SCROLLBAR */
-
+#LoremOutput::-webkit-scrollbar,
 #ChooseRepoURL datalist::-webkit-scrollbar,
 #ConsoleOutput::-webkit-scrollbar,
 #HistoryOutput::-webkit-scrollbar,
@@ -100,23 +109,21 @@ select {
 #Items::-webkit-scrollbar {
     display: none
 }
-
+/* 
 #ConsoleOutput,
 #Debug,
 #Items {
     position: relative;
     overflow-y: auto;
-    overflow-x: hidden;
-    /* height: 85vh; */
+    overflow-x: auto;
+    height: 85vh;
     height: calc(99vh + 50px);
 
     scrollbar-width: none;
-
-
     margin: 0;
     -webkit-transition: .93s;
     transition: .93s
-}
+} */
 
 
 /* HIDE SCROLLBAR */
@@ -275,19 +282,59 @@ fieldset legend {
     cursor: pointer;
 }
 
-#HistoryOutput {
-    background-color: var(--dark);
-    margin: 0;
-    z-index: 4;
+#Items,
+#ConsoleOutput,
+#HistoryOutput,
+#DebugOutput
+{
+    /* display: none;
+    font-family: JetBrainsMono_Regular, 'Courier New', monospace;
     position: relative;
     overflow-y: auto;
     overflow-x: auto;
     height: 85vh;
+    height: calc(99vh + 50px);
+    background-color: var(--dark);
+    z-index: 4;
+
     scrollbar-width: none;
-    top: -85vh;
-    font-family: JetBrainsMono_Regular, 'Courier New', monospace;
-    white-space: pre;
+    margin: 0;
+    -webkit-transition: .93s;
+    transition: .93s */
 }
+
+
+
+#LoremOutput,#Items,
+#ConsoleOutput,
+#HistoryOutput,
+#DebugOutput{
+    font-family: JetBrainsMono_Regular, 'Courier New', monospace;
+    border:1px solid #be5046;
+    position: relative;
+    top: -30px;
+    max-height: calc(100% - 1.5em);
+    overflow: auto;    
+    scrollbar-width: none;
+    margin: 0;
+}
+
+#LoremOutput{
+    
+display: none;
+}
+
+#Debug {
+    /* display:none; */
+    position: absolute;
+    top: 1350px;
+    right: 200px;
+    z-index: 200;
+    overflow: auto;
+    height: calc(99vh + 350px)
+}
+
+
 
 #HistoryOutput .date {
     color: var(--orange)
@@ -301,17 +348,7 @@ fieldset legend {
     color: var(--green)
 }
 
-#DebugOutput {
-    background-color: var(--dark);
-    margin: 0;
-    z-index: 4;
-    position: relative;
-    overflow-y: auto;
-    overflow-x: auto;
-    height: 85vh;
-    scrollbar-width: none;
-    top: -85vh;
-}
+
 
 
 /* DropDownDataList small */
@@ -372,15 +409,9 @@ fieldset legend {
     bottom: 0;
     right: 0;
     margin-bottom: .5em;
-    text-align: center;
-    cursor: pointer;
-    width: 100px;
-    background: var(--blue)
+    width: 100px; 
 }
-
-.item button:hover {
-    background: var(--grey)
-}
+ 
  
 
 
@@ -425,28 +456,21 @@ fieldset legend {
 /* DEBUG */ 
 .responsedebug {
     position: relative;
-    top: 370px;
-    padding: 1em;
+    /* top: 370px; */
+    /* padding: 1em; */
     background-color: var(--dark);
     border: 1px solid var(--darkgrey);
     border-radius: 5px;
     z-index: 15
 } 
 
-#debug {
-    /* display:none; */
-    position: absolute;
-    top: 1350px;
-    right: 200px;
-    z-index: 200;
-    overflow: auto;
-    height: calc(99vh + 350px)
-}
+
  
 
 /* LOGIN */ 
-fieldset#Login {
-    min-width: max-content;
+#Login {
+    min-width: 200px;
+    max-width: 300px;
     height: max-content;
     margin: auto;
     border: 2px solid var(--lightgrey);
@@ -454,13 +478,17 @@ fieldset#Login {
     padding: 1em
 }
 
-fieldset#Login label {
+#Login label {
     width: 80px;
     display: inline-block
 }
+#Login legend{
+    color: var(--blue);
+}
 
-fieldset#Login button {
-    float: right
+#Login button {
+    float: right;
+    margin-top: 1em;
 }
 
 

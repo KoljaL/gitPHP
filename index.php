@@ -280,6 +280,82 @@ function pprint( $array ) {
 //
 //======================================================================
 
+
+$lorem = <<< HTML
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+<div class="loremDIV">
+    <h3>bla bla info text</h3>
+    <div class="loremtext">
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    </div>
+</div>
+HTML;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -336,7 +412,7 @@ function pprint( $array ) {
             </div><!-- HEADER -->
             <!-- COMMAND ITEMS -->
             <div id="Items">
-                <?php makeItemsForCommands( $resp ); ?>
+                <?php makeItemsForCommands( $resp ); ?> 
             </div>
         </fieldset>
         <div id=ResizeGap></div>
@@ -346,14 +422,29 @@ function pprint( $array ) {
             <!-- <div id=console_header> -->
             <div id=HeaderRight class=item>
 
-                <label id=HistoryLabel>command history</label>
-                <label id=DebugLabel>config file</label>
+                <label for=ConsoleOutput id=ConsoleLabel>console output</label>
+                <label for=HistoryOutput id=HistoryLabel>command history</label>
+                <label for=DebugOutput id=DebugLabel>config file</label>
             </div>
-            <div id="ConsoleOutput"></div>
+            <!-- <div id="LoremOutput"><?= $lorem  ?></div> -->
+
+
+            <div id="ConsoleOutput"></div>            
+
+
             <div id="DebugOutput" style="display:none">
-                <?=print_resp( $resp ) ?>
+                <div class=responsedebug>
+                    <h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br>
+                    <pre>
+                    <?= pprint( $resp ); ?>
+                    </pre>
+                </div>
             </div>
+
+
             <div id="HistoryOutput" style="display:none"></div>
+
+
         </fieldset>
     </div>
 
@@ -535,10 +626,10 @@ function session( &$resp ) {
                         <form id=Form action='' method='post'>
                             <label>Name</label>
                             <input class=login type='text' size='15' name='name'>
-                            <br><br>
+                            <!-- <br><br> -->
                             <label>Password</label>
                             <input class=login type='password' size='15' name='password'>
-                            <br><br>
+                            <!-- <br><br> -->
                             <input id=Login type='submit' value='Log In' style="display:none">
                             <button id=LoginButton for=login class=button>Log In</button>
                         </form>
