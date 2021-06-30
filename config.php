@@ -114,6 +114,9 @@ $resp = [
 
 ];
 
+// servername hostname
+// ip 
+
 // search for a repo: https://api.github.com/repos/<user>/<repo>
 
 // create new repo: 

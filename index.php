@@ -117,10 +117,38 @@ function execPHP( $post_array ) {
     echo "<div class=deb_resp style='display:none;'>";
     print_resp( $post_array );
     echo '</div>';
-
+    
+    //
     // execute SSH
-    $output = $ssh->exec( 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'] );
-    // $output = 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'];
+    //
+
+    // STATE start
+    if('start' == $post_array['State']){
+        // get hostname of server
+        $hostname = $ssh->exec('hostname');
+        // send info if connected to server
+        if(!empty($hostname)){
+            $groups = $ssh->exec('groups');
+            // try to find a remote repo
+            $current_repo = $ssh->exec( 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && git config --get remote.origin.url');
+            // use post array for message ;-)
+            $post_array['RepoURL'] = 'connected as';
+            $post_array['Command'] = " $groups to server $hostname";
+            // output for remote repo
+            if(!empty($current_repo)){
+                $output= 'remote repo: '.$current_repo;
+            }else{
+                $output='no remote repo found';
+            }
+        // send info if NOT connected to server
+        }else{
+            $output = "not connected to server";
+        }
+    // STATE command
+    }else{    
+        $output = $ssh->exec( 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'] );
+        // $output = 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && '.$post_array['Command'];
+    }
 
     // search for error strings, in cade add error class
     foreach ( $resp['ConsoleError'] as $value ) {

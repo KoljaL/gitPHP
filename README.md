@@ -27,7 +27,7 @@ Uses [phpseclib](https://phpseclib.com) for SSH access without the dependence on
 - [x] link to remote repo after push
 - [x] git init
 - [x] create new repo
-- [ ] welcomem essage afert choosing a repo and testing ssh connection
+- [x] welcome message after choosing a repo and testing ssh connection
 - [ ] add SSH Key
 - [ ] clean CSS
 - [ ] clean HTML

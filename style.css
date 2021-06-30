@@ -143,7 +143,7 @@ select {
 }
 
 fieldset {
-    min-width: max-content;
+    min-width: 290px;
     width: 590px;
     height: 97vh;
     border: 2px solid var(--lightgrey);

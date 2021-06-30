@@ -5,10 +5,22 @@ function sendCommands(command) {
         return;
     }
 
+    // console.log(command.Command)
+
+
     loadingDots("rightFS", true);
 
     var params = new Object();
-    params.Command = command.Command.value;
+    // parameter start is used for the first acction afte choosing the repoURL from drop down menu
+    if ('start' == command) {
+        params.Command = "git config --get remote.origin.url ";
+        params.State = "start";
+    } else {
+        params.State = "command";
+        params.Command = command.Command.value;
+
+    }
+
     params.RepoURL = document.getElementById('RepoURL').value;
 
     var xhr = new XMLHttpRequest();
@@ -35,6 +47,7 @@ function sendCommands(command) {
 
 }
 
+// sendCommand("<form><input name=Command value='git config --get remote.origin.url '></form>");
 
 //
 // hide GH_link overlay
@@ -115,6 +128,12 @@ function DDDL() {
                     // console.log(dddlInput);
                     dddlInput.value = option.value;
                     dddlDatalist.style.display = "none";
+                    // call the first command
+                    if('RepoURL' == DropDownDataLists[i].id){
+                    sendCommands('start');
+
+                    }
+
                 };
             }
 
