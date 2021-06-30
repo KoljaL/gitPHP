@@ -244,7 +244,7 @@ function get_icon() {
 //
 function print_resp( $resp ) {
     echo "<div class=responsedebug>
-        <h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br>
+        <h3 style='color:var(--blue)'>last command</h3><br>
         <pre>";
     pprint( $resp );
     echo '</pre>
@@ -259,7 +259,7 @@ function pprint( $array ) {
     $lines     = explode( "\n", $array_str );
     foreach ( $lines as $line ) {
         $line = str_replace( ['Array', '(', ')'], '', $line );
-        $line = str_replace( '[', '<span style="color: var(--orange)">', $line );
+        $line = str_replace( '[', '<span>', $line );
         $line = str_replace( ']', '</span>', $line );
         if ( trim( $line ) != '' ) {
             $indentation = ( strlen( $line ) - strlen( ltrim( $line ) ) ) / 4;
@@ -279,83 +279,6 @@ function pprint( $array ) {
 //                               HTML
 //
 //======================================================================
-
-
-$lorem = <<< HTML
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-<div class="loremDIV">
-    <h3>bla bla info text</h3>
-    <div class="loremtext">
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-    </div>
-</div>
-HTML;
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -433,8 +356,9 @@ HTML;
 
 
             <div id="DebugOutput" style="display:none">
+                <div id=LastCommand></div>
                 <div class=responsedebug>
-                    <h3 style='color:var(--orange)'>Debug: &#36;resp[]</h3><br>
+                    <h3 style='color:var(--bluegreen)'>&#36;config[]</h3><br>
                     <pre>
                     <?= pprint( $resp ); ?>
                     </pre>
@@ -557,7 +481,7 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                 <form action="javascript:;" onsubmit="sendCommands(this)" id="$no">
                     <div class="HL_outer">
                         <div class="HL_behind"></div>
-                        <input class=HL_input type="text" id="Command" value="$command" name="Command">
+                        <input class=HL_input type="text" value="$command" name="Command">
                     </div>
                     <button type="submit" form="$no" value="Submit">$button</button> 
                 </form>

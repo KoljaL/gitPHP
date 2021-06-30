@@ -27,7 +27,7 @@ function sendCommands(command) {
         // send last hidden debug array 
         var debug_div = document.getElementsByClassName('deb_resp');
         var last_debug_div = debug_div[debug_div.length - 1].innerHTML;
-        document.getElementById('DebugOutput').innerHTML = last_debug_div;
+        document.getElementById('LastCommand').innerHTML = last_debug_div;
         // stop playing loadingDots
         loadingDots("rightFS", false);
         hide_overlay();
@@ -41,9 +41,9 @@ function sendCommands(command) {
 //
 function hide_overlay() {
     var overlay_div = document.getElementsByClassName('overlay');
-    console.log(overlay_div);
+    // console.log(overlay_div);
     for (let i = 0; i < overlay_div.length; i++) {
-        console.log(overlay_div[i]);
+        // console.log(overlay_div[i]);
         overlay_div[i].addEventListener("click", function() {
             overlay_div[i].style.display = "none";
         });
@@ -238,8 +238,9 @@ function loadingDots(divID, switchOn) {
 
 
 
-
+//
 // creates an event on an element eg 'click'
+//
 function eventFire(el, etype) {
     console.log(el);
     if (el.fireEvent) {
@@ -268,7 +269,9 @@ large.addEventListener("click", function(event) {
 });
 
 
-// get the right header
+//
+// show and hide the outputs in the right fieldset by clicking the labels
+//
 var HeaderRight = document.getElementById("HeaderRight");
 // console.log(HeaderRight)
 // make an array of all his children and add an eventlistener to them
@@ -286,104 +289,31 @@ Array.from(HeaderRight.children).forEach((child) => {
         if (OutputDIV_block == 'HistoryOutput') {
             getCommandHistory();
         }
-
-
-
         document.getElementById(OutputDIV_block).style.display = 'block';
-
-
-
-
     })
-
 })
 
 
-
-
+//
+// send request to get the history log
+//
 function getCommandHistory() {
-
     var history_output = document.getElementById("HistoryOutput");
-
-
     var xhr = new XMLHttpRequest();
     xhr.open("GET", 'index.php?history', true);
     xhr.send(null);
     xhr.onload = function() {
-        var data = this.responseText;
-        // show history output & fill with data & scroll down
-        history_output.innerHTML = data;
+        history_output.innerHTML = this.responseText;
         history_output.scroll({
             top: 10000000,
             behavior: 'smooth'
         });
     };
-
 }
 
 
 
 
-
-
-
-
-
-// //
-// // DEBUG WINDOW
-// // & show command history
-// //
-// var debug_label = document.getElementById("DebugLabel");
-// var debug_output = document.getElementById("DebugOutput");
-// // var hidden_debug = document.querySelector("#debug .responsedebug");
-// var history_label = document.getElementById("HistoryLabel");
-// var history_output = document.getElementById("HistoryOutput");
-
-
-// debug_label.addEventListener("click", function(event) {
-//     if (debug_output.style.display == 'none') {
-//         // hide history output & set label fontweight        
-//         history_output.style.display = 'none';
-//         history_label.style.fontWeight = "400";
-//         // show debug output
-//         debug_output.style.display = 'block';
-//         // debug_output.innerHTML = hidden_debug.innerHTML;
-//         debug_label.style.fontWeight = "900";
-//     } else {
-//         debug_output.style.display = 'none';
-//         // debug_output.innerHTML = '';
-//         debug_label.style.fontWeight = "400";
-//     }
-// });
-// //
-// // show command history
-// //
-// history_label.addEventListener("click", function(event) {
-//     if (history_output.style.display == 'none') {
-
-//         var xhr = new XMLHttpRequest();
-//         xhr.open("GET", 'index.php?history', true);
-//         xhr.send(null);
-//         xhr.onload = function() {
-//             var data = this.responseText;
-//             // hide debug output
-//             debug_output.style.display = 'none';
-//             debug_label.style.fontWeight = "400";
-//             // show history output & fill with data & scroll down
-//             history_output.style.display = 'block';
-//             history_output.innerHTML = data;
-//             history_output.scroll({
-//                 top: 10000000,
-//                 behavior: 'smooth'
-//             });
-//             history_label.style.fontWeight = "900";
-//         };
-//     } else {
-//         history_output.style.display = 'none';
-//         history_output.innerHTML = '';
-//         history_label.style.fontWeight = "400";
-//     }
-// });
 
 
 
@@ -534,6 +464,73 @@ function clickLink(link) {
         window.location = link.href;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// //
+// // DEBUG WINDOW
+// // & show command history
+// //
+// var debug_label = document.getElementById("DebugLabel");
+// var debug_output = document.getElementById("DebugOutput");
+// // var hidden_debug = document.querySelector("#debug .responsedebug");
+// var history_label = document.getElementById("HistoryLabel");
+// var history_output = document.getElementById("HistoryOutput");
+
+
+// debug_label.addEventListener("click", function(event) {
+//     if (debug_output.style.display == 'none') {
+//         // hide history output & set label fontweight        
+//         history_output.style.display = 'none';
+//         history_label.style.fontWeight = "400";
+//         // show debug output
+//         debug_output.style.display = 'block';
+//         // debug_output.innerHTML = hidden_debug.innerHTML;
+//         debug_label.style.fontWeight = "900";
+//     } else {
+//         debug_output.style.display = 'none';
+//         // debug_output.innerHTML = '';
+//         debug_label.style.fontWeight = "400";
+//     }
+// });
+// //
+// // show command history
+// //
+// history_label.addEventListener("click", function(event) {
+//     if (history_output.style.display == 'none') {
+
+//         var xhr = new XMLHttpRequest();
+//         xhr.open("GET", 'index.php?history', true);
+//         xhr.send(null);
+//         xhr.onload = function() {
+//             var data = this.responseText;
+//             // hide debug output
+//             debug_output.style.display = 'none';
+//             debug_label.style.fontWeight = "400";
+//             // show history output & fill with data & scroll down
+//             history_output.style.display = 'block';
+//             history_output.innerHTML = data;
+//             history_output.scroll({
+//                 top: 10000000,
+//                 behavior: 'smooth'
+//             });
+//             history_label.style.fontWeight = "900";
+//         };
+//     } else {
+//         history_output.style.display = 'none';
+//         history_output.innerHTML = '';
+//         history_label.style.fontWeight = "400";
+//     }
+// });
 
 
 
