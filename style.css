@@ -333,7 +333,9 @@ background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
+#ConsoleOutput span{
+    color: var(--green);
+}
 #Debug {
     /* display:none; */
     position: absolute;

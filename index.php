@@ -377,7 +377,7 @@ function pprint( $array ) {
                 <label for=HistoryOutput id=HistoryLabel title="command history"></label>
                 <label for=DebugOutput id=DebugLabel title="config file"></label>
             </div>
-            <div id="ConsoleOutput"></div>
+            <div id="ConsoleOutput"><span>Select a repository to connect to the server</span></div>
             <div id="DebugOutput" style="display:none">
                 <div id=LastCommand></div>
                 <div class=responsedebug>
