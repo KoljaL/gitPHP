@@ -1,3 +1,13 @@
+function runhighlightInputField() {
+    let highlightingStrings = ["REPONAME", "private", "public", "description", "main", "new commit"];
+    let highlightingClass = 'highlightA'
+    highlightInputField('HL_input', highlightingStrings, highlightingClass);
+}
+
+
+
+
+
 function sendCommands(command) {
     if (document.getElementById('RepoURL').value == '') {
         // alert('Please select a repository');
@@ -100,7 +110,7 @@ options.forEach(option => {
             document.getElementById('Items').innerHTML = data;
         };
         setTimeout(function() {
-            highlightInputField('HL_input', ["git", "amet", "main", "new commit"], 'highlightA');
+            runhighlightInputField();
         }, 300);
     });
 });

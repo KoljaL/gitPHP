@@ -12,8 +12,6 @@ error_reporting( E_ALL );
 require_once __DIR__.'/pw.php';
 require_once __DIR__.'/config.php';
 
-// echo is_dir('../AHA/.git');
-// exit;
 //
 // include phpseclib.com
 //
@@ -375,11 +373,10 @@ function pprint( $array ) {
             <!-- <div id=console_header> -->
             <div id=HeaderRight class=item>
 
-                <label for=ConsoleOutput id=ConsoleLabel>console output</label>
-                <label for=HistoryOutput id=HistoryLabel>command history</label>
-                <label for=DebugOutput id=DebugLabel>config file</label>
+                <label for=ConsoleOutput id=ConsoleLabel title="console output"></label>
+                <label for=HistoryOutput id=HistoryLabel title="command history"></label>
+                <label for=DebugOutput id=DebugLabel title="config file"></label>
             </div>
-            <!-- <div id="LoremOutput"><?= $lorem  ?></div> -->
             <div id="ConsoleOutput"></div>
             <div id="DebugOutput" style="display:none">
                 <div id=LastCommand></div>
@@ -396,7 +393,7 @@ function pprint( $array ) {
 
     <script src="script.js"></script>
     <script>
-    highlightInputField('HL_input', ["lorem", "amet", "main", "new commit"], 'highlightA');
+    // highlightInputField('HL_input', ["lorem", "amet", "main", "new commit"], 'highlightA');
 
     // < ?php echo file_get_contents('script.js')?>
     // debugCSS({
@@ -529,7 +526,7 @@ function session( &$resp ) {
     }
     // check login values & create session
     if ( isset( $_POST['name'] ) && isset( $_POST['password'] )
-        && $_POST['password'] === $resp['user'][$_POST['name']]['login_password'] ) {
+        && md5($_POST['password']) === $resp['user'][$_POST['name']]['login_password'] ) {
         $_SESSION['id'] = rand();
     }
     // destroy session
@@ -537,18 +534,6 @@ function session( &$resp ) {
         $_SESSION = [];
         session_destroy();
     }
-    // reset session time & show logout button
-    // if ( isset( $_SESSION['id'] ) ) {
-    //     $_SESSION['last_visit'] = time();
-    //     $html                   = <<<HTML
-    //         <form action='' method='post'>
-    //         <input type='hidden' name='destroy'>
-    //         <input id=logout type='submit' value='Log Out' style="display:none">
-    //         <label id=logoutButton for=logout class=button>Log Out</label>
-    //         </form>
-    //     HTML;
-    //     return $html;
-    // }
     // show login form
     if ( !isset( $_SESSION['id'] ) ) {
         $html = <<<HTML
