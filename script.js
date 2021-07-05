@@ -16,7 +16,7 @@ function sendCommands(command) {
         params.Command = "git config --get remote.origin.url ";
         params.State = "start";
     } else {
-        params.State = "command";
+        params.State = "Command";
         params.Command = command.Command.value;
 
     }
@@ -99,8 +99,9 @@ options.forEach(option => {
             var data = this.responseText;
             document.getElementById('Items').innerHTML = data;
         };
-        setTimeout(function() { trigger_highlighting(); }, 300);
-
+        setTimeout(function() {
+            highlightInputField('HL_input', ["git", "amet", "main", "new commit"], 'highlightA');
+        }, 300);
     });
 });
 
@@ -129,8 +130,8 @@ function DDDL() {
                     dddlInput.value = option.value;
                     dddlDatalist.style.display = "none";
                     // call the first command
-                    if('RepoURL' == DropDownDataLists[i].id){
-                    sendCommands('start');
+                    if ('RepoURL' == DropDownDataLists[i].id) {
+                        sendCommands('start');
 
                     }
 
@@ -380,31 +381,83 @@ resizer.addEventListener("mousedown", mouseDownHandler);
 
 
 
-
-function trigger_highlighting() {
-    var strings = ["lorem", "amet", "main", "new commit"];
-    var outer_input = document.getElementsByClassName('HL_outer');
-    // console.log(outer_input)
-    highlightInput(outer_input, strings);
-}
-
-
-
+// call the first function
 //
-// loops outer_input, finds behind_input & input
+// loops hj_framingDIV, finds behind_input & input
 // copy input value to behind_input
-// highlights & sets eventlistener
+// highlights 6 sets eventlistener
 //
-function highlightInput(outer_input, strings) {
-    for (let i = 0; i < outer_input.length; i++) {
-        let behind_input = outer_input[i].children[0];
-        let input = outer_input[i].children[1];
-        // console.log(input);
-        behind_input.innerHTML = input.value;
-        highlight(behind_input, strings);
-        input.addEventListener("keyup", event => {
-            behind_input.innerHTML = input.value;
-            highlight(behind_input, strings);
+function highlightInputField(IClass, HKeywords, HClass) {
+    var inputFields = document.getElementsByTagName('input');
+    for (let i = 0; i < inputFields.length; i++) {
+        // do only for choosen input fields 
+        if (inputFields[i].classList.contains(IClass)) {
+            let inputField_new = inputFields[i];
+            // make a framing DIV arround the input tag
+            var framingDIV = document.createElement('div');
+            framingDIV.classList.add("hj_framingDIV");
+            inputField_new.parentNode.insertBefore(framingDIV, inputField_new);
+            framingDIV.appendChild(inputField_new);
+            // add an emty DIV before the input tag, to insert the text 
+            var behind_input_new = document.createElement('div');
+            behind_input_new.classList.add("behind_input");
+            framingDIV.insertBefore(behind_input_new, inputField_new);
+        }
+    }
+    // get all framing DIVs
+    var hj_framingDIV = document.getElementsByClassName('hj_framingDIV');
+    for (let i = 0; i < hj_framingDIV.length; i++) {
+        // get children of framingDIV 
+        let behind_input = hj_framingDIV[i].children[0];
+        let inputField = hj_framingDIV[i].children[1];
+        if (inputField.classList.contains(IClass)) {
+            // // do for the first view
+            doHighlighting(behind_input, inputField, HKeywords, HClass);
+            // set eventlistener for every event on a input field
+            inputField.addEventListener("change", event => {
+                doHighlighting(behind_input, inputField, HKeywords, HClass);
+            });
+            inputField.addEventListener("input", event => {
+                doHighlighting(behind_input, inputField, HKeywords, HClass);
+            });
+            inputField.addEventListener("keydown", event => {
+                doHighlighting(behind_input, inputField, HKeywords, HClass);
+            });
+            inputField.addEventListener("scroll", event => {
+                doHighlighting(behind_input, inputField, HKeywords, HClass);
+            });
+        }
+    }
+    // on every event do the highlighting
+    function doHighlighting(behind_input, inputField, HKeywords, HClass) {
+        // set content of behind_input like value of inputField
+        behind_input.innerHTML = inputField.value;
+        // scroll behind_input like inputField 
+        requestAnimationFrame(() => behind_input.scrollLeft = inputField.scrollLeft);
+        // highlighting process
+        caseSensitive = true;
+        const flags = caseSensitive ? "gi" : "g";
+        HKeywords.sort((a, b) => b.length - a.length);
+        Array.from(behind_input.childNodes).forEach((child) => {
+            const keywordRegex = RegExp(HKeywords.join("|"), flags);
+            if (keywordRegex.test(child.textContent)) {
+                const frag = document.createDocumentFragment();
+                let lastIdx = 0;
+                child.textContent.replace(keywordRegex, (match, idx) => {
+                    const part = document.createTextNode(
+                        child.textContent.slice(lastIdx, idx)
+                    );
+                    const highlighted = document.createElement("span");
+                    highlighted.textContent = match;
+                    highlighted.classList.add(HClass);
+                    frag.appendChild(part);
+                    frag.appendChild(highlighted);
+                    lastIdx = idx + match.length;
+                });
+                const end = document.createTextNode(child.textContent.slice(lastIdx));
+                frag.appendChild(end);
+                child.parentNode.replaceChild(frag, child);
+            }
         });
     }
 }
@@ -413,46 +466,26 @@ function highlightInput(outer_input, strings) {
 
 
 
-/**
- * Highlight keywords inside a DOM element
- * @param {string} elem Element to search for keywords in
- * @param {string[]} keywords Keywords to highlight
- * @param {boolean} caseSensitive Differenciate between capital and lowercase letters
- * @param {string} cls Class to apply to the highlighted keyword
- */
-function highlight(elem, keywords, caseSensitive = false, cls = "HL_highlight") {
-    const flags = caseSensitive ? "gi" : "g";
-    // Sort longer matches first to avoid
-    // highlighting keywords within keywords.
-    keywords.sort((a, b) => b.length - a.length);
-    Array.from(elem.childNodes).forEach((child) => {
-        const keywordRegex = RegExp(keywords.join("|"), flags);
-        if (child.nodeType !== 3) {
-            // not a text node
-            highlight(child, keywords, caseSensitive, cls);
-        } else if (keywordRegex.test(child.textContent)) {
-            const frag = document.createDocumentFragment();
-            let lastIdx = 0;
-            child.textContent.replace(keywordRegex, (match, idx) => {
-                const part = document.createTextNode(
-                    child.textContent.slice(lastIdx, idx)
-                );
-                const highlighted = document.createElement("span");
-                highlighted.textContent = match;
-                highlighted.classList.add(cls);
-                frag.appendChild(part);
-                frag.appendChild(highlighted);
-                lastIdx = idx + match.length;
-            });
-            const end = document.createTextNode(child.textContent.slice(lastIdx));
-            frag.appendChild(end);
-            child.parentNode.replaceChild(frag, child);
-        }
-    });
-}
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//          NOT IN USE really
+//          NOT IN USE really
+//          NOT IN USE really
+//          NOT IN USE really
+//          NOT IN USE really
+//          NOT IN USE really
 //          NOT IN USE really
 
 

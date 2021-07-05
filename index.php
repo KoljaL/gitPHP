@@ -192,17 +192,19 @@ function execPHP( $post_array ) {
         if(!empty($gh_link)){
             echo <<< HTML
             <div class=overlay>
-            <div class=GH_link_text>
-                <h2>push successful</h2>
-                visit remote repo: <a href="https://github.com/$gh_link" id=GH_link target="_blank">$gh_link</a>
+                <div class=GH_link_text>
+                    <h2>push successful</h2>
+                    visit remote repo: <a href="https://github.com/$gh_link" id=GH_link target="_blank">$gh_link</a>
+                </div>
             </div>
-        </div>
-        HTML;
+            HTML;
     }
 
 
     // write command in logfile
-    CommandHistory( $post_array );
+    if('Command' == $post_array['State']){
+        CommandHistory( $post_array );
+    }
 }
 
 //
@@ -346,14 +348,14 @@ function pprint( $array ) {
 
                 <!-- PRESETS -->
                 <div id=SelectPreset>
-                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset">
+                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="Preset" name="Presets" placeholder="Select Preset" >
                     <datalist id="Presets" class="DDDL_small" role="listbox">
                         <?php echo makeOptionList( $resp['presets'] ); ?>
                     </datalist>
                 </div>
                 <!-- ChooseRepoURL -->
                 <div id=ChooseRepoURL>
-                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository">
+                    <input autocomplete="off" class=DropDownDataList role="combobox" list="" id="RepoURL" name="RepoURLs" placeholder="Select Repository" >
                     <datalist id="RepoURLs" role="listbox">
                         <?php echo makeOptionList( $resp['preselected_folder'] ); ?>
                         <button onclick="FolderList();">scan folder</button>
@@ -363,7 +365,7 @@ function pprint( $array ) {
             </div><!-- HEADER -->
             <!-- COMMAND ITEMS -->
             <div id="Items">
-                <?php makeItemsForCommands( $resp ); ?> 
+                <?php makeItemsForCommands( $resp ); ?>
             </div>
         </fieldset>
         <div id=ResizeGap></div>
@@ -378,36 +380,30 @@ function pprint( $array ) {
                 <label for=DebugOutput id=DebugLabel>config file</label>
             </div>
             <!-- <div id="LoremOutput"><?= $lorem  ?></div> -->
-
-
-            <div id="ConsoleOutput"></div>            
-
-
+            <div id="ConsoleOutput"></div>
             <div id="DebugOutput" style="display:none">
                 <div id=LastCommand></div>
                 <div class=responsedebug>
                     <h3 style='color:var(--bluegreen)'>&#36;config[]</h3><br>
                     <pre>
-                    <?= pprint( $resp ); ?>
+                        <?= pprint( $resp ); ?>
                     </pre>
                 </div>
             </div>
-
-
             <div id="HistoryOutput" style="display:none"></div>
-
-
         </fieldset>
     </div>
 
+    <script src="script.js"></script>
     <script>
+    highlightInputField('HL_input', ["lorem", "amet", "main", "new commit"], 'highlightA');
+
     // < ?php echo file_get_contents('script.js')?>
     // debugCSS({
     //     selector: "#console div",
     //     not: ".logo"
     // });
     </script>
-    <script src="script.js"></script>
 </body>
 </html>
 
@@ -507,10 +503,7 @@ function makeItemsForCommands( $resp, $preset = 'start' ) {
                     $link
                 </div>
                 <form action="javascript:;" onsubmit="sendCommands(this)" id="$no">
-                    <div class="HL_outer">
-                        <div class="HL_behind"></div>
-                        <input class=HL_input type="text" value="$command" name="Command">
-                    </div>
+                    <input class=HL_input type="text" value="$command" name="Command">
                     <button type="submit" form="$no" value="Submit">$button</button> 
                 </form>
             </div>
