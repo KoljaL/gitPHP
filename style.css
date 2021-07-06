@@ -60,7 +60,7 @@ h3 {
 }
 
 button,
-input,
+/* input, */
 select {
     font-family: JetBrainsMono_SemiLight, 'Courier New', monospace;
     height: 23px;
@@ -82,7 +82,7 @@ button:hover {
     background: var(--grey);
 }
 
-input {
+/* input {
     display: block;
     width: 100%;
     margin-top: .5em;
@@ -92,7 +92,7 @@ input {
 
 input:focus {
     outline: 1px solid var(--blue)
-}
+} */
 
 select {
     -moz-appearance: none;
@@ -426,7 +426,7 @@ background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w
     padding: .5em .5em .5em 0;
     margin: 0;
     max-width: max-content;
-    text-align: justify
+    /* text-align:right */
 }
 
 
@@ -591,9 +591,8 @@ background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w
     position: absolute;
     height: 18px;
     width: calc(100% - 14px);
-    /* font: 16px Arial, sans-serif; */
+    max-width: inherit;
     font: 16px 'JetBrainsMono_Regular', 'Courier New', monospace;
-
     margin: 0px;
     /* padding: 7px; */
     padding-inline-start: 0px;

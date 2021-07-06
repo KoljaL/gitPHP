@@ -17,9 +17,9 @@ $resp = [
     'commands' => array(
 
         'commit_and_push' => array(
-            'command' => 'git add . && git commit -m "new commit" && git push origin input_rewrite ',
+            'command' => 'git add . && git commit -m "new commit" && git push origin main ',
             'title' => 'Add, commit & push in onecommand',  
-            'button' => 'add & push',
+            'button' => 'commit&push',
             'text' => 'Mind the commit message and the origin branch name (main)'
         ),
 
