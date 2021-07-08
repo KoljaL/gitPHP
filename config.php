@@ -1,11 +1,17 @@
 <?php
 $resp = [
     'user' => array(
-        'test' => array(
-            'login_password' => '098f6bcd4621d373cade4e832627b4f6'
+        'username' => array(
+            'login_password' => 'md5_hashed_string'
         ),
     ),
     'session_time' => 300,
+    'SSH' =>  array(
+        'password' => '****',
+        'user'     => 'ssh-w00',
+        'host'     => 'ssh.server.com',
+        'port'     => '22',
+    ),
     'presets' => array(
         'startpage' => 'start', 
         'create new repo' => array('init', 'add', 'branch', 'commit', 'create_repo', 'push'),
@@ -113,30 +119,3 @@ $resp = [
     ),    
 
 ];
-
-// servername hostname
-// ip 
-
-// search for a repo: https://api.github.com/repos/<user>/<repo>
-
-// create new repo: 
-
-
-// git init
-// git add .
-// git commit -m "tt"
-// git branch -M main
-// gh repo create AHA -y -d "ne beschreibung" --private
-// git push -u origin main
-
-
-// delete a repo
-//   # one time:
-// $ gh alias set delete 'api -X DELETE repos/$1'
-// $ gh auth refresh -h github.com -s delete_repo
-// # usage (WARNING: no confirmation!)
-// gh delete user/myrepo
-
-// or this
-//git push origin --delete main
-// https://stackoverflow.com/questions/2003505/how-do-i-delete-a-git-branch-locally-and-remotely
