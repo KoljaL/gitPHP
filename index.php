@@ -15,9 +15,10 @@ require_once __DIR__.'/config.php';
 //
 // include phpseclib.com
 //
-require_once __DIR__.'/vendor/autoload.php';
-use phpseclib3\Net\SSH2;
-
+// require_once __DIR__.'/vendor/autoload.php';// was for phpseclib2 installed with composer
+// use phpseclib3\Net\SSH2;// was for phpseclib2 installed with composer
+set_include_path(get_include_path() . PATH_SEPARATOR . 'phpseclib');
+include('Net/SSH2.php');
 //
 // ASYNC read the history.log file & make a nice output
 //
@@ -106,7 +107,8 @@ function ASreadPOSTandExecuteCommand( &$resp ) {
 function execPHP( $post_array ) {
     global $resp;    // make SSH connection
     global $host, $user, $password; // just fur development
-    $ssh = new SSH2( $host );
+    // $ssh = new SSH2( $host ); // was for phpseclib2 installed with composer
+    $ssh = new Net_SSH2( $host );
     if ( !$ssh->login( $user, $password ) ) {
         throw new \Exception( 'Login failed' );
     }
