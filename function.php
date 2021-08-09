@@ -5,20 +5,20 @@
 // read parameter for repo & command from URL & execute
 //
 function commandOverGet($resp){
-    if (isset($_GET)){
-        $RepoURL = key($_GET);
-        if (!empty($RepoURL)){
-            $Command = $_GET[$RepoURL];
-            $Command = $resp['commands'][$Command]['command'];     
-            $get_array = array(
-            'Command' => $Command,
-            'RepoURL' => $RepoURL,
-            'abs_path' => dirname(dirname(__FILE__)),
-        );
-        // print_r($get_array);
-        execPHP( $get_array );
-        }
-    }
+    // if (isset($_GET)){
+    //     $RepoURL = key($_GET);
+    //     if (!empty($RepoURL)){
+    //         $Command = $_GET[$RepoURL];
+    //         $Command = $resp['commands'][$Command]['command'];     
+    //         $get_array = array(
+    //         'Command' => $Command,
+    //         'RepoURL' => $RepoURL,
+    //         'abs_path' => dirname(dirname(__FILE__)),
+    //     );
+    //     // print_r($get_array);
+    //     execPHP( $get_array );
+    //     }
+    // }
 }
 
 
@@ -42,9 +42,9 @@ function ASreadPOSTandExecuteCommand( &$resp ) {
 // execute SSH commands & echo console output & write CommandHistory
 //
 function execPHP( $post_array ) {
-    global $resp;    // make SSH connection
-    // global $host, $user, $password; // just fur development
-    // $ssh = new SSH2( $host ); // was for phpseclib2 installed with composer
+    global $resp;    
+    
+    // make SSH connection
     $ssh = new Net_SSH2( $resp['SSH']['host'] );
     if ( !$ssh->login( $resp['SSH']['user'], $resp['SSH']['password'] ) ) {
         throw new \Exception( 'Login failed' );
@@ -68,15 +68,22 @@ function execPHP( $post_array ) {
             $groups = $ssh->exec('groups');
             // try to find a remote repo
             $current_repo = $ssh->exec( 'cd '.$post_array['abs_path'].'/'.$post_array['RepoURL'].' && git config --get remote.origin.url');
-            // use post array for message ;-)
-            $post_array['RepoURL'] = 'connected as';
-            $post_array['Command'] = " $groups to server $hostname";
+            
+            $branches = getBranches($post_array['RepoURL']);
+            $branchesLocal = (array_flatten($branches['local'])) ? "<br> local branches: ".array_flatten($branches['local']) : " ";
+            $branchesRemote = (array_flatten($branches['remote'])) ? "remote branches: ".array_flatten($branches['remote']) : " ";
+            
             // output for remote repo
             if(!empty($current_repo)){
-                $output= 'remote repo: '.$current_repo;
+                $output= 'remote repo: '.$current_repo.$branchesRemote;
+
+
             }else{
                 $output='no remote repo found';
             }
+            // use post array for message ;-)
+            $post_array['RepoURL'] = 'connected as';
+            $post_array['Command'] = " $groups to server $hostname $branchesLocal";
         // send info if NOT connected to server
         }else{
             $output = "not connected to server";
@@ -144,6 +151,44 @@ function execPHP( $post_array ) {
     }
 }
 
+
+
+function getBranches($name){
+    echo '<br><br>';
+    // echo $name;
+    $local = "../$name/.git/logs/refs/heads";
+    $remote = "../$name/.git/logs/refs/remotes/origin";
+    // echo $local;
+
+    if(is_dir($remote)){
+        $remotecommit = array_diff(scandir($remote), array('..', '.'));
+        $remote_data = array_values($remotecommit);
+
+    }
+    if(is_dir($local)){
+        $localcommit = array_diff(scandir($local), array('..', '.'));
+        $local_data = array_values($localcommit);
+    }
+
+    $allArr = array(
+        "local"=>!empty($local_data)?$local_data:[],
+        "remote"=>!empty($remote_data)?$remote_data:[]
+    );
+    return $allArr;
+
+}
+
+function array_flatten($array) { 
+    if (!is_array($array)) { 
+      return false; 
+    } 
+    $result = ""; 
+    foreach ($array as $key => $value) { 
+        $result .= $value.", ";
+    } 
+    
+    return rtrim($result, ", ");
+  }
 
 
 //

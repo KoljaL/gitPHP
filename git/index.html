@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/materia/bootstrap.min.css">
+    <title>Git UI</title>
+    <style>
+        .tab-content .card h4{
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Simple Git UI</h1>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Info</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="local-tab" data-toggle="tab" href="#local" role="tab" aria-controls="local" aria-selected="true">Local</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="remote-tab" data-toggle="tab" href="#remote" role="tab" aria-controls="remote" aria-selected="false">Remote</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="branches-tab" data-toggle="tab" href="#branches" role="tab" aria-controls="branches" aria-selected="false">Branches</a>
+        </li>
+      </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+            <div class="card">
+                <div class="card-body info">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="local" role="tabpanel" aria-labelledby="local-tab">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-group local"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="remote" role="tabpanel" aria-labelledby="remote-tab">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-group remote"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="branches" role="tabpanel" aria-labelledby="branches-tab">
+            <div class="card">
+                <div class="card-body branches">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+
+function currentLink(){
+        let err = new Error()
+        let link = err.stack.split('(')
+        link = link[1]
+        console.log(err.stack)
+        link = link.split(')')[0]
+        link = link.split(':')
+        link.splice(-2, 2)
+        link = link.join(':')
+        return link
+}
+        function format(time){
+            return new Date(Number(time)*1000).toLocaleString();
+        }
+        function fetchData(dir,bran){
+            const allCommits = new Promise((resolve,reject)=>{
+                const url = bran =='local'?'../.git/logs/refs/heads/'+dir:'../.git/logs/refs/remotes/origin/'+dir;
+                fetch(url).then(e=>e.text()).then(res=>{
+                const lines = res.split("\n").reverse();
+                const data = [];
+                    for(let i = 0 ; i < lines.length; i++){
+                        const fname = lines[i].split(" ")[2]||null;
+                        const lname = lines[i].split(" ")[3]||null;
+                        const fullname = fname+' '+lname;
+                        const email = lines[i].split(" ")[4]||null;
+                        const time = lines[i].split(" ")[5]||null;
+                        const num = lines[i].split(" ")[1]||null;
+                        let msg = '';
+                        if(lines[i].includes(":")){
+                           msg = lines[i].split(":").pop().trim()||null;
+                        }else{
+                           msg = lines[i].split(time).pop().trim().replace(/[+0-9]/g, '')||null;
+                        }
+                        if(msg && num){
+                            data.push({name:fullname,email,time,num,msg,env:dir})
+                        }
+                    }
+                    resolve(data);
+                });
+            })
+            return allCommits;
+        }
+        fetch('git.php').then(e=>e.json()).then(res=>{
+            const {local,remote} = res;
+            // append info
+            fetch('../.git/config').then(e=>e.text()).then(dd=>{
+                const all = dd.split("\n")
+                const remoteUrl = all.filter(r=>r.includes("url ="))[0];
+                document.querySelector(".info").innerHTML = `<h4> Local url </h4> ${currentLink()} <hr> <h4> Remote url </h4> ${remoteUrl.replace("url =","")}`;
+            })
+
+            const localB = local.map(e=>`<li>${e}</li>`).join("");
+            let remoteB = '';
+            appendInDom(local,'local');
+
+            if(remote.length !== 0){
+                appendInDom(remote,'remote');
+                remoteB = remote.map(x=>`<li>${x}</li>`).join("");
+            }else{
+                remoteB = 'No remote branch';
+                document.querySelector(".remote").innerHTML = 'No remote commits';
+            }
+
+            const branches = `<h4>Local</h4><ul>${localB}</ul><hr><h4>Remote</h4><ul>${remoteB}</ul>`;
+            document.querySelector(".branches").innerHTML = branches;
+
+        })
+
+        const appendInDom = (arr,branch)=>{
+            const select = branch == 'local'?".local":".remote";
+            const final = [];
+            for(let i = 0 ; i < arr.length; i++){
+                final.push(fetchData(arr[i],branch));
+            }
+            const data = Promise.all(final);
+            data.then(e=>{
+                const dataArr = [].concat(...e).sort((a,b)=>b.time-a.time);
+                const result = dataArr.map(x=>{
+                    const {time,env,name,email,num,msg} = x;
+                    return `<li class="list-group-item">
+                    <span class="badge ${env == 'master'?"badge-dark":"badge-info"} mr-2">${env}</span>
+                    <span class="badge badge-success mr-2">${name}</span>
+                    <span class="badge badge-warning mr-2">${num}</span>
+                    ${msg}
+                    <span class="badge badge-secondary float-right mr-2">${format(time)}</span>
+                    </li>`;
+                })
+                document.querySelector(select).innerHTML = `<h4>${branch} commits</h4> ${result.join("")}`;
+            })
+        };
+
+    </script>
+</body>
+</html>

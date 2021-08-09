@@ -14,9 +14,10 @@ $resp = [
     ),
     'presets' => array(
         'startpage' => 'start', 
-        'create new repo' => array('init', 'add', 'branch', 'commit', 'create_repo', 'push'),
+        'create new repo' => array('init', 'add', 'new_branch', 'commit', 'create_repo', 'push'),
         'commit and push' => array('commit_and_push', 'add', 'commit', 'push'),
         'info and stats' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
+        'pull' => array('pull'),
         'all' => 'all',
     ),
     // to avoit WARNINGs every entry has to have every key set
@@ -53,12 +54,20 @@ $resp = [
             'text' => 'Create a new commit containing the current contents of the index and the given log message describing the changes. ',
         ),
 
-        'branch' => array(
-            'command' => 'git branch -M main ',
-            'title' => 'Create a new branch',  
-            'button' => 'branch',
+        'all_branches' => array(
+            'command' => 'git branch ',
+            'title' => 'Show all branches',  
+            'button' => 'all branch',
             'infolink' => 'https://git-scm.com/docs/git-branch',
-            'text' => 'This command creates a new branch named \'main\' which points to the current HEAD. ',
+            'text' => 'Show all branches of the current repo. ',
+        ),
+
+        'new_branch' => array(
+            'command' => 'git checkout -b development ',
+            'title' => 'Create a new branch',  
+            'button' => 'new branch',
+            'infolink' => 'https://git-scm.com/docs/git-branch',
+            'text' => 'This command creates a new branch named \'development\' and switch to it. ',
         ),
 
         'create_repo' => array(
@@ -75,6 +84,14 @@ $resp = [
             'button' => 'push',
             'infolink' => 'https://git-scm.com/docs/git-push',
             'text' => 'Updates remote refs using local refs, while sending objects necessary to complete the given refs. '
+        ),
+
+        'pull' => array(
+            'command' => 'git pull origin main ',
+            'title' => 'Fetch from and integrate with another repository or a branch',  
+            'button' => 'pull',
+            'infolink' => 'https://git-scm.com/docs/git-pull',
+            'text' => 'Incorporates changes from a remote repository into the current branch. In its default mode, git pull is shorthand for git fetch followed by git merge FETCH_HEAD. More precisely, git pull runs git fetch with the given parameters and calls git merge to merge the retrieved branch heads into the current branch. With --rebase, it runs git rebase instead of git merge.'
         ),
 
         'remote_origin_url' => array(

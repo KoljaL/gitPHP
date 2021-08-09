@@ -22,8 +22,6 @@ if(is_file(__DIR__.'/pw.php')){
 //
 // include phpseclib.com
 //
-// require_once __DIR__.'/vendor/autoload.php';// was for phpseclib2 installed with composer
-// use phpseclib3\Net\SSH2;// was for phpseclib2 installed with composer
 set_include_path(get_include_path() . PATH_SEPARATOR . 'phpseclib');
 include('Net/SSH2.php');
 
