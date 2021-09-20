@@ -14,8 +14,8 @@ $resp = [
     ),
     'presets' => array(
         'startpage' => 'start', 
-        'create new repo' => array('init', 'add', 'new_branch', 'commit', 'create_repo', 'push'),
-        'commit and push' => array('commit_and_push', 'add', 'commit', 'push'),
+        'create new repo' => array('init', 'add', 'first_branch', 'commit', 'create_repo', 'push'),
+        'commit and push' => array('commit_and_push', 'add', 'commit', 'push','new_branch',),
         'info and stats' => array('remote_origin_url', 'remote_show_origin', 'last_commit', 'all_commits'),
         'pull' => array('pull'),
         'all' => 'all',
@@ -60,6 +60,14 @@ $resp = [
             'button' => 'all branch',
             'infolink' => 'https://git-scm.com/docs/git-branch',
             'text' => 'Show all branches of the current repo. ',
+        ),
+
+        'first_branch' => array(
+            'command' => 'git branch -M main ',
+            'title' => 'Create the first branch',  
+            'button' => 'first branch',
+            'infolink' => 'https://git-scm.com/docs/git-branch',
+            'text' => 'This command creates the first branch named \'main\' and switch to it. ',
         ),
 
         'new_branch' => array(
